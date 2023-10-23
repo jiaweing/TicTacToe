@@ -20,30 +20,33 @@ jobs:
 
       - name: Build for Linux
         run: |
+          cd source/
           gcc -o ttt ttt.c -lSDL2 -lSDL2_ttf
 
       - name: Build for Windows
         run: |
+          cd source/
           x86_64-w64-mingw32-gcc -o ttt.exe ttt.c -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
 
       - name: Build for Mac
         run: |
+          cd source/
           gcc -o ttt-mac ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2.2.4
         with:
           name: ttt-linux
-          path: ./ttt
+          path: ./source/ttt
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2.2.4
         with:
           name: ttt-windows
-          path: ./ttt.exe
+          path: ./source/ttt.exe
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2.2.4
         with:
           name: ttt-mac
-          path: ./ttt-mac
+          path: ./source/ttt-mac
