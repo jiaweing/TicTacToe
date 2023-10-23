@@ -11,6 +11,8 @@ This is a simple Tic Tac Toe game written in C using the SDL2 library.
 
 ### Windows
 
+Note: You need the SDL2.dll file to run.
+
 1. Install [MSYS2](https://www.msys2.org/)
 2. Open MSYS2 terminal
 3. Navigate to the project directory
