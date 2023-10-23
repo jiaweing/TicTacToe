@@ -26,7 +26,7 @@ jobs:
       - name: Build for Windows
         run: |
           cd source/
-          gcc -std=c17 ttt.c -I./SDL2/include -L./SDL2/lib -Wall -lmingw32 -lSDL2main -lSDL2 -o ttt.exe
+          gcc -std=c17 ttt.c -I./SDL2/include -L./SDL2/lib -L/usr/x86_64-w64-mingw32/lib -Wall -lmingw32 -lSDL2main -lSDL2 -o ttt.exe
 
       - name: Build for Mac
         run: |
