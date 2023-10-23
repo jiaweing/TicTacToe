@@ -29,7 +29,7 @@ Note: You need the SDL2.dll file to run.
 2. Navigate to the project directory
 3. Compile the game: `gcc -o ttt ttt.c -lSDL2`
 4. Run the game: `./ttt`
-
+l
 ### Mac
 
 1. Install [Homebrew](https://brew.sh/)
