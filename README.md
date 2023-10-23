@@ -4,7 +4,7 @@ This is a simple Tic Tac Toe game written in C using the SDL2 library.
 
 ## Builds
 
-To download the latest build, select the latest build [here](https://github.com/my3t/TicTacToe/actions). Download the build for your operating system.
+All builds can be found **[here](https://github.com/my3t/TicTacToe/actions)**. To download the latest version, select the latest build and download from the "Artifacts" section for your operating system.
 
 ## Dependencies
 
