@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc libsdl2-dev libsdl2-ttf-dev mingw-w64
+
+      - name: Build for Linux
+        run: |
+          gcc -o ttt ttt.c -lSDL2 -lSDL2_ttf
+
+      - name: Build for Windows
+        run: |
+          x86_64-w64-mingw32-gcc -o ttt.exe ttt.c -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
+
+      - name: Build for Mac
+        run: |
+          gcc -o ttt-mac ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: ttt-linux
+          path: ./ttt
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: ttt-windows
+          path: ./ttt.exe
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: ttt-mac
+          path: ./ttt-mac
