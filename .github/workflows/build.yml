@@ -34,8 +34,6 @@ jobs:
           gcc -o ttt ttt.c -lSDL2 -lSDL2_ttf -lm
 
       - name: Get Commit Hash
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
         run: |
           bash scripts/hash.sh
 
