@@ -21,7 +21,7 @@ jobs:
       - name: Build for Linux
         run: |
           cd source/
-          gcc -o ttt ttt.c -lSDL2 -lSDL2_ttf
+          gcc -o ttt ttt.c -lSDL2 -lSDL2_ttf -lm
 
       - name: Build for Windows
         run: |
