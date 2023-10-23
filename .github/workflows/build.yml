@@ -10,18 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc libsdl2-dev libsdl2-ttf-dev mingw-w64
-
-      - name: Build for Linux
-        run: |
-          cd source/
-          gcc -o ttt ttt.c -lSDL2 -lSDL2_ttf -lm
 
       - name: Build for Windows
         run: |
@@ -33,22 +28,33 @@ jobs:
           cd source/
           gcc -o ttt-mac ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2.2.4
-        with:
-          name: linux
-          path: ./source/ttt
+      - name: Build for Linux
+        run: |
+          cd source/
+          gcc -o ttt ttt.c -lSDL2 -lSDL2_ttf -lm
 
-      - name: Upload artifacts
+      - name: Get Commit Hash
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+        run: |
+          bash scripts/hash.sh
+
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: windows
+          name: "windows-${{ env.COMMIT_HASH }}"
           path: |
             ./source/ttt.exe
             ./source/SDL2.dll
 
-      - name: Upload artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: mac
+          name: "mac-${{ env.COMMIT_HASH }}"
           path: ./source/ttt-mac
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: "linux-${{ env.COMMIT_HASH }}"
+          path: ./source/ttt
