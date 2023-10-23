@@ -26,12 +26,12 @@ jobs:
       - name: Build for Windows
         run: |
           cd source/
-          gcc -std=c17 ttt.c -I./SDL2/include -L./SDL2/lib -L/usr/x86_64-w64-mingw32/lib -Wall -lmingw32 -lSDL2main -lSDL2 -o ttt.exe
+          x86_64-w64-mingw32-gcc -o ttt.exe ttt.c -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lm
 
       - name: Build for Mac
         run: |
           cd source/
-          gcc -o ttt-mac ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf
+          gcc -o ttt-mac ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2.2.4
