@@ -1,4 +1,4 @@
-# Tic Tac Toe Game
+# Tic Tac Toe Game ![Build Status](https://github.com/my3t/TicTacToe/workflows/Build/badge.svg)
 
 This is a simple Tic Tac Toe game written in C using the SDL2 library.
 
@@ -29,7 +29,8 @@ Note: You need the SDL2.dll file to run.
 2. Navigate to the project directory
 3. Compile the game: `gcc -o ttt ttt.c -lSDL2`
 4. Run the game: `./ttt`
-l
+   l
+
 ### Mac
 
 1. Install [Homebrew](https://brew.sh/)
