@@ -1,5 +1,5 @@
 // TODO: validation for input
-// TODO: game type specific modules in seperate
+// TODO: game type specific modules in seperate files
 // TODO: spruce up GUI
 
 #include <stdio.h>
@@ -61,9 +61,9 @@ int main() {
 
     // TODO: if can afford, make this more modular (split into functions)
     // DONT SPLIT INTO FUNCTIONS UNTIL DESIGN IS FINALISED
-
     while (game) {
         drawBoard(renderer, board); // draw board for the first time
+        
         if (gameType == TWO_PLAYER_GAME) { // check game type
             for (turn = 0; turn < 9 && win(board) == EMPTY_SYMBOL; ++turn) { // loop until turns finish or there is no win
                 if (player == X_SYMBOL) { // check current player type
@@ -246,7 +246,7 @@ int minimax(char board[9], char player) {
 }
 
 char win(const char board[9]) {
-	// determines if a player has won, returns 0 otherwise.
+	// determines if a player has won, returns empty symbol otherwise.
 	unsigned int wins[8][3] = { {2, 4, 6}, {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 4, 8}  }; // win states
 	for (int i = 0; i < 8; ++i) {
         if (board[wins[i][0]] != EMPTY_SYMBOL &&
