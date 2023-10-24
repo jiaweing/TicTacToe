@@ -6,19 +6,14 @@
 #include <SDL2/SDL.h>
 #include <math.h>
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
-#define BOARD_SIZE 300
-#define TILE_SIZE 100
-#define LINE_WIDTH 10
+#include "include/variables/global.c"
 
-#define EMPTY_SYMBOL 'b'
-#define X_SYMBOL 'x'
-#define O_SYMBOL 'o'
+#include "include/functions/win.c"
+#include "include/ai/minimax.c"
+#include "include/functions/logic.c"
 
-#define TWO_PLAYER_GAME 0
-#define MINIMAX_GAME 1
-#define AI_GAME 2
+#include "include/gui/board.c"
+#include "include/gui/mainmenu.c"
 
 void drawBoard(SDL_Renderer *renderer, const char board[9]);
 void drawEllipse(SDL_Renderer *renderer, int x, int y, int rx, int ry);
@@ -150,163 +145,4 @@ int main(int argc, char *argv[])
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;
-}
-
-void drawBoard(SDL_Renderer *renderer, const char board[9])
-{
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderClear(renderer);
-
-    SDL_Rect board_rect = {SCREEN_WIDTH / 2 - BOARD_SIZE / 2, SCREEN_HEIGHT / 2 - BOARD_SIZE / 2, BOARD_SIZE, BOARD_SIZE};
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderDrawRect(renderer, &board_rect);
-
-    for (int i = 0; i < 9; ++i)
-    {
-        int row = i % 3;
-        int col = i / 3;
-        SDL_Rect tileRect = {board_rect.x + row * TILE_SIZE, board_rect.y + col * TILE_SIZE, TILE_SIZE, TILE_SIZE};
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderDrawRect(renderer, &tileRect);
-
-        if (board[i] == X_SYMBOL)
-        {
-            SDL_RenderDrawLine(renderer, tileRect.x + LINE_WIDTH, tileRect.y + LINE_WIDTH, tileRect.x + TILE_SIZE - LINE_WIDTH, tileRect.y + TILE_SIZE - LINE_WIDTH);
-            SDL_RenderDrawLine(renderer, tileRect.x + TILE_SIZE - LINE_WIDTH, tileRect.y + LINE_WIDTH, tileRect.x + LINE_WIDTH, tileRect.y + TILE_SIZE - LINE_WIDTH);
-        }
-        else if (board[i] == O_SYMBOL)
-        {
-            drawEllipse(renderer, tileRect.x + TILE_SIZE / 2, tileRect.y + TILE_SIZE / 2, TILE_SIZE / 2 - LINE_WIDTH, TILE_SIZE / 2 - LINE_WIDTH);
-        }
-    }
-
-    SDL_RenderPresent(renderer);
-}
-
-void drawEllipse(SDL_Renderer *renderer, int x, int y, int rx, int ry)
-{
-    double angle, x1, y1, x2, y2;
-
-    for (int i = 0; i < 360; i++)
-    {
-        angle = i * M_PI / 180;
-        x1 = rx * cos(angle);
-        y1 = ry * sin(angle);
-        x2 = x1 * cos(angle) - y1 * sin(angle) + x;
-        y2 = x1 * sin(angle) + y1 * cos(angle) + y;
-        SDL_RenderDrawPoint(renderer, x2, y2);
-    }
-}
-
-void clearScreen(SDL_Renderer *renderer)
-{
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderClear(renderer);
-}
-
-void playerMove(char symbol, char board[9])
-{
-    SDL_Event event;
-    int done = 0;
-
-    // Poll for event
-    while (!done)
-    {
-        while (SDL_PollEvent(&event))
-        {
-            switch (event.type)
-            {
-            case SDL_MOUSEBUTTONDOWN:
-                if (event.button.button == SDL_BUTTON_LEFT)
-                {
-                    int x, y;
-                    SDL_GetMouseState(&x, &y);
-                    if (x >= SCREEN_WIDTH / 2 - BOARD_SIZE / 2 && x < SCREEN_WIDTH / 2 + BOARD_SIZE / 2 &&
-                        y >= SCREEN_HEIGHT / 2 - BOARD_SIZE / 2 && y < SCREEN_HEIGHT / 2 + BOARD_SIZE / 2)
-                    {
-                        int row = (y - (SCREEN_HEIGHT / 2 - BOARD_SIZE / 2)) / TILE_SIZE;
-                        int col = (x - (SCREEN_WIDTH / 2 - BOARD_SIZE / 2)) / TILE_SIZE;
-                        int pos = (row * 3) + col;
-                        if (board[pos] == EMPTY_SYMBOL)
-                        {
-                            board[pos] = symbol;
-                            done = 1;
-                        }
-                    }
-                }
-                break;
-            case SDL_QUIT:
-                exit(0);
-                break;
-            }
-        }
-    }
-}
-
-void computerMove(char board[9])
-{
-    int move = -1;
-    int score = -2;
-    int i;
-    for (i = 0; i < 9; ++i)
-    {
-        if (board[i] == EMPTY_SYMBOL)
-        {
-            board[i] = X_SYMBOL;
-            int tempScore = -minimax(board, O_SYMBOL);
-            board[i] = EMPTY_SYMBOL;
-            if (tempScore > score)
-            {
-                score = tempScore;
-                move = i;
-            }
-        }
-    }
-
-    // returns a score based on minimax tree at a given node.
-    board[move] = X_SYMBOL;
-}
-
-// something's not working here
-int minimax(char board[9], char player)
-{
-    // How is the position like for player (their turn) on board?
-    char winner = win(board);
-    if (winner != EMPTY_SYMBOL)
-        return winner == X_SYMBOL ? 1 : -1;
-
-    int move = -1;
-    int score = -2; // Losing moves are preferred to no move
-    for (int i = 0; i < 9; ++i)
-    { // For all moves
-        if (board[i] == EMPTY_SYMBOL)
-        {                      // If legal
-            board[i] = player; // Try the move
-            int thisScore = -minimax(board, player == X_SYMBOL ? O_SYMBOL : X_SYMBOL);
-            if (thisScore > score)
-            {
-                score = thisScore;
-                move = i;
-            }                        // Pick the one that's worst for the opponent
-            board[i] = EMPTY_SYMBOL; // Reset board after try
-        }
-    }
-
-    if (move == -1)
-        return 0;
-    return score;
-}
-
-char win(const char board[9])
-{
-    // determines if a player has won, returns 0 otherwise.
-    unsigned int wins[8][3] = {{2, 4, 6}, {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 4, 8}}; // win states
-    for (int i = 0; i < 8; ++i)
-    {
-        if (board[wins[i][0]] != EMPTY_SYMBOL &&
-            board[wins[i][0]] == board[wins[i][1]] &&
-            board[wins[i][0]] == board[wins[i][2]])
-            return board[wins[i][0]];
-    }
-    return EMPTY_SYMBOL;
 }
