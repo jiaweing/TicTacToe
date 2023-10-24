@@ -56,9 +56,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    printf("Input game type:\n-----\n0 - Player vs Player\n1 - Minimax AI Game\n2 - Dataset AI Game \n");
+    scanf("%i", &gameType);
+
     // TODO: if can afford, make this more modular (split into functions)
     // DONT SPLIT INTO FUNCTIONS UNTIL DESIGN IS FINALISED
-
     while (game)
     {
         drawBoard(renderer, board); // draw board for the first time
@@ -133,6 +135,7 @@ int main(int argc, char *argv[])
         else
         {
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "AI Mode", "Mode is still under construction!", window);
+            game = 0;
         }
 
         // reset game
