@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     while (game)
     {
         drawBoard(renderer, board); // draw board for the first time
-        
+
         if (gameType == TWO_PLAYER_GAME)
         { // check game type
             for (turn = 0; turn < 9 && win(board) == EMPTY_SYMBOL; ++turn)
