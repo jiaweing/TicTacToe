@@ -106,8 +106,8 @@ int main(int argc, char *argv[])
             {
                 if (player == X_SYMBOL)
                 {
-                    computerMove(board);
-                    player = O_SYMBOL;
+                    playerMove(O_SYMBOL, board);
+                    player = X_SYMBOL;
                 }
                 else
                 {
