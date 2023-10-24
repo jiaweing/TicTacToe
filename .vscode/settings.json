@@ -1,3 +1,8 @@
 {
-  "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe"
+  "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
+  "files.associations": {
+    "*.embeddedhtml": "html",
+    "*.titan": "SourcePawn",
+    "sdl.h": "c"
+  }
 }

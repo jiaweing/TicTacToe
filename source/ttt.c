@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <math.h>
 
 #include "include/variables/global.c"
@@ -55,6 +56,24 @@ int main(int argc, char *argv[])
         SDL_Quit();
         return 1;
     }
+
+    printf("Before TTF_Init\n");
+    if (TTF_Init() != 0)
+    {
+        printf("TTF_Init Error: %s\n", TTF_GetError());
+        return 1;
+    }
+    printf("After TTF_Init\n");
+
+    // Load the font
+    printf("Before TTF_OpenFont\n");
+    TTF_Font *font = TTF_OpenFont("fonts/Inter-Regular.ttf", 24);
+    if (!font)
+    {
+        printf("TTF_OpenFont: %s\n", TTF_GetError());
+        exit(2);
+    }
+    printf("After TTF_OpenFont\n");
 
     // TODO: if can afford, make this more modular (split into functions)
     // DONT SPLIT INTO FUNCTIONS UNTIL DESIGN IS FINALISED
