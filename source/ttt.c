@@ -1,5 +1,5 @@
 // TODO: validation for input
-// TODO: game type specific modules in seperate
+// TODO: game type specific modules in seperate files
 // TODO: spruce up GUI
 
 #include <stdio.h>
@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
     while (game)
     {
         drawBoard(renderer, board); // draw board for the first time
+        
         if (gameType == TWO_PLAYER_GAME)
         { // check game type
             for (turn = 0; turn < 9 && win(board) == EMPTY_SYMBOL; ++turn)
