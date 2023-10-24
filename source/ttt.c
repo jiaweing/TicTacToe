@@ -20,7 +20,7 @@ void drawEllipse(SDL_Renderer *renderer, int x, int y, int rx, int ry);
 void clearScreen(SDL_Renderer *renderer);
 void playerMove(char symbol, char board[9]);
 void computerMove(char board[9]);
-int minimax(char board[9], char player);
+int minimax(char board[9], char player, int depth, int alpha, int beta);
 char win(const char board[9]);
 
 int main(int argc, char *argv[])
@@ -100,6 +100,7 @@ int main(int argc, char *argv[])
         {
             for (turn = 0; turn < 9 && win(board) == EMPTY_SYMBOL; ++turn)
             {
+                // printf("new turn\n");
                 if (player == X_SYMBOL)
                 {
                     computerMove(board);

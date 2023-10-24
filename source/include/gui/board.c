@@ -1,3 +1,24 @@
+void clearScreen(SDL_Renderer *renderer)
+{
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderClear(renderer);
+}
+
+void drawEllipse(SDL_Renderer *renderer, int x, int y, int rx, int ry)
+{
+	double angle, x1, y1, x2, y2;
+
+	for (int i = 0; i < 360; i++)
+	{
+		angle = i * M_PI / 180;
+		x1 = rx * cos(angle);
+		y1 = ry * sin(angle);
+		x2 = x1 * cos(angle) - y1 * sin(angle) + x;
+		y2 = x1 * sin(angle) + y1 * cos(angle) + y;
+		SDL_RenderDrawPoint(renderer, x2, y2);
+	}
+}
+
 void drawBoard(SDL_Renderer *renderer, const char board[9])
 {
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -27,25 +48,4 @@ void drawBoard(SDL_Renderer *renderer, const char board[9])
 	}
 
 	SDL_RenderPresent(renderer);
-}
-
-void drawEllipse(SDL_Renderer *renderer, int x, int y, int rx, int ry)
-{
-	double angle, x1, y1, x2, y2;
-
-	for (int i = 0; i < 360; i++)
-	{
-		angle = i * M_PI / 180;
-		x1 = rx * cos(angle);
-		y1 = ry * sin(angle);
-		x2 = x1 * cos(angle) - y1 * sin(angle) + x;
-		y2 = x1 * sin(angle) + y1 * cos(angle) + y;
-		SDL_RenderDrawPoint(renderer, x2, y2);
-	}
-}
-
-void clearScreen(SDL_Renderer *renderer)
-{
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderClear(renderer);
 }
