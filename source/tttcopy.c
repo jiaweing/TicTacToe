@@ -44,7 +44,7 @@ void drawMenu(SDL_Renderer *renderer)
     SDL_Rect textRect;
 
     // Draw the title
-    textSurface = TTF_RenderText_Solid(font, "Hello, World", textColor);
+    textSurface = TTF_RenderText_Solid(font, "Tic Tac Toe", textColor);
     textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     textRect.x = SCREEN_WIDTH / 2 - textSurface->w / 2;
     textRect.y = 50;
@@ -54,8 +54,18 @@ void drawMenu(SDL_Renderer *renderer)
 
     // Draw the menu options (PVP, PVAI, Exit)
     char *menuOptions[] = {"PVP", "PVAI", "Exit"};
+    SDL_Color buttonColors[] = {{0, 100, 200}, {0, 200, 100}, {200, 100, 0}};
+    SDL_Rect buttonRects[3];
     for (int i = 0; i < 3; i++)
     {
+        // Define button colors and positions
+        SDL_SetRenderDrawColor(renderer, buttonColors[i].r, buttonColors[i].g, buttonColors[i].b, 255);
+        buttonRects[i].x = SCREEN_WIDTH / 2 - 100;
+        buttonRects[i].y = 150 + i * 100;
+        buttonRects[i].w = 200;
+        buttonRects[i].h = 50;
+        SDL_RenderFillRect(renderer, &buttonRects[i]);
+
         textSurface = TTF_RenderText_Solid(font, menuOptions[i], textColor);
         textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
         textRect.x = SCREEN_WIDTH / 2 - textSurface->w / 2;
@@ -71,7 +81,8 @@ void drawMenu(SDL_Renderer *renderer)
     SDL_DestroyTexture(textTexture);
 }
 // Function to handle the PvAI game
-void playPvAI(char board[9], SDL_Renderer* renderer, SDL_Window* window) {
+void playPvAI(char board[9], SDL_Renderer *renderer, SDL_Window *window)
+{
     int turn = 0;
     char player = X_SYMBOL;
 
@@ -113,7 +124,6 @@ void playPvAI(char board[9], SDL_Renderer* renderer, SDL_Window* window) {
         board[i] = 'b';
     }
 }
-
 
 int main(int argc, char *argv[])
 {
@@ -223,9 +233,11 @@ int main(int argc, char *argv[])
                                 SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "The game ended in a draw...", window);
                             }
                         }
-
                     }
-                    else if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
+                }
+                else if (y >= 250 && y < 300) // PVAI button
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
                     {
                         drawBoard(board);
                         // PVAI clicked
@@ -235,9 +247,11 @@ int main(int argc, char *argv[])
                         {
                             playPvAI(board, _renderer, window);
                         }
-                            
                     }
-                    else if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 3)
+                }
+                else
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 3)
                     {
                         // Exit clicked
                         printf("Exit clicked\n");
