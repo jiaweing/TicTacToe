@@ -44,6 +44,7 @@ jobs:
           path: |
             ./source/ttt.exe
             ./source/SDL2.dll
+            ./source/SDL2_ttf.dll
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2.2.4
