@@ -34,9 +34,9 @@ Note: You need the SDL2.dll file to run.
 ### Mac
 
 1. Install [Homebrew](https://brew.sh/)
-2. Install SDL2 and SDL2_ttf libraries: `brew install sdl2`
+2. Install SDL2 and SDL2_ttf libraries: `brew install sdl2 sdl2_ttf`
 3. Navigate to the project directory
-4. Compile the game: `gcc -o ttt ttt.c -I/Library/Frameworks/SDL2.framework/Headers -F/Library/Frameworks -framework SDL2 -rpath /Library/Frameworks`
+4. Compile the game: `gcc -o ttt ttt.c -I/Library/Frameworks/SDL2.framework/Headers -I/Library/Frameworks/SDL2_ttf.framework/Headers -F/Library/Frameworks -framework SDL2 -framework SDL2_ttf -rpath /Library/Frameworks`
 5. Run the game: `./ttt`
 
 ## How to Play
@@ -45,10 +45,3 @@ Note: You need the SDL2.dll file to run.
 2. Click on an empty tile to place your mark.
 3. The first player to get three marks in a row (horizontally, vertically, or diagonally) wins.
 4. If all tiles are filled and no player has won, the game is a tie.
-
-## To Do
-
-- [ ] Versus AI
-- [ ] Mode Selection Menu
-- [ ] Display Current Player
-- [ ] Scoring System

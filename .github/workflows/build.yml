@@ -37,21 +37,23 @@ jobs:
         run: |
           bash scripts/hash.sh
 
-      - name: Upload Artifacts
+      - name: Upload Artifacts - Windows
         uses: actions/upload-artifact@v2.2.4
         with:
           name: "windows-${{ env.COMMIT_HASH }}"
           path: |
             ./source/ttt.exe
             ./source/SDL2.dll
+            ./source/SDL2_ttf.dll
+            ./source/fonts
 
-      - name: Upload Artifacts
+      - name: Upload Artifacts - Mac
         uses: actions/upload-artifact@v2.2.4
         with:
           name: "mac-${{ env.COMMIT_HASH }}"
           path: ./source/ttt-mac
 
-      - name: Upload Artifacts
+      - name: Upload Artifacts - Linux
         uses: actions/upload-artifact@v2.2.4
         with:
           name: "linux-${{ env.COMMIT_HASH }}"

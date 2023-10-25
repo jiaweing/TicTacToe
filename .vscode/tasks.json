@@ -10,7 +10,15 @@
         "-g",
         "${file}",
         "-o",
-        "${fileDirname}\\${fileBasenameNoExtension}.exe"
+        "${fileDirname}\\${fileBasenameNoExtension}.exe",
+        "-std=c17",
+        "-IC:\\Users\\User\\Desktop\\Desktop\\SIT\\CSC1103\\Project\\SDL2\\include",
+        "-LC:\\Users\\User\\Desktop\\Desktop\\SIT\\CSC1103\\Project\\SDL2\\lib",
+        "-Wall",
+        "-lmingw32",
+        "-lSDL2main",
+        "-lSDL2",
+        "-lSDL2_ttf",
       ],
       "options": {
         "cwd": "${fileDirname}"
