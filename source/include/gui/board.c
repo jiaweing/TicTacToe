@@ -32,7 +32,6 @@ void drawBoard(const char board[9])
 
 void drawCurrentPlayer(char currentPlayer)
 {
-	printf("Current Player: %c\n", currentPlayer);
 	SDL_Rect textRect = {10, 10, 0, 0};
 	SDL_Color textColor = {0, 0, 0, 255};
 
