@@ -8,9 +8,10 @@
 #define X_SYMBOL 'X'
 #define O_SYMBOL 'O'
 
-#define TWO_PLAYER_GAME 0
-#define MINIMAX_GAME 1
-#define AI_GAME 2
+#define MAIN_MENU 0
+#define TWO_PLAYER_GAME 1
+#define MINIMAX_GAME 2
+#define AI_GAME 3
 
 SDL_Renderer *_renderer;
 TTF_Font *_font;
