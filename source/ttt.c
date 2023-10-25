@@ -16,9 +16,9 @@
 #include "include/gui/board.c"
 #include "include/gui/mainmenu.c"
 
-void drawBoard(SDL_Renderer *renderer, const char board[9]);
-void drawEllipse(SDL_Renderer *renderer, int x, int y, int rx, int ry);
-void clearScreen(SDL_Renderer *renderer);
+void drawBoard(const char board[9]);
+void drawEllipse(int x, int y, int rx, int ry);
+void clearScreen();
 void playerMove(char symbol, char board[9]);
 void computerMove(char board[9]);
 int minimax(char board[9], char player);
@@ -39,6 +39,15 @@ int main(int argc, char *argv[])
         printf("SDL_Init Error: %s\n", SDL_GetError());
         return 1;
     }
+
+    // Initialize SDL_ttf
+    if (TTF_Init() != 0)
+    {
+        printf("TTF_Init Error: %s\n", TTF_GetError());
+        SDL_Quit();
+        return 1;
+    }
+
     // Create window
     SDL_Window *window = SDL_CreateWindow("Tic Tac Toe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     if (window == NULL)
@@ -48,8 +57,8 @@ int main(int argc, char *argv[])
         return 1;
     }
     // Create renderer
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (renderer == NULL)
+    _renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (_renderer == NULL)
     {
         printf("SDL_CreateRenderer Error: %s\n", SDL_GetError());
         SDL_DestroyWindow(window);
@@ -57,30 +66,22 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    printf("Before TTF_Init\n");
-    if (TTF_Init() != 0)
+    _font = TTF_OpenFont("fonts/Inter-Regular.ttf", 24);
+    if (_font == NULL)
     {
-        printf("TTF_Init Error: %s\n", TTF_GetError());
+        printf("TTF_OpenFont Error: %s\n", TTF_GetError());
+        SDL_DestroyRenderer(_renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
         return 1;
     }
-    printf("After TTF_Init\n");
-
-    // Load the font
-    printf("Before TTF_OpenFont\n");
-    TTF_Font *font = TTF_OpenFont("fonts/Inter-Regular.ttf", 24);
-    if (!font)
-    {
-        printf("TTF_OpenFont: %s\n", TTF_GetError());
-        exit(2);
-    }
-    printf("After TTF_OpenFont\n");
 
     // TODO: if can afford, make this more modular (split into functions)
     // DONT SPLIT INTO FUNCTIONS UNTIL DESIGN IS FINALISED
 
     while (game)
     {
-        drawBoard(renderer, board); // draw board for the first time
+        drawBoard(board); // draw board for the first time
 
         if (gameType == TWO_PLAYER_GAME)
         { // check game type
@@ -97,7 +98,7 @@ int main(int argc, char *argv[])
                     player = X_SYMBOL;
                 }
 
-                drawBoard(renderer, board); // redraw board after changes
+                drawBoard(board); // redraw board after changes
             }
 
             char winner = win(board); // check winner once got winner or out of turns
@@ -130,7 +131,7 @@ int main(int argc, char *argv[])
                     player = X_SYMBOL;
                 }
 
-                drawBoard(renderer, board);
+                drawBoard(board);
             }
 
             char winner = win(board);
@@ -161,8 +162,11 @@ int main(int argc, char *argv[])
         }
     }
 
-    SDL_DestroyRenderer(renderer);
+    TTF_CloseFont(_font);
+    TTF_Quit();
+    SDL_DestroyRenderer(_renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
     return 0;
 }

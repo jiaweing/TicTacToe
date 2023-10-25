@@ -11,3 +11,6 @@
 #define TWO_PLAYER_GAME 0
 #define MINIMAX_GAME 1
 #define AI_GAME 2
+
+SDL_Renderer *_renderer;
+TTF_Font *_font;

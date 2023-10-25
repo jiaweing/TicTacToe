@@ -3,6 +3,8 @@ void playerMove(char symbol, char board[9])
 	SDL_Event event;
 	int done = 0;
 
+	drawCurrentPlayer(symbol);
+
 	// Poll for event
 	while (!done)
 	{
@@ -39,6 +41,8 @@ void playerMove(char symbol, char board[9])
 
 void computerMove(char board[9])
 {
+	drawCurrentPlayer(X_SYMBOL);
+
 	int move = -1;
 	int score = -2;
 	int i;
