@@ -15,20 +15,41 @@ void drawBoard(const char board[9])
 		SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
 		SDL_RenderDrawRect(_renderer, &tileRect);
 
-		if (board[i] == X_SYMBOL)
+	 if (board[i] == X_SYMBOL)
 		{
-			SDL_RenderDrawLine(_renderer, tileRect.x + LINE_WIDTH, tileRect.y + LINE_WIDTH, tileRect.x + TILE_SIZE - LINE_WIDTH, tileRect.y + TILE_SIZE - LINE_WIDTH);
-			SDL_RenderDrawLine(_renderer, tileRect.x + TILE_SIZE - LINE_WIDTH, tileRect.y + LINE_WIDTH, tileRect.x + LINE_WIDTH, tileRect.y + TILE_SIZE - LINE_WIDTH);
+			// Set the color for X
+			SDL_Color color = {255, 0, 0, 255};  // Red color
+			renderText("X", tileRect.x + TILE_SIZE / 2, tileRect.y + TILE_SIZE / 2, color);
 		}
 		else if (board[i] == O_SYMBOL)
 		{
-			drawEllipse(tileRect.x + TILE_SIZE / 2, tileRect.y + TILE_SIZE / 2, TILE_SIZE / 2 - LINE_WIDTH, TILE_SIZE / 2 - LINE_WIDTH);
+			// Set the color for O
+			SDL_Color color = {0, 155, 255, 255};  // Blue color
+			renderText("O", tileRect.x + TILE_SIZE / 2, tileRect.y + TILE_SIZE / 2, color);
 		}
 	}
 
 	drawCurrentPlayer(' ');
 	SDL_RenderPresent(_renderer);
 }
+
+void renderText(const char *text, int x, int y, SDL_Color color)
+{
+	SDL_Surface *textSurface = TTF_RenderText_Solid(_font, text, color);
+	SDL_Texture *textTexture = SDL_CreateTextureFromSurface(_renderer, textSurface);
+
+	SDL_Rect textRect;
+	textRect.x = x - textSurface->w / 2;
+	textRect.y = y - textSurface->h / 2;
+	textRect.w = textSurface->w;
+	textRect.h = textSurface->h;
+
+	SDL_RenderCopy(_renderer, textTexture, NULL, &textRect);
+
+	SDL_FreeSurface(textSurface);
+	SDL_DestroyTexture(textTexture);
+}
+
 
 void drawCurrentPlayer(char currentPlayer)
 {
@@ -49,21 +70,6 @@ void drawCurrentPlayer(char currentPlayer)
 	SDL_FreeSurface(textSurface);
 	SDL_DestroyTexture(textTexture);
 	SDL_RenderPresent(_renderer);
-}
-
-void drawEllipse(int x, int y, int rx, int ry)
-{
-	double angle, x1, y1, x2, y2;
-
-	for (int i = 0; i < 360; i++)
-	{
-		angle = i * M_PI / 180;
-		x1 = rx * cos(angle);
-		y1 = ry * sin(angle);
-		x2 = x1 * cos(angle) - y1 * sin(angle) + x;
-		y2 = x1 * sin(angle) + y1 * cos(angle) + y;
-		SDL_RenderDrawPoint(_renderer, x2, y2);
-	}
 }
 
 void clearScreen()

@@ -24,68 +24,7 @@ void computerMove(char board[9]);
 int minimax(char board[9], char player, int depth, int alpha, int beta);
 char win(const char board[9]);
 
-void drawMenu(SDL_Renderer *renderer)
-{
-    // Clear the screen
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
 
-    // Create a font (you should replace this with your own font)
-    TTF_Font *font = TTF_OpenFont("fonts/pcsenior.ttf", 42);
-    TTF_Font *btnfont = TTF_OpenFont("fonts/pcsenior.ttf", 36);
-    if (font == NULL)
-    {
-        fprintf(stderr, "TTF_OpenFont Error: %s\n", TTF_GetError());
-        return;
-    }
-
-    SDL_Color textColor = {255, 255, 255};
-    SDL_Surface *textSurface;
-    SDL_Texture *textTexture;
-    SDL_Rect textRect;
-
-    // Draw the title
-    textSurface = TTF_RenderText_Solid(font, "Tic Tac Toe", textColor);
-    textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    textRect.x = SCREEN_WIDTH / 2 - textSurface->w / 2;
-    textRect.y = 80;
-    textRect.w = textSurface->w;
-    textRect.h = textSurface->h;
-    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
-
-    // Draw the menu options (PVP, PVAI, Exit)
-    char *menuOptions[] = {"PvP", "Play to Lose", "PvAI", "Exit"};
-    SDL_Color buttonColors[] = {{0, 100, 200}, {0, 200, 100}, {200, 100, 0}, {200, 200, 0}};
-    SDL_Rect buttonRects[4];
-    for (int i = 0; i < 4; i++)
-    {
-        // Define button colors and positions
-        SDL_SetRenderDrawColor(renderer, buttonColors[i].r, buttonColors[i].g, buttonColors[i].b, 255);
-        buttonRects[i].x = SCREEN_WIDTH / 2 - 200;
-        buttonRects[i].y = 160 + i * 130;
-        buttonRects[i].w = 400;
-        buttonRects[i].h = 100;
-        // SDL_SetRenderDrawColor(renderer, 255, 255, 255,255); // Border color (black)
-        SDL_RenderFillRect(renderer, &buttonRects[i]);
-
-        textSurface = TTF_RenderText_Solid(btnfont, menuOptions[i], textColor);
-        textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-
-        // Center the text within the buttonRect
-        textRect.x = buttonRects[i].x + (buttonRects[i].w - textSurface->w) / 2;
-        textRect.y = buttonRects[i].y + (buttonRects[i].h - textSurface->h) / 2;
-        textRect.w = textSurface->w;
-        textRect.h = textSurface->h;
-
-        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
-    }
-
-    // Clean up resources
-    TTF_CloseFont(font);
-    TTF_CloseFont(btnfont);
-    SDL_FreeSurface(textSurface);
-    SDL_DestroyTexture(textTexture);
-}
 // Function to handle the PvAI game
 void playPvAI(char board[9], SDL_Renderer *renderer, SDL_Window *window)
 {
@@ -156,7 +95,7 @@ int main(int argc, char *argv[])
     }
 
     // Create window
-    SDL_Window *window = SDL_CreateWindow("Tic-Tac-Toe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    SDL_Window *window = SDL_CreateWindow("Tic Tac Toe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     if (window == NULL)
     {
         printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
@@ -183,6 +122,7 @@ int main(int argc, char *argv[])
         return 1;
     }
     SDL_Event event;
+    SDL_Rect buttonRects[4];
     // TODO: if can afford, make this more modular (split into functions)
     // DONT SPLIT INTO FUNCTIONS UNTIL DESIGN IS FINALISED
     while (game)
@@ -198,7 +138,7 @@ int main(int argc, char *argv[])
                 int x = event.button.x;
                 int y = event.button.y;
 
-                if (y >= 150 && y < 250)
+                if (y >= buttonRects[0].y && y < buttonRects[0].y + buttonRects[0].h && x >= buttonRects[0].x && x < buttonRects[0].x + buttonRects[0].w)
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50)
                     {
@@ -241,7 +181,7 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
-                else if (y >= 250 && y < 300) // PVAI button
+                else if (y >= buttonRects[1].y && y < buttonRects[1].y + buttonRects[1].h && x >= buttonRects[1].x && x < buttonRects[1].x + buttonRects[1].w) // PVAI button
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
                     {
@@ -255,12 +195,12 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
-                else if (y >= 300 && y < 400)
+                else if (y >= buttonRects[2].y && y < buttonRects[2].y + buttonRects[2].h && x >= buttonRects[2].x && x < buttonRects[2].x + buttonRects[2].w)
                 {
                     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "AI Mode", "Mode is still under construction!", window);
                     //     game = 0;
                 }
-                else
+                else if (y >= buttonRects[3].y && y < buttonRects[3].y + buttonRects[3].h && x >= buttonRects[3].x && x < buttonRects[3].x + buttonRects[3].w)
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 3)
                     {
@@ -285,7 +225,7 @@ int main(int argc, char *argv[])
         }
 
         // Draw the menu
-        drawMenu(_renderer);
+        drawMenu(_renderer, buttonRects);
 
         // Present the renderer
         SDL_RenderPresent(_renderer);
