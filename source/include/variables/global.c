@@ -5,8 +5,8 @@
 #define LINE_WIDTH 10
 
 #define EMPTY_SYMBOL 'b'
-#define X_SYMBOL 'x'
-#define O_SYMBOL 'o'
+#define X_SYMBOL 'X'
+#define O_SYMBOL 'O'
 
 #define TWO_PLAYER_GAME 0
 #define MINIMAX_GAME 1
@@ -14,3 +14,5 @@
 
 SDL_Renderer *_renderer;
 TTF_Font *_font;
+#define MAX_SCORE 1000
+#define MIN_SCORE -1000

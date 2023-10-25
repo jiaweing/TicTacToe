@@ -43,15 +43,14 @@ void computerMove(char board[9])
 {
 	drawCurrentPlayer(X_SYMBOL);
 
-	int move = -1;
-	int score = -2;
-	int i;
-	for (i = 0; i < 9; ++i)
+	int move = 0;
+	int score = MIN_SCORE;
+	for (int i = 0; i < 9; ++i)
 	{
 		if (board[i] == EMPTY_SYMBOL)
 		{
 			board[i] = X_SYMBOL;
-			int tempScore = -minimax(board, O_SYMBOL);
+			int tempScore = minimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
 			board[i] = EMPTY_SYMBOL;
 			if (tempScore > score)
 			{

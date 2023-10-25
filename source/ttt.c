@@ -21,7 +21,7 @@ void drawEllipse(int x, int y, int rx, int ry);
 void clearScreen();
 void playerMove(char symbol, char board[9]);
 void computerMove(char board[9]);
-int minimax(char board[9], char player);
+int minimax(char board[9], char player, int depth, int alpha, int beta);
 char win(const char board[9]);
 
 int main(int argc, char *argv[])
@@ -76,9 +76,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    printf("Input game type:\n-----\n0 - Player vs Player\n1 - Minimax AI Game\n2 - Dataset AI Game \n");
+    scanf("%i", &gameType);
+
     // TODO: if can afford, make this more modular (split into functions)
     // DONT SPLIT INTO FUNCTIONS UNTIL DESIGN IS FINALISED
-
     while (game)
     {
         drawBoard(board); // draw board for the first time
@@ -120,6 +122,7 @@ int main(int argc, char *argv[])
         {
             for (turn = 0; turn < 9 && win(board) == EMPTY_SYMBOL; ++turn)
             {
+                // printf("new turn\n");
                 if (player == X_SYMBOL)
                 {
                     computerMove(board);
@@ -152,6 +155,7 @@ int main(int argc, char *argv[])
         else
         {
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "AI Mode", "Mode is still under construction!", window);
+            game = 0;
         }
 
         // reset game

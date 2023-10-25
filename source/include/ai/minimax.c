@@ -1,29 +1,62 @@
-// something's not working here
-int minimax(char board[9], char player)
+int minimax(char board[9], char player, int depth, int alpha, int beta)
 {
-	// How is the position like for player (their turn) on board?
+	int bestScore = (player == X_SYMBOL) ? MIN_SCORE : MAX_SCORE;
 	char winner = win(board);
-	if (winner != EMPTY_SYMBOL)
-		return winner == X_SYMBOL ? 1 : -1;
-
-	int move = -1;
-	int score = -2; // Losing moves are preferred to no move
-	for (int i = 0; i < 9; ++i)
-	{ // For all moves
-		if (board[i] == EMPTY_SYMBOL)
-		{					   // If legal
-			board[i] = player; // Try the move
-			int thisScore = -minimax(board, player == X_SYMBOL ? O_SYMBOL : X_SYMBOL);
-			if (thisScore > score)
-			{
-				score = thisScore;
-				move = i;
-			}						 // Pick the one that's worst for the opponent
-			board[i] = EMPTY_SYMBOL; // Reset board after try
-		}
+	if (winner == X_SYMBOL) 
+	{
+		return MAX_SCORE;
 	}
+	else if (winner == O_SYMBOL)
+	{
+		return MIN_SCORE;
+	}
+	else
+	{
+		for (int i = 0; i < 9; ++i)
+		{
+			if (board[i] == EMPTY_SYMBOL)
+			{
+                board[i] = player;
 
-	if (move == -1)
-		return 0;
-	return score;
+				if (player == X_SYMBOL) // max
+				{
+					int score = minimax(board, O_SYMBOL, depth + 1, alpha, beta);
+					if (bestScore < score)
+					{
+						bestScore = score - depth * 10;
+
+						// Check if this branch's best move is worse than the best
+						// option of a previously search branch. If it is, skip it
+						alpha = alpha > bestScore ? alpha : bestScore;
+						if (beta <= alpha) 
+						{ 
+                            board[i] = EMPTY_SYMBOL;
+							break;
+						}
+					}
+				} 
+				else // min
+				{
+					int score = minimax(board, X_SYMBOL, depth + 1, alpha, beta);
+					if (bestScore > score)
+					{
+						bestScore = score + depth * 10;
+
+						// Check if this branch's best move is worse than the best
+						// option of a previously search branch. If it is, skip it
+						beta = beta < bestScore ? beta : bestScore;
+						if (beta <= alpha) 
+						{ 
+                            board[i] = EMPTY_SYMBOL;
+							break;
+						}
+					}
+				}
+
+				board[i] = EMPTY_SYMBOL;
+			}		
+		}
+
+		return bestScore;
+	}
 }
