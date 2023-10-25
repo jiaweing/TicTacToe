@@ -40,17 +40,17 @@ void playerMove(char symbol, char board[9])
 void computerMove(char board[9])
 {
 	int move = 0;
-	int score = MIN_SCORE;
+	int bestScore = MIN_SCORE;
 	for (int i = 0; i < 9; ++i)
 	{
 		if (board[i] == EMPTY_SYMBOL)
 		{
 			board[i] = X_SYMBOL;
-			int tempScore = minimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
+			int score = minimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
 			board[i] = EMPTY_SYMBOL;
-			if (tempScore > score)
+			if (score > bestScore)
 			{
-				score = tempScore;
+				bestScore = score;
 				move = i;
 			}
 		}

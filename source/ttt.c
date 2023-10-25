@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     int gameType = MINIMAX_GAME;
     int game = 1;
     int turn = 0;
-    char player = X_SYMBOL;
+    char player = O_SYMBOL;
 
     // TODO: make into window intialisation into function
     // Initialize SDL
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
         }
 
         // reset game
-        player = X_SYMBOL;
+        player = O_SYMBOL;
         for (int i = 0; i < 9; ++i)
         {
             board[i] = 'b';
