@@ -31,7 +31,8 @@ void drawMenu(SDL_Renderer *renderer)
     SDL_RenderClear(renderer);
 
     // Create a font (you should replace this with your own font)
-    TTF_Font *font = TTF_OpenFont("fonts/pcsenior.ttf", 36);
+    TTF_Font *font = TTF_OpenFont("fonts/pcsenior.ttf", 42);
+    TTF_Font *btnfont = TTF_OpenFont("fonts/pcsenior.ttf", 36);
     if (font == NULL)
     {
         fprintf(stderr, "TTF_OpenFont Error: %s\n", TTF_GetError());
@@ -47,36 +48,41 @@ void drawMenu(SDL_Renderer *renderer)
     textSurface = TTF_RenderText_Solid(font, "Tic Tac Toe", textColor);
     textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     textRect.x = SCREEN_WIDTH / 2 - textSurface->w / 2;
-    textRect.y = 50;
+    textRect.y = 80;
     textRect.w = textSurface->w;
     textRect.h = textSurface->h;
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
 
     // Draw the menu options (PVP, PVAI, Exit)
-    char *menuOptions[] = {"PVP", "PVAI", "Exit"};
-    SDL_Color buttonColors[] = {{0, 100, 200}, {0, 200, 100}, {200, 100, 0}};
-    SDL_Rect buttonRects[3];
-    for (int i = 0; i < 3; i++)
+    char *menuOptions[] = {"PvP", "Play to Lose", "PvAI", "Exit"};
+    SDL_Color buttonColors[] = {{0, 100, 200}, {0, 200, 100}, {200, 100, 0}, {200, 200, 0}};
+    SDL_Rect buttonRects[4];
+    for (int i = 0; i < 4; i++)
     {
         // Define button colors and positions
         SDL_SetRenderDrawColor(renderer, buttonColors[i].r, buttonColors[i].g, buttonColors[i].b, 255);
-        buttonRects[i].x = SCREEN_WIDTH / 2 - 100;
-        buttonRects[i].y = 150 + i * 100;
-        buttonRects[i].w = 200;
-        buttonRects[i].h = 50;
+        buttonRects[i].x = SCREEN_WIDTH / 2 - 200;
+        buttonRects[i].y = 160 + i * 130;
+        buttonRects[i].w = 400;
+        buttonRects[i].h = 100;
+        // SDL_SetRenderDrawColor(renderer, 255, 255, 255,255); // Border color (black)
         SDL_RenderFillRect(renderer, &buttonRects[i]);
 
-        textSurface = TTF_RenderText_Solid(font, menuOptions[i], textColor);
+        textSurface = TTF_RenderText_Solid(btnfont, menuOptions[i], textColor);
         textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-        textRect.x = SCREEN_WIDTH / 2 - textSurface->w / 2;
-        textRect.y = 150 + i * 100;
+
+        // Center the text within the buttonRect
+        textRect.x = buttonRects[i].x + (buttonRects[i].w - textSurface->w) / 2;
+        textRect.y = buttonRects[i].y + (buttonRects[i].h - textSurface->h) / 2;
         textRect.w = textSurface->w;
         textRect.h = textSurface->h;
+
         SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     }
 
     // Clean up resources
     TTF_CloseFont(font);
+    TTF_CloseFont(btnfont);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
 }
@@ -150,7 +156,7 @@ int main(int argc, char *argv[])
     }
 
     // Create window
-    SDL_Window *window = SDL_CreateWindow("Tic Tac Toe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    SDL_Window *window = SDL_CreateWindow("Tic-Tac-Toe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     if (window == NULL)
     {
         printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
@@ -248,6 +254,11 @@ int main(int argc, char *argv[])
                             playPvAI(board, _renderer, window);
                         }
                     }
+                }
+                else if (y >= 300 && y < 400)
+                {
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "AI Mode", "Mode is still under construction!", window);
+                    //     game = 0;
                 }
                 else
                 {
