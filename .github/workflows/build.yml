@@ -45,6 +45,7 @@ jobs:
             ./source/ttt.exe
             ./source/SDL2.dll
             ./source/SDL2_ttf.dll
+            ./source/fonts
 
       - name: Upload Artifacts - Mac
         uses: actions/upload-artifact@v2.2.4
