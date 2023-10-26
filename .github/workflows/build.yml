@@ -26,12 +26,7 @@ jobs:
       - name: Build for Mac (Intel)
         run: |
           cd source/
-          gcc -o ttt-mac-intel ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm -arch x86_64
-
-      - name: Build for Mac (Apple Silicon)
-        run: |
-          cd source/
-          gcc -o ttt-mac-arm ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm -arch arm64
+          gcc -o ttt-mac-intel ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm
 
       - name: Build for Linux
         run: |
@@ -58,14 +53,6 @@ jobs:
           name: "mac-intel-${{ env.COMMIT_HASH }}"
           path: |
             ./source/ttt-mac-intel
-            ./source/fonts
-
-      - name: Upload Artifacts - Mac (Apple Silicon)
-        uses: actions/upload-artifact@v2.2.4
-        with:
-          name: "mac-arm-${{ env.COMMIT_HASH }}"
-          path: |
-            ./source/ttt-mac-arm
             ./source/fonts
 
       - name: Upload Artifacts - Linux
