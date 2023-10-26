@@ -22,7 +22,7 @@ Note: You need the SDL2.dll, SDL2_ttf.dll and fonts to run.
 1. Install [MSYS2](https://www.msys2.org/)
 2. Open MSYS2 terminal
 3. Navigate to the project directory
-4. Compile the game: `gcc -std=c17 ttt.c -I<project path>\SDL2\include -L<project path>\SDL2\lib -Wall -lmingw32 -lSDL2main -lSDL2 -o ttt`
+4. Compile the game: `gcc -std=c17 ttt.c -I<project path>\SDL2\include -L<project path>\SDL2\lib -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o ttt`
 5. Run the game: `./ttt.exe`
 
 ### Linux
