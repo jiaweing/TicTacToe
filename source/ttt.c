@@ -7,6 +7,15 @@
 #include <SDL2/SDL_ttf.h>
 #include <math.h>
 
+void drawBoard(const char board[9]);
+void renderText(const char *text, int x, int y, SDL_Color color);
+void drawCurrentPlayer(char currentPlayer);
+void clearScreen();
+void playerMove(char symbol, char board[9]);
+void computerMove(char board[9]);
+int minimax(char board[9], char player, int depth, int alpha, int beta);
+char win(const char board[9]);
+
 #include "include/variables/global.c"
 
 #include "include/functions/win.c"
@@ -15,14 +24,6 @@
 
 #include "include/gui/board.c"
 #include "include/gui/mainmenu.c"
-
-void drawBoard(const char board[9]);
-void drawEllipse(int x, int y, int rx, int ry);
-void clearScreen();
-void playerMove(char symbol, char board[9]);
-void computerMove(char board[9]);
-int minimax(char board[9], char player, int depth, int alpha, int beta);
-char win(const char board[9]);
 
 int main(int argc, char *argv[])
 {

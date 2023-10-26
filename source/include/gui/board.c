@@ -15,16 +15,16 @@ void drawBoard(const char board[9])
 		SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
 		SDL_RenderDrawRect(_renderer, &tileRect);
 
-	 if (board[i] == X_SYMBOL)
+		if (board[i] == X_SYMBOL)
 		{
 			// Set the color for X
-			SDL_Color color = {255, 0, 0, 255};  // Red color
+			SDL_Color color = {255, 0, 0, 255}; // Red color
 			renderText("X", tileRect.x + TILE_SIZE / 2, tileRect.y + TILE_SIZE / 2, color);
 		}
 		else if (board[i] == O_SYMBOL)
 		{
 			// Set the color for O
-			SDL_Color color = {0, 155, 255, 255};  // Blue color
+			SDL_Color color = {0, 155, 255, 255}; // Blue color
 			renderText("O", tileRect.x + TILE_SIZE / 2, tileRect.y + TILE_SIZE / 2, color);
 		}
 	}
@@ -49,7 +49,6 @@ void renderText(const char *text, int x, int y, SDL_Color color)
 	SDL_FreeSurface(textSurface);
 	SDL_DestroyTexture(textTexture);
 }
-
 
 void drawCurrentPlayer(char currentPlayer)
 {

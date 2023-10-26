@@ -23,10 +23,15 @@ jobs:
           cd source/
           x86_64-w64-mingw32-gcc -o ttt.exe ttt.c -I../SDL2/include -L../SDL2/lib -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lm
 
-      - name: Build for Mac
+      - name: Build for Mac (Intel)
         run: |
           cd source/
-          gcc -o ttt-mac ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm
+          gcc -o ttt-mac-intel ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm -arch x86_64
+
+      - name: Build for Mac (Apple Silicon)
+        run: |
+          cd source/
+          gcc -o ttt-mac-arm ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm -arch arm64
 
       - name: Build for Linux
         run: |
@@ -47,12 +52,20 @@ jobs:
             ./source/SDL2_ttf.dll
             ./source/fonts
 
-      - name: Upload Artifacts - Mac
+      - name: Upload Artifacts - Mac (Intel)
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: "mac-${{ env.COMMIT_HASH }}"
+          name: "mac-intel-${{ env.COMMIT_HASH }}"
           path: |
-            ./source/ttt-mac
+            ./source/ttt-mac-intel
+            ./source/fonts
+
+      - name: Upload Artifacts - Mac (Apple Silicon)
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: "mac-arm-${{ env.COMMIT_HASH }}"
+          path: |
+            ./source/ttt-mac-arm
             ./source/fonts
 
       - name: Upload Artifacts - Linux

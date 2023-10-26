@@ -37,7 +37,9 @@ Note: You need the SDL2.dll, SDL2_ttf.dll and fonts to run.
 1. Install [Homebrew](https://brew.sh/)
 2. Install SDL2 and SDL2_ttf libraries: `brew install sdl2 sdl2_ttf`
 3. Navigate to the project directory
-4. Compile the game: `gcc -o ttt ttt.c -I/Library/Frameworks/SDL2.framework/Headers -I/Library/Frameworks/SDL2_ttf.framework/Headers -F/Library/Frameworks -framework SDL2 -framework SDL2_ttf -rpath /Library/Frameworks`
+4. Compile the game
+   a. Intel: `gcc -o ttt ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm`
+   b. Apple Silicon: `gcc -o ttt ttt.c -I /opt/homebrew/include -L /opt/homebrew/lib -lSDL2 -lSDL2_ttf -lm`
 5. Run the game: `./ttt`
 
 ## How to Play
