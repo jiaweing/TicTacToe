@@ -51,10 +51,14 @@ jobs:
         uses: actions/upload-artifact@v2.2.4
         with:
           name: "mac-${{ env.COMMIT_HASH }}"
-          path: ./source/ttt-mac
+          path: |
+            ./source/ttt-mac
+            ./source/fonts
 
       - name: Upload Artifacts - Linux
         uses: actions/upload-artifact@v2.2.4
         with:
           name: "linux-${{ env.COMMIT_HASH }}"
-          path: ./source/ttt
+          path: |
+            ./source/ttt
+            ./source/fonts

@@ -24,7 +24,6 @@ void computerMove(char board[9]);
 int minimax(char board[9], char player, int depth, int alpha, int beta);
 char win(const char board[9]);
 
-
 int main(int argc, char *argv[])
 {
     char board[9] = {'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}; // computer squares are x, player squares are o, empty squares are b
@@ -180,7 +179,7 @@ int main(int argc, char *argv[])
         }
 
         // Draw the menu
-        drawMenu(_renderer, buttonRects);
+        drawMenu(buttonRects);
 
         // Present the renderer
         SDL_RenderPresent(_renderer);

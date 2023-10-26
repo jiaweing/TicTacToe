@@ -6,6 +6,10 @@ This is a simple Tic Tac Toe game written in C using the SDL2 library.
 
 All builds can be found **[here](https://github.com/my3t/TicTacToe/actions)**. To download the latest version, select the latest build and download from the "Artifacts" section for your operating system.
 
+### Windows
+
+Note: You need the SDL2.dll, SDL2_ttf.dll and fonts to run.
+
 ## Dependencies
 
 - SDL2
@@ -14,8 +18,6 @@ All builds can be found **[here](https://github.com/my3t/TicTacToe/actions)**. T
 ## Compilation
 
 ### Windows
-
-Note: You need the SDL2.dll file to run.
 
 1. Install [MSYS2](https://www.msys2.org/)
 2. Open MSYS2 terminal
@@ -27,9 +29,8 @@ Note: You need the SDL2.dll file to run.
 
 1. Install SDL2 and SDL2_ttf libraries: `sudo apt-get install libsdl2-dev libsdl2-ttf-dev`
 2. Navigate to the project directory
-3. Compile the game: `gcc -o ttt ttt.c -lSDL2`
+3. Compile the game: `gcc -o ttt ttt.c -lSDL2 -lSDL2_ttf`
 4. Run the game: `./ttt`
-   l
 
 ### Mac
 

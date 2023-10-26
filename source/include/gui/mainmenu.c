@@ -1,8 +1,8 @@
-void drawMenu(SDL_Renderer *renderer,SDL_Rect buttonRects[4])
+void drawMenu(SDL_Rect buttonRects[4])
 {
     // Clear the screen
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
+    SDL_RenderClear(_renderer);
 
     // Create a font (you should replace this with your own font)
     TTF_Font *font = TTF_OpenFont("fonts/pcsenior.ttf", 42);
@@ -20,12 +20,12 @@ void drawMenu(SDL_Renderer *renderer,SDL_Rect buttonRects[4])
 
     // Draw the title
     textSurface = TTF_RenderText_Solid(font, "Tic Tac Toe", textColor);
-    textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    textTexture = SDL_CreateTextureFromSurface(_renderer, textSurface);
     textRect.x = SCREEN_WIDTH / 2 - textSurface->w / 2;
     textRect.y = 80;
     textRect.w = textSurface->w;
     textRect.h = textSurface->h;
-    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_RenderCopy(_renderer, textTexture, NULL, &textRect);
 
     // Draw the menu options (PVP, PVAI, Exit)
     char *menuOptions[] = {"PvP", "Perfect AI", "PvAI", "Exit"};
@@ -34,16 +34,16 @@ void drawMenu(SDL_Renderer *renderer,SDL_Rect buttonRects[4])
     for (int i = 0; i < 4; i++)
     {
         // Define button colors and positions
-        SDL_SetRenderDrawColor(renderer, buttonColors[i].r, buttonColors[i].g, buttonColors[i].b, 255);
+        SDL_SetRenderDrawColor(_renderer, buttonColors[i].r, buttonColors[i].g, buttonColors[i].b, 255);
         buttonRects[i].x = SCREEN_WIDTH / 2 - 200;
         buttonRects[i].y = 160 + i * 130;
         buttonRects[i].w = 400;
         buttonRects[i].h = 100;
-        // SDL_SetRenderDrawColor(renderer, 255, 255, 255,255); // Border color (black)
-        SDL_RenderFillRect(renderer, &buttonRects[i]);
+        // SDL_SetRenderDrawColor(_renderer, 255, 255, 255,255); // Border color (black)
+        SDL_RenderFillRect(_renderer, &buttonRects[i]);
 
         textSurface = TTF_RenderText_Solid(btnfont, menuOptions[i], textColor);
-        textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        textTexture = SDL_CreateTextureFromSurface(_renderer, textSurface);
 
         // Center the text within the buttonRect
         textRect.x = buttonRects[i].x + (buttonRects[i].w - textSurface->w) / 2;
@@ -51,7 +51,7 @@ void drawMenu(SDL_Renderer *renderer,SDL_Rect buttonRects[4])
         textRect.w = textSurface->w;
         textRect.h = textSurface->h;
 
-        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+        SDL_RenderCopy(_renderer, textTexture, NULL, &textRect);
     }
 
     // Clean up resources
