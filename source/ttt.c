@@ -12,8 +12,9 @@ void renderText(const char *text, int x, int y, SDL_Color color);
 void drawCurrentPlayer(char currentPlayer);
 void clearScreen();
 void playerMove(char symbol, char board[9]);
-void computerMove(char board[9]);
+void computerMove(char board[9], int gameType);
 int minimax(char board[9], char player, int depth, int alpha, int beta);
+int imperfectAI(char board[9], char player, int depth, int alpha, int beta);
 char win(const char board[9]);
 
 #include "include/variables/global.c"
@@ -24,6 +25,7 @@ char win(const char board[9]);
 
 #include "include/gui/board.c"
 #include "include/gui/mainmenu.c"
+#include "include/ai/imperfectalgo.c"
 
 int main(int argc, char *argv[])
 {
@@ -146,14 +148,25 @@ int main(int argc, char *argv[])
                         gameType = MINIMAX_GAME;
                         if (gameType == MINIMAX_GAME)
                         {
-                            playPvAI(board, _renderer, window);
+                            playPvAI(board, _renderer, window, gameType);
                         }
                     }
                 }
                 else if (y >= buttonRects[2].y && y < buttonRects[2].y + buttonRects[2].h && x >= buttonRects[2].x && x < buttonRects[2].x + buttonRects[2].w)
                 {
-                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "AI Mode", "Mode is still under construction!", window);
-                    //     game = 0;
+                    // SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "AI Mode", "Mode is still under construction!", window);
+                     //     game = 0;
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
+                    {
+                        drawBoard(board);
+                        // PVAI clicked
+                        printf("PVAI clicked\n");
+                        gameType = IMPERFECT_GAME;
+                        if (gameType == IMPERFECT_GAME)
+                        {
+                            playPvimperfectAI(board, _renderer, window, gameType);
+                        }
+                    }
                 }
                 else if (y >= buttonRects[3].y && y < buttonRects[3].y + buttonRects[3].h && x >= buttonRects[3].x && x < buttonRects[3].x + buttonRects[3].w)
                 {
