@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
         printf("SDL_Init Error: %s\n", SDL_GetError());
         return 1;
     }
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
     // Initialize SDL_ttf
     if (TTF_Init() != 0)
