@@ -1,5 +1,5 @@
 // Function to handle the PvAI game
-void playPvAI(char board[9], SDL_Renderer *renderer, SDL_Window *window, int type)
+void playPvAI(char board[9], SDL_Renderer *renderer, SDL_Window *window, int gameType)
 {
 	int turn = 0;
 	char player = X_SYMBOL;
@@ -8,7 +8,7 @@ void playPvAI(char board[9], SDL_Renderer *renderer, SDL_Window *window, int typ
 	{
 		if (player == X_SYMBOL)
 		{
-			computerMove(board, type);
+			computerMove(board,gameType);
 			player = O_SYMBOL;
 		}
 		else
@@ -33,6 +33,50 @@ void playPvAI(char board[9], SDL_Renderer *renderer, SDL_Window *window, int typ
 	else
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "The game ended in a draw...", window);
+	}
+
+	// Reset the game
+	player = X_SYMBOL;
+	for (int i = 0; i < 9; ++i)
+	{
+		board[i] = 'b';
+	}
+}
+
+void playPvimperfectAI(char board[9], SDL_Renderer *renderer, SDL_Window *window, int gameType)
+{
+	int turn = 0;
+	char player = X_SYMBOL;
+
+	for (turn = 0; turn < 9 && win(board) == EMPTY_SYMBOL; ++turn)
+	{
+		if (player == X_SYMBOL)
+		{
+			computerMove(board,gameType);
+			player = O_SYMBOL;
+		}
+		else
+		{
+			playerMove(O_SYMBOL, board);
+			player = X_SYMBOL;
+		}
+
+		drawBoard(board);
+	}
+
+	char winner = win(board);
+
+	if (winner == X_SYMBOL)
+	{
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "The computer (X) is the winner imperfect aglo!", window);
+	}
+	else if (winner == O_SYMBOL)
+	{
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "You (O) are the winner! imperfect algo ", window);
+	}
+	else
+	{
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "The game ended in a draw... imperfect algo", window);
 	}
 
 	// Reset the game
@@ -110,7 +154,7 @@ void computerMove(char board[9], int type)
 		board[move] = X_SYMBOL;
 	}
 
-	else if (type == AI_GAME)
+	else if (type == IMPERFECT_GAME)
 	{
 		int data[MAX_ROWS][NUM_POSITIONS];
 		int labels[MAX_ROWS];

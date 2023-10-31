@@ -11,7 +11,7 @@
 #define MAIN_MENU 0
 #define TWO_PLAYER_GAME 1
 #define MINIMAX_GAME 2
-#define AI_GAME 3
+#define IMPERFECT_GAME 3
 
 SDL_Renderer *_renderer;
 TTF_Font *_font;
