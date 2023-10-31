@@ -31,6 +31,7 @@ void split_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS], int tra
 void calculatePriors(int data[][NUM_POSITIONS], int labels[], double priors[]);
 void calculateLikelihoods(int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][MAX_ROWS][NUM_CLASSES], double priors[]);
 int predictNextMove(char board[], double priors[], double likelihoods[NUM_POSITIONS][MAX_ROWS][NUM_CLASSES]);
+void shuffleArr (int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]);
 
 #include "include/functions/logic.c"
 
@@ -176,7 +177,7 @@ int main(int argc, char *argv[])
                         gameType = IMPERFECT_GAME;
                         if (gameType == IMPERFECT_GAME)
                         {
-                            playPvimperfectAI(board, _renderer, window, gameType);
+                            playPvAI(board, _renderer, window, gameType);
                         }
                     }
                 }

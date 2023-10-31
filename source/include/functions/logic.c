@@ -43,7 +43,7 @@ void playPvAI(char board[9], SDL_Renderer *renderer, SDL_Window *window, int gam
 	}
 }
 
-// Function to handle the ImperfectAI game
+/* // Function to handle the ImperfectAI game
 void playPvimperfectAI(char board[9], SDL_Renderer *renderer, SDL_Window *window, int gameType)
 {
 	int turn = 0;
@@ -86,7 +86,7 @@ void playPvimperfectAI(char board[9], SDL_Renderer *renderer, SDL_Window *window
 	{
 		board[i] = 'b';
 	}
-}
+} */
 
 void playerMove(char symbol, char board[9])
 {
@@ -129,11 +129,11 @@ void playerMove(char symbol, char board[9])
 	}
 }
 
-void computerMove(char board[9], int type)
+void computerMove(char board[9], int gametype)
 {
 	drawCurrentPlayer(X_SYMBOL);
 	
-	if (type == MINIMAX_GAME) {
+	if (gametype == MINIMAX_GAME) {
 		int move = 0;
 		int bestScore = MIN_SCORE;
 		for (int i = 0; i < 9; ++i)
@@ -154,7 +154,7 @@ void computerMove(char board[9], int type)
 		board[move] = X_SYMBOL;
 	}
 
-	else if (type == IMPERFECT_GAME)
+	else if (gametype == IMPERFECT_GAME)
 	{
 		int data[MAX_ROWS][NUM_POSITIONS];
 		int labels[MAX_ROWS];

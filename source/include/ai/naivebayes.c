@@ -1,11 +1,11 @@
 // Extract all data from tic-tac-toe.data
 void extract_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]) {
-    FILE *file = fopen("../../../data/tic-tac-toe.data", "r"); 
+    FILE *file = fopen("../data/tic-tac-toe.data", "r"); 
 
-    /* if (file == NULL) {
+    if (file == NULL) {
         perror("Error opening file");
-        return 1;
-    } */
+        printf("Cannot open file");
+    }
 
     char temp_data[MAX_ROWS][NUM_POSITIONS];
 
@@ -61,6 +61,9 @@ void shuffleArr (int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]) {     
         int temp = data[i][k];
         data[i][k] = data[j][k]; //swap current element with element placed in jth location
         data[j][k] = temp;
+        temp = labels[i];
+        labels[i] = labels[j];
+        labels[j] = temp; 
       }                
    }
 }
