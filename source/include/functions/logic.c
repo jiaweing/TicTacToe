@@ -1,5 +1,5 @@
 // Function to handle the PvAI game
-void playPvAI(char board[9], SDL_Renderer *renderer, SDL_Window *window)
+void playPvAI(char board[9], SDL_Renderer *renderer, SDL_Window *window, int type)
 {
 	int turn = 0;
 	char player = X_SYMBOL;
@@ -8,7 +8,7 @@ void playPvAI(char board[9], SDL_Renderer *renderer, SDL_Window *window)
 	{
 		if (player == X_SYMBOL)
 		{
-			computerMove(board);
+			computerMove(board, type);
 			player = O_SYMBOL;
 		}
 		else
@@ -84,27 +84,53 @@ void playerMove(char symbol, char board[9])
 	}
 }
 
-void computerMove(char board[9])
+void computerMove(char board[9], int type)
 {
 	drawCurrentPlayer(X_SYMBOL);
-
-	int move = 0;
-	int bestScore = MIN_SCORE;
-	for (int i = 0; i < 9; ++i)
-	{
-		if (board[i] == EMPTY_SYMBOL)
+	
+	if (type == MINIMAX_GAME) {
+		int move = 0;
+		int bestScore = MIN_SCORE;
+		for (int i = 0; i < 9; ++i)
 		{
-			board[i] = X_SYMBOL;
-			int score = minimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
-			board[i] = EMPTY_SYMBOL;
-			if (score > bestScore)
+			if (board[i] == EMPTY_SYMBOL)
 			{
-				bestScore = score;
-				move = i;
+				board[i] = X_SYMBOL;
+				int score = minimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
+				board[i] = EMPTY_SYMBOL;
+				if (score > bestScore)
+				{
+					bestScore = score;
+					move = i;
+				}
 			}
 		}
+
+		// returns a score based on minimax tree at a given node.
+		board[move] = X_SYMBOL;
 	}
 
-	// returns a score based on minimax tree at a given node.
-	board[move] = X_SYMBOL;
+	else if (type == AI_GAME)
+	{
+		int data[MAX_ROWS][NUM_POSITIONS];
+		int labels[MAX_ROWS];
+		int training_data[MAX_ROWS][NUM_POSITIONS];
+		int training_labels[MAX_ROWS];
+		int testing_data[MAX_ROWS][NUM_POSITIONS]; 
+		int testing_labels[MAX_ROWS]; 
+		int split_ratio = 80;
+		double priors[NUM_CLASSES];
+		double likelihoods[NUM_POSITIONS][MAX_ROWS][NUM_CLASSES];
+
+		extract_data(data, labels);
+		split_data(data, labels, training_data, training_labels, testing_data, testing_labels, split_ratio);
+		calculatePriors(training_data, training_labels, priors);
+		calculateLikelihoods(training_data, training_labels, likelihoods, priors);
+
+		int next_move = predictNextMove(board, priors, likelihoods);
+
+		board[next_move] = X_SYMBOL;
+		
+	}
+		
 }
