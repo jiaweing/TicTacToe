@@ -1,4 +1,4 @@
-int imperfectAI(char board[9], char player, int depth, int alpha, int beta)
+/* int imperfectAI(char board[9], char player, int depth, int alpha, int beta)
 {
 	int bestScore = (player == X_SYMBOL) ? MIN_SCORE : MAX_SCORE;
 	char winner = win(board);
@@ -59,4 +59,4 @@ int imperfectAI(char board[9], char player, int depth, int alpha, int beta)
 
 		return bestScore;
 	}
-}
+} */
