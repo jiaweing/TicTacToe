@@ -43,6 +43,7 @@ void playPvAI(char board[9], SDL_Renderer *renderer, SDL_Window *window, int gam
 	}
 }
 
+// Function to handle the ImperfectAI game
 void playPvimperfectAI(char board[9], SDL_Renderer *renderer, SDL_Window *window, int gameType)
 {
 	int turn = 0;
@@ -149,7 +150,6 @@ void computerMove(char board[9], int type)
 				}
 			}
 		}
-
 		// returns a score based on minimax tree at a given node.
 		board[move] = X_SYMBOL;
 	}
