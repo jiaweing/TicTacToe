@@ -1,29 +1,43 @@
 // TODO: validation for input
 // TODO: game type specific modules in seperate files
 // TODO: spruce up GUI
-
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <math.h>
+#include <stdlib.h>
+#include <time.h>
 
 void drawBoard(const char board[9]);
 void renderText(const char *text, int x, int y, SDL_Color color);
 void drawCurrentPlayer(char currentPlayer);
 void clearScreen();
 void playerMove(char symbol, char board[9]);
-void computerMove(char board[9]);
+void computerMove(char board[9], int gameType);
 int minimax(char board[9], char player, int depth, int alpha, int beta);
+int imperfectAI(char board[9], char player, int depth, int alpha, int beta);
 char win(const char board[9]);
+
 
 #include "include/variables/global.c"
 
 #include "include/functions/win.c"
 #include "include/ai/minimax.c"
+#include "include/ai/naivebayes.c"
+
+void extract_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]);
+void split_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS], int training_data[MAX_ROWS][NUM_POSITIONS], int training_labels[MAX_ROWS], 
+                   int testing_data[MAX_ROWS][NUM_POSITIONS], int testing_labels[MAX_ROWS], int split_ratio);
+void calculatePriors(int data[][NUM_POSITIONS], int labels[], double priors[]);
+void calculateLikelihoods(int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][MAX_ROWS][NUM_CLASSES], double priors[]);
+int predictNextMove(char board[], double priors[], double likelihoods[NUM_POSITIONS][MAX_ROWS][NUM_CLASSES]);
+void shuffleArr (int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]);
+
 #include "include/functions/logic.c"
 
 #include "include/gui/board.c"
 #include "include/gui/mainmenu.c"
+#include "include/ai/imperfectalgo.c"
 
 int main(int argc, char *argv[])
 {
@@ -40,6 +54,7 @@ int main(int argc, char *argv[])
         printf("SDL_Init Error: %s\n", SDL_GetError());
         return 1;
     }
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
     // Initialize SDL_ttf
     if (TTF_Init() != 0)
@@ -146,14 +161,25 @@ int main(int argc, char *argv[])
                         gameType = MINIMAX_GAME;
                         if (gameType == MINIMAX_GAME)
                         {
-                            playPvAI(board, _renderer, window);
+                            playPvAI(board, _renderer, window, gameType);
                         }
                     }
                 }
                 else if (y >= buttonRects[2].y && y < buttonRects[2].y + buttonRects[2].h && x >= buttonRects[2].x && x < buttonRects[2].x + buttonRects[2].w)
                 {
-                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "AI Mode", "Mode is still under construction!", window);
-                    //     game = 0;
+                    // SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "AI Mode", "Mode is still under construction!", window);
+                     //     game = 0;
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
+                    {
+                        drawBoard(board);
+                        // PVAI clicked
+                        printf("PVAI clicked\n");
+                        gameType = IMPERFECT_GAME;
+                        if (gameType == IMPERFECT_GAME)
+                        {
+                            playPvAI(board, _renderer, window, gameType);
+                        }
+                    }
                 }
                 else if (y >= buttonRects[3].y && y < buttonRects[3].y + buttonRects[3].h && x >= buttonRects[3].x && x < buttonRects[3].x + buttonRects[3].w)
                 {

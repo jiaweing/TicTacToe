@@ -62,3 +62,31 @@ jobs:
           path: |
             ./source/ttt
             ./source/fonts
+
+  # build_mac_silicon:
+  #   runs-on: macos-latest-large
+
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v2
+
+  #     - name: Install Dependencies
+  #       run: |
+  #         brew install sdl2 sdl2_ttf
+
+  #     - name: Build for Mac (Apple Silicon)
+  #       run: |
+  #         cd source/
+  #         gcc -arch arm64 -o ttt-mac-silicon ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm
+
+  #     - name: Get Commit Hash
+  #       run: |
+  #         bash scripts/hash.sh
+
+  #     - name: Upload Artifacts - Mac (Apple Silicon)
+  #       uses: actions/upload-artifact@v2.2.4
+  #       with:
+  #         name: "mac-silicon-${{ env.COMMIT_HASH }}"
+  #         path: |
+  #           ./source/ttt-mac-silicon
+  #           ./source/fonts
