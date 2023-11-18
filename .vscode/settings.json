@@ -59,6 +59,7 @@
     "unordered_map": "c",
     "variant": "c",
     "vector": "c",
-    "algorithm": "c"
+    "algorithm": "c",
+    "board.h": "c"
   }
 }

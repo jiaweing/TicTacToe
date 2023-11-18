@@ -154,7 +154,7 @@ void computerMove(char board[9], int gametype)
 		board[move] = X_SYMBOL;
 	}
 
-	else if (gametype == IMPERFECT_GAME)
+	else if (gametype == NB_GAME)
 	{
 		int data[MAX_ROWS][NUM_POSITIONS];
 		int labels[MAX_ROWS];

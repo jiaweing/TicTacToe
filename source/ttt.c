@@ -17,7 +17,7 @@ void computerMove(char board[9], int gameType);
 int minimax(char board[9], char player, int depth, int alpha, int beta);
 int imperfectAI(char board[9], char player, int depth, int alpha, int beta);
 char win(const char board[9]);
-
+void levelMenu(SDL_Renderer *_renderer);
 
 #include "include/variables/global.c"
 
@@ -26,15 +26,15 @@ char win(const char board[9]);
 #include "include/ai/naivebayes.c"
 
 void extract_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]);
-void split_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS], int training_data[MAX_ROWS][NUM_POSITIONS], int training_labels[MAX_ROWS], 
-                   int testing_data[MAX_ROWS][NUM_POSITIONS], int testing_labels[MAX_ROWS], int split_ratio);
+void split_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS], int training_data[MAX_ROWS][NUM_POSITIONS], int training_labels[MAX_ROWS],
+                int testing_data[MAX_ROWS][NUM_POSITIONS], int testing_labels[MAX_ROWS], int split_ratio);
 void calculatePriors(int data[][NUM_POSITIONS], int labels[], double priors[]);
 void calculateLikelihoods(int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][MAX_ROWS][NUM_CLASSES], double priors[]);
 int predictNextMove(char board[], double priors[], double likelihoods[NUM_POSITIONS][MAX_ROWS][NUM_CLASSES]);
-void shuffleArr (int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]);
+void shuffleArr(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]);
 
 #include "include/functions/logic.c"
-
+#include "include/gui/levelmenu.c"
 #include "include/gui/board.c"
 #include "include/gui/mainmenu.c"
 #include "include/ai/imperfectalgo.c"
@@ -92,16 +92,26 @@ int main(int argc, char *argv[])
         return 1;
     }
     SDL_Event event;
-    SDL_Rect buttonRects[4];
+    SDL_Rect buttonRects[5];
+
     // TODO: if can afford, make this more modular (split into functions)
     // DONT SPLIT INTO FUNCTIONS UNTIL DESIGN IS FINALISED
     while (game)
     {
+        // Draw the menu
+        // drawMenu(buttonRects);
+
+        // // Present the renderer
+        // SDL_RenderPresent(_renderer);
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)
             {
-                return 1;
+                // if i run the drawmenu and present function here it works fine but the initial execution will start a blank screen, have to close then eveyrthing works fine
+                drawMenu(buttonRects);
+
+                // Present the renderer
+                SDL_RenderPresent(_renderer);
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
@@ -157,7 +167,7 @@ int main(int argc, char *argv[])
                     {
                         drawBoard(board);
                         // PVAI clicked
-                        printf("PVAI clicked\n");
+                        printf("PerfectAI clicked\n");
                         gameType = MINIMAX_GAME;
                         if (gameType == MINIMAX_GAME)
                         {
@@ -168,22 +178,33 @@ int main(int argc, char *argv[])
                 else if (y >= buttonRects[2].y && y < buttonRects[2].y + buttonRects[2].h && x >= buttonRects[2].x && x < buttonRects[2].x + buttonRects[2].w)
                 {
                     // SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "AI Mode", "Mode is still under construction!", window);
-                     //     game = 0;
+                    //     game = 0;
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
                     {
-                        drawBoard(board);
-                        // PVAI clicked
-                        printf("PVAI clicked\n");
                         gameType = IMPERFECT_GAME;
-                        if (gameType == IMPERFECT_GAME)
-                        {
-                            playPvAI(board, _renderer, window, gameType);
-                        }
+                        printf("Imperfect AI clicked\n");
+                        levelMenu(_renderer);
+                        // SDL_RenderPresent(_renderer);
+                        game = 0;
                     }
                 }
                 else if (y >= buttonRects[3].y && y < buttonRects[3].y + buttonRects[3].h && x >= buttonRects[3].x && x < buttonRects[3].x + buttonRects[3].w)
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 3)
+                    {
+                        drawBoard(board);
+                        // PVAI clicked
+                        printf("NB GAME clicked\n");
+                        gameType = NB_GAME;
+                        if (gameType == NB_GAME)
+                        {
+                            playPvAI(board, _renderer, window, gameType);
+                        }
+                    }
+                }
+                else if (y >= buttonRects[4].y && y < buttonRects[4].y + buttonRects[4].h && x >= buttonRects[4].x && x < buttonRects[4].x + buttonRects[4].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
                     {
                         // Exit clicked
                         printf("Exit clicked\n");
@@ -205,11 +226,11 @@ int main(int argc, char *argv[])
             board[i] = 'b';
         }
 
-        // Draw the menu
-        drawMenu(buttonRects);
+        // // Draw the menu
+        // drawMenu(buttonRects);
 
-        // Present the renderer
-        SDL_RenderPresent(_renderer);
+        // // Present the renderer
+        // SDL_RenderPresent(_renderer);
     }
 
     // TTF_CloseFont(_font);
