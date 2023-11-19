@@ -4,7 +4,7 @@ This is a simple Tic Tac Toe game written in C using the SDL2 library.
 
 ## Builds
 
-All builds can be found **[here](https://github.com/my3t/TicTacToe/actions)**. To download the latest version, select the latest build and download from the "Artifacts" section for your operating system.
+
 
 ## Mac
 
@@ -24,7 +24,7 @@ We only have prebuilt binaries for Macs running on Apple Intel, as it is not pos
 1. Install [MSYS2](https://www.msys2.org/)
 2. Open MSYS2 terminal
 3. Navigate to the project directory
-4. Compile the game: `gcc -std=c17 ttt.c -I<project path>\SDL2\include -L<project path>\SDL2\lib -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o ttt`
+4. Compile the game: `gcc -std=c17 ttt.c -I<project path>\include\SDL2\include -L<project path>\include\SDL2\lib -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o ttt`
    - Replace `<project path>` with the location of your project
 5. Run the game: `./ttt.exe`
 

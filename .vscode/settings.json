@@ -60,6 +60,9 @@
     "variant": "c",
     "vector": "c",
     "algorithm": "c",
-    "board.h": "c"
+    "board.h": "c",
+    "ui.h": "c",
+    "stdlib.h": "c",
+    "pvai_game.h": "c"
   }
 }

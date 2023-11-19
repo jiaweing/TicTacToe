@@ -49,8 +49,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-source/ttt.exe
-source/ttt
-SDL2/lib/.DS_Store
-SDL2/include/.DS_Store
-source/ttt
+**/.DS_Store
+**/ttt.exe
+**/ttt
