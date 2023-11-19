@@ -1,233 +1,394 @@
-#include <sys/types.h>	/*It enables us to use Inbuilt functions such as clocktime, offset, ptrdiff_t for substracting two pointers*/
-#include <sys/socket.h> /*Socket operations, definitions and its structures*/
-#include <netinet/in.h> /*Contains constants and structures needed for internet domain addresses*/
-#include <netdb.h>		/* Contains definition of network database operations*/
-#include <pthread.h>	/* For creation and management of threads*/
-#include <stdio.h>		/*Standard library of Input/output*/
-#include <string.h>		/*Contains string function*/
-#include "strmap.h"		/*Create and maintain HashMap functions*/
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
-void *serverthread(void *parm); /* Thread function to handle communication with clients */
+int player_count = 0;
+pthread_mutex_t mutexcount;
 
-/* A call back function for the hashmap enumerator that forms a list of players
- * by concatenating them into the obj parameters.
- */
-void getPlayers(const void *key, const void *value, void *obj);
-
-/* Hashmap to hold player name's as keys
- * and  and their IPs as values .
- */
-StrMap *players; /*Name of HashMap<Player's name,IP address>*/
-
-int size = 0; /* Number of users currently joined as players */
-
-pthread_mutex_t mut; /* Mutex to prevent race conditions. */
-
-#define PROTOPORT 27428 /* default protocol port number */
-#define QLEN 10			/* size of request queue */
-#define MAXRCVLEN 200	/*Maximum size of buffer*/
-#define STRLEN 200		/*Maximum String length*/
-
-int main(int argc, char *argv[])
+void server_error(const char *msg)
 {
-	players = sm_new(100); /* Initialize hashmap */
+	perror(msg);
+	pthread_exit(NULL);
+}
 
-	struct hostent *ptrh; /* pointer to a host table entry */	   /*hostent structure is used by functions to store information about host name, IPv4 address ans so on*/
-	struct protoent *ptrp; /* pointer to a protocol table entry */ /*Structure contains name and protocol numbers*/
-	struct sockaddr_in sad;										   /* structure to hold server's address */
-	struct sockaddr_in cad;										   /* structure to hold client's address */
-	int sd, sd2;												   /* socket descriptors */
-	int port;													   /* protocol port number */
-	int alen;													   /* length of address */
-	pthread_t tid;												   /* variable to hold thread ID */
+void write_client_int(int cli_sockfd, int msg)
+{
+	int n = write(cli_sockfd, &msg, sizeof(int));
+	if (n < 0)
+		server_error("ERROR writing int to client socket");
+}
 
-	pthread_mutex_init(&mut, NULL);
-	memset((char *)&sad, 0, sizeof(sad));							 /* clear sockaddr structure   */
-	sad.sin_family = AF_INET;										 /* set family to Internet     */
-	sad.sin_addr.s_addr = INADDR_ANY; /* set the local IP address */ /*Set local ip of device as server ip*/
+void write_client_msg(int cli_sockfd, char *msg)
+{
+	int n = write(cli_sockfd, msg, strlen(msg));
+	if (n < 0)
+		server_error("ERROR writing msg to client socket");
+}
 
-	/* Check  command-line argument for protocol port and extract      */
-	/* port number if one is specfied.  Otherwise, use the default     */
-	/* port value given by constant PROTOPORT                          */
+void write_clients_msg(int *cli_sockfd, char *msg)
+{
+	write_client_msg(cli_sockfd[0], msg);
+	write_client_msg(cli_sockfd[1], msg);
+}
 
-	if (argc > 1)
-	{						  /* if argument specified     */
-		port = atoi(argv[1]); /* convert argument to binary*/
+void write_clients_int(int *cli_sockfd, int msg)
+{
+	write_client_int(cli_sockfd[0], msg);
+	write_client_int(cli_sockfd[1], msg);
+}
+
+int setup_listener(int portno)
+{
+	int sockfd;
+	struct sockaddr_in serv_addr;
+
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	if (sockfd < 0)
+		server_error("ERROR opening listener socket.");
+
+	memset(&serv_addr, 0, sizeof(serv_addr));
+	serv_addr.sin_family = AF_INET;
+	serv_addr.sin_addr.s_addr = INADDR_ANY;
+	serv_addr.sin_port = htons(portno);
+
+	if (bind(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+		server_error("ERROR binding listener socket.");
+
+#ifdef DEBUG
+	printf("[DEBUG] Listener set.\n");
+#endif
+
+	return sockfd;
+}
+int server_recv_int(int cli_sockfd)
+{
+	int msg = 0;
+	int n = read(cli_sockfd, &msg, sizeof(int));
+
+	if (n < 0 || n != sizeof(int))
+		return -1;
+
+	printf("[DEBUG] Received int: %d\n", msg);
+
+	return msg;
+}
+
+void get_clients(int lis_sockfd, int *cli_sockfd)
+{
+	socklen_t clilen;
+	struct sockaddr_in cli_addr;
+
+#ifdef DEBUG
+	printf("[DEBUG] Listening for clients...\n");
+#endif
+
+	int num_conn = 0;
+	while (num_conn < 2)
+	{
+		listen(lis_sockfd, 253 - player_count);
+
+		memset(&cli_addr, 0, sizeof(cli_addr));
+
+		clilen = sizeof(cli_addr);
+
+		cli_sockfd[num_conn] = accept(lis_sockfd, (struct sockaddr *)&cli_addr, &clilen);
+
+		if (cli_sockfd[num_conn] < 0)
+			server_error("ERROR accepting a connection from a client.");
+
+#ifdef DEBUG
+		printf("[DEBUG] Accepted connection from client %d\n", num_conn);
+#endif
+
+		write(cli_sockfd[num_conn], &num_conn, sizeof(int));
+
+#ifdef DEBUG
+		printf("[DEBUG] Sent client %d it's ID.\n", num_conn);
+#endif
+
+		pthread_mutex_lock(&mutexcount);
+		player_count++;
+		printf("Number of players is now %d.\n", player_count);
+		pthread_mutex_unlock(&mutexcount);
+
+		if (num_conn == 0)
+		{
+			write_client_msg(cli_sockfd[0], "HLD");
+
+#ifdef DEBUG
+			printf("[DEBUG] Told client 0 to hold.\n");
+#endif
+		}
+
+		num_conn++;
+	}
+}
+
+int get_player_move(int cli_sockfd)
+{
+#ifdef DEBUG
+	printf("[DEBUG] Getting player move...\n");
+#endif
+
+	write_client_msg(cli_sockfd, "TRN");
+
+	return server_recv_int(cli_sockfd);
+}
+
+int check_move(char board[][3], int move, int player_id)
+{
+	if ((move == 9) || (board[move / 3][move % 3] == ' '))
+	{
+		#ifdef DEBUG
+			printf("[DEBUG] Player %d's move was valid.\n", player_id);
+		#endif
+		return 1;
 	}
 	else
 	{
-		port = PROTOPORT; /* use default port number   */
-	}
-	if (port > 0) /* test for illegal value    */
-		sad.sin_port = htons((u_short)port);
-	else
-	{ /* print error message and exit */
-		fprintf(stderr, "bad port number %s/n", argv[1]);
-		exit(1);
-	}
+		#ifdef DEBUG
+			printf("[DEBUG] Player %d's move was invalid.\n", player_id);
+		#endif
 
-	/* Map TCP transport protocol name to protocol number */
-	if (((int)(ptrp = getprotobyname("tcp"))) == 0)
+		return 0;
+	}
+}
+
+void update_board(char board[][3], int move, int player_id)
+{
+	board[move / 3][move % 3] = player_id ? 'X' : 'O';
+
+#ifdef DEBUG
+	printf("[DEBUG] Board updated.\n");
+#endif
+}
+
+void server_draw_board(char board[][3])
+{
+	printf(" %c | %c | %c \n", board[0][0], board[0][1], board[0][2]);
+	printf("-----------\n");
+	printf(" %c | %c | %c \n", board[1][0], board[1][1], board[1][2]);
+	printf("-----------\n");
+	printf(" %c | %c | %c \n", board[2][0], board[2][1], board[2][2]);
+}
+
+void send_update(int *cli_sockfd, int move, int player_id)
+{
+#ifdef DEBUG
+	printf("[DEBUG] Sending update...\n");
+#endif
+
+	write_clients_msg(cli_sockfd, "UPD");
+
+	write_clients_int(cli_sockfd, player_id);
+
+	write_clients_int(cli_sockfd, move);
+
+#ifdef DEBUG
+	printf("[DEBUG] Update sent.\n");
+#endif
+}
+
+void send_player_count(int cli_sockfd)
+{
+	write_client_msg(cli_sockfd, "CNT");
+	write_client_int(cli_sockfd, player_count);
+
+#ifdef DEBUG
+	printf("[DEBUG] Player Count Sent.\n");
+#endif
+}
+
+int check_board(char board[][3], int last_move)
+{
+#ifdef DEBUG
+	printf("[DEBUG] Checking for a winner...\n");
+#endif
+
+	int row = last_move / 3;
+	int col = last_move % 3;
+
+	if (board[row][0] == board[row][1] && board[row][1] == board[row][2])
 	{
-		fprintf(stderr, "cannot map \"tcp\" to protocol number");
-		exit(1);
+#ifdef DEBUG
+		printf("[DEBUG] Win by row %d.\n", row);
+#endif
+		return 1;
 	}
-
-	/* Create a socket */
-	sd = socket(PF_INET, SOCK_STREAM, ptrp->p_proto);
-	if (sd < 0)
+	else if (board[0][col] == board[1][col] && board[1][col] == board[2][col])
 	{
-		fprintf(stderr, "socket creation failed\n");
-		exit(1);
+#ifdef DEBUG
+		printf("[DEBUG] Win by column %d.\n", col);
+#endif
+		return 1;
 	}
-
-	/* Bind a local address to the socket */
-	if (bind(sd, (struct sockaddr *)&sad, sizeof(sad)) < 0)
+	else if (!(last_move % 2))
 	{
-		fprintf(stderr, "bind failed\n");
-		exit(1);
+		if ((last_move == 0 || last_move == 4 || last_move == 8) && (board[1][1] == board[0][0] && board[1][1] == board[2][2]))
+		{
+#ifdef DEBUG
+				printf("[DEBUG] Win by backslash diagonal.\n");
+#endif
+			return 1;
+		}
+		if ((last_move == 2 || last_move == 4 || last_move == 6) && (board[1][1] == board[0][2] && board[1][1] == board[2][0]))
+		{
+#ifdef DEBUG
+				printf("[DEBUG] Win by frontslash diagonal.\n");
+#endif
+			return 1;
+		}
 	}
 
-	/* Specify a size of request queue */
-	if (listen(sd, QLEN) < 0)
+#ifdef DEBUG
+	printf("[DEBUG] No winner, yet.\n");
+#endif
+
+	return 0;
+}
+
+void *run_game(void *thread_data)
+{
+	int *cli_sockfd = (int *)thread_data;
+	char board[3][3] = {{' ', ' ', ' '},
+						{' ', ' ', ' '},
+						{' ', ' ', ' '}};
+
+	printf("Game on!\n");
+
+	write_clients_msg(cli_sockfd, "SRT");
+
+#ifdef DEBUG
+	printf("[DEBUG] Sent start message.\n");
+#endif
+
+	server_draw_board(board);
+
+	int prev_player_turn = 1;
+	int player_turn = 0;
+	int game_over = 0;
+	int turn_count = 0;
+	while (!game_over)
 	{
-		fprintf(stderr, "listen failed\n");
+
+		if (prev_player_turn != player_turn)
+			write_client_msg(cli_sockfd[(player_turn + 1) % 2], "WAT");
+
+		int valid = 0;
+		int move = 0;
+		while (!valid)
+		{
+			move = get_player_move(cli_sockfd[player_turn]);
+			if (move == -1)
+				break;
+			printf("Player %d played position %d\n", player_turn, move);
+
+			valid = check_move(board, move, player_turn);
+			if (!valid)
+			{
+				printf("Move was invalid. Let's try this again...\n");
+				write_client_msg(cli_sockfd[player_turn], "INV");
+			}
+		}
+
+		if (move == -1)
+		{
+			printf("Player disconnected.\n");
+			break;
+		}
+		else if (move == 9)
+		{
+			prev_player_turn = player_turn;
+			send_player_count(cli_sockfd[player_turn]);
+		}
+		else
+		{
+			update_board(board, move, player_turn);
+			send_update(cli_sockfd, move, player_turn);
+
+			server_draw_board(board);
+
+			game_over = check_board(board, move);
+
+			if (game_over == 1)
+			{
+				write_client_msg(cli_sockfd[player_turn], "WIN");
+				write_client_msg(cli_sockfd[(player_turn + 1) % 2], "LSE");
+				printf("Player %d won.\n", player_turn);
+			}
+			else if (turn_count == 8)
+			{
+				printf("Draw.\n");
+				write_clients_msg(cli_sockfd, "DRW");
+				game_over = 1;
+			}
+
+			prev_player_turn = player_turn;
+			player_turn = (player_turn + 1) % 2;
+			turn_count++;
+		}
+	}
+
+	printf("Game over.\n");
+
+	close(cli_sockfd[0]);
+	close(cli_sockfd[1]);
+
+	pthread_mutex_lock(&mutexcount);
+	player_count--;
+	printf("Number of players is now %d.", player_count);
+	player_count--;
+	printf("Number of players is now %d.", player_count);
+	pthread_mutex_unlock(&mutexcount);
+
+	free(cli_sockfd);
+
+	pthread_exit(NULL);
+}
+
+int server(int argc, char *argv[])
+{
+	if (argc < 2)
+	{
+		fprintf(stderr, "ERROR, no port provided\n");
 		exit(1);
 	}
 
-	alen = sizeof(cad);
+	int lis_sockfd = setup_listener(atoi(argv[1]));
+	pthread_mutex_init(&mutexcount, NULL);
 
-	/* Main server loop - accept and handle requests */
-	fprintf(stderr, "Server up and running.\n");
 	while (1)
 	{
-		if ((sd2 = accept(sd, (struct sockaddr *)&cad, &alen)) < 0)
+		if (player_count <= 252)
 		{
-			fprintf(stderr, "accept failed\n");
-			exit(1);
-		}
-		/* Create seperate thread for each client */
-		pthread_create(&tid, NULL, serverthread, (void *)sd2);
-	}
+			int *cli_sockfd = (int *)malloc(2 * sizeof(int));
+			memset(cli_sockfd, 0, 2 * sizeof(int));
 
-	close(sd);			/* Close socket */
-	sm_delete(players); /* Delete the hasmap */
-}
+			get_clients(lis_sockfd, cli_sockfd);
 
-/* Thread function to handle communication with clients */
-void *serverthread(void *parm)
-{
-	int tsd, len;
-	tsd = (int)parm; /*Thread Socket descriptor*/
+#ifdef DEBUG
+			printf("[DEBUG] Starting new game thread...\n");
+#endif
 
-	/* Get client's IP address*/
-	char ip[INET_ADDRSTRLEN]; /*Char array to store client's IP address*/
-	struct sockaddr_in peeraddr;
-	socklen_t peeraddrlen = sizeof(peeraddr);
-	getpeername(tsd, &peeraddr, &peeraddrlen);												 /*Retrives address of the peer to which a socket is connected*/
-	inet_ntop(AF_INET, &(peeraddr.sin_addr), ip, INET_ADDRSTRLEN); /*Binary to text string*/ /*Retriving IP addrees of client and converting
-	it to text and storing it in IP char array*/
+			pthread_t thread;
+			int result = pthread_create(&thread, NULL, run_game, (void *)cli_sockfd);
+			if (result)
+			{
+				printf("Thread creation failed with return code %d\n", result);
+				exit(-1);
+			}
 
-	char buf[MAXRCVLEN + 1]; /* buffer for data exchange */
-	char name[STRLEN + 1];	 /* Variable to store current client's name. */
-
-	/* Run loop until client closes connection. */
-	while (len = recv(tsd, buf, MAXRCVLEN, 0))
-	{
-		/* Split received query into two arguements */
-		buf[len] = '\0';
-		char arg1[STRLEN], arg2[STRLEN];
-		int n = sscanf(buf, "%s %s", arg1, arg2);
-
-		/* Handle 'join' query */
-		if (strcmp(arg1, "join") == 0 && arg2 != NULL)
-		{
-			/* Put the player in hasmap if the player doesn't already exist. */
-			pthread_mutex_lock(&mut);
-			if (sm_exists(players, arg2) == 0)
-			{
-				sm_put(players, arg2, ip);
-				size++;
-				strcpy(name, arg2);
-				sprintf(buf, "Player %s added to the player's list\n", arg2);
-				printf("Player %s added to the player's list\n", arg2);
-			}
-			else
-			{
-				sprintf(buf, "Player %s is already in the player's list\n", arg2);
-			}
-			pthread_mutex_unlock(&mut);
-			send(tsd, buf, strlen(buf), 0);
-		}
-		/* Handle 'invite {playername}' query. */
-		else if (strcmp(arg1, "invite") == 0 && arg2 != NULL)
-		{
-			/* If invited player exists then send player's IP address. */
-			pthread_mutex_lock(&mut);
-			if ((size > 0) && (sm_exists(players, arg2) == 1))
-			{
-				sm_get(players, arg2, buf, sizeof(buf));
-			}
-			else
-			{
-				sprintf(buf, "Player %s not found\n", arg2);
-			}
-			pthread_mutex_unlock(&mut);
-			send(tsd, buf, strlen(buf), 0);
-		}
-		/* Handle 'list' query. */
-		else if (strcmp(arg1, "list") == 0)
-		{
-			/* Iterate over the hasmap and form a list of players to send. */
-			pthread_mutex_lock(&mut);
-			if (size > 0)
-			{
-				sprintf(buf, "Players: ");
-				sm_enum(players, getPlayers, buf);
-			}
-			else
-			{
-				sprintf(buf, "There are no players online\n", arg2);
-			}
-			pthread_mutex_unlock(&mut);
-			send(tsd, buf, strlen(buf), 0);
+			printf("[DEBUG] New game thread started.\n");
 		}
 	}
 
-	/* If client closes connection then remove the entry from the hashmap and
-	 * close the socket and thread.
-	 */
-	pthread_mutex_lock(&mut);
-	if (name != NULL && strlen(name) > 1)
-	{
-		sm_get(players, name, buf, sizeof(buf));
-		if (strcmp(buf, ip) == 0)
-		{
-			/* Important note: Player is not really removed from hashmap,
-			 * only the value is removed while the key is kept. This is
-			 * a workaround function as the original hasmap implementation
-			 * did not come with a remove function and I did not have
-			 * time to implement it myself.
-			 */
-			sm_remove(players, name);
-			size--;
-			printf("Player %s removed from the player's list\n", name);
-			name[0] = '\0';
-		}
-	}
-	pthread_mutex_unlock(&mut);
-	close(tsd);
-	pthread_exit(0);
-}
+	close(lis_sockfd);
 
-/* A call back function for the hasmap enumerator that forms a list of players
- * by concatenating them into the obj parameter.
- */
-void getPlayers(const void *key, const void *value, void *obj)
-{
-	if (value != NULL)
-	{
-		strcat(obj, key);
-		strcat(obj, ", ");
-	}
+	pthread_mutex_destroy(&mutexcount);
+	pthread_exit(NULL);
 }
