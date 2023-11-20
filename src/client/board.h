@@ -8,7 +8,7 @@
 #define TILE_SIZE 100
 #define LINE_WIDTH 10
 
-void playerMove(char symbol, char board[9]);
+int playerMove(char symbol, char board[9]);
 char win(const char board[9]);
 void drawBoard(const char board[9]);
 void drawCurrentPlayer(char currentPlayer);

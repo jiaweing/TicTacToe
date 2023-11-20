@@ -1,40 +1,58 @@
 CC := gcc
-FLAGS := -Wall
-HDRS := $(wildcard src/*.h)
-SRCS := $(wildcard src/*.c)
-OBJS := $(SRCS:%.c=tmp/%.o) $(wildcard Gfx/*.o) $(wildcard Sfx/*.o)
-EXEC := ttt
+CLFLAGS := -Wall
+CLHDRS := $(wildcard src/client/*.h)
+CLSRCS := $(wildcard src/client/*.c)
+CLOBJS := $(CLSRCS:%.c=tmp/%.o) $(wildcard Gfx/*.o) $(wildcard Sfx/*.o)
+CLEXEC := ttt_client
+
+SVFLAGS := -Wall
+SVHDRS := $(wildcard src/server/*.h)
+SVSRCS := $(wildcard src/server/*.c)
+SVOBJS := $(SVSRCS:%.c=tmp/%.o) $(wildcard Gfx/*.o) $(wildcard Sfx/*.o)
+SVEXEC := ttt_server
 
 ifeq ($(OS),Windows_NT)
-FLAGS += -std=c17 -I.\include\SDL2\include -L.\include\SDL2\lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
+CLFLAGS += -std=c17 -I.\include\SDL2\include -L.\include\SDL2\lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
 else
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-FLAGS += -lSDL2 -lSDL2_ttf
+CLFLAGS += -lSDL2 -lSDL2_ttf
 endif
 ifeq ($(UNAME_S),Darwin)
 ifeq ($(filter %86,$(UNAME_P)),)
-FLAGS += -I./include/SDL2/include -lSDL2 -lSDL2_ttf -lm
+CLFLAGS += -I./include/SDL2/include -lSDL2 -lSDL2_ttf -lm
 else
-FLAGS += -I./include/SDL2/include -lSDL2 -lSDL2_ttf -lm
+CLFLAGS += -I./include/SDL2/include -lSDL2 -lSDL2_ttf -lm
 endif
 endif
 endif
 
-.PHONY: all
 
-all: $(EXEC)
+.PHONY: all, client
 
-$(EXEC): $(OBJS) $(HDRS)
-	$(CC) -o $@ $(OBJS) $(FLAGS) && echo "EXEC [OK]  $@"
+all, client: $(CLEXEC)
 
+$(CLEXEC): $(CLOBJS) $(CLHDRS)
+	$(CC) -o $@ $(CLOBJS) $(CLFLAGS) && echo "EXEC [OK]  $@"
 
 tmp/%.o: %.c
-	@$(CC) $(FLAGS) -c $< -o $@ && echo "tmp/%.o: %.c [OK]  $@"
+	@$(CC) $(CLFLAGS) -c $< -o $@ && echo "tmp/%.o: %.c [OK]  $@"
+
+.PHONY: server
+
+server: $(SVEXEC)
+
+$(SVEXEC): $(SVOBJS) $(SVHDRS)
+	$(CC) -o $@ $(SVOBJS) $(SVFLAGS) && echo "EXEC [OK]  $@"
+
+tmp/%.o: %.c
+	@$(CC) $(SVFLAGS) -c $< -o $@ && echo "tmp/%.o: %.c [OK]  $@"
 
 
 .PHONY: clean, clear
 
 clean clear:
-	@rm -f ttt && echo "[CL]  out/"
-	@rm -f tmp/* && echo "[CL]  tmp/"
+	@rm -f ttt_client && echo "[CL] out/ttt_client"
+	@rm -f tmp/src/client/* && echo "[CL] tmp/client"
+	@rm -f ttt_server && echo "[CL] out/ttt_server"
+	@rm -f tmp/src/server/* && echo "[CL] tmp/server"

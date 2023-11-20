@@ -1,7 +1,7 @@
 #include "ui.h"
 #include "board.h"
 
-void playerMove(char symbol, char board[9])
+int playerMove(char symbol, char board[9])
 {
 	SDL_Event event;
 
@@ -27,8 +27,7 @@ void playerMove(char symbol, char board[9])
 						int pos = (row * 3) + col;
 						if (board[pos] == EMPTY_SYMBOL)
 						{
-							board[pos] = symbol;
-							return;
+							return pos;
 						}
 					}
 				}
@@ -39,6 +38,8 @@ void playerMove(char symbol, char board[9])
 			}
 		}
 	}
+
+	return -1;
 }
 
 char win(const char board[9])

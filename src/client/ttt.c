@@ -4,7 +4,8 @@
 
 #include "ui.h"
 #include "main_menu.h"
-#include "pvp_game.h"
+#include "pvp_offline_game.h"
+#include "pvp_online_game.h"
 #include "pvai_game.h"
 
 int initialiseSDL();
@@ -14,6 +15,7 @@ int main(int argc, char *argv[])
 	if (initialiseSDL() == ERROR)
 	{
 		printf("There has been an error with initialising SDL.\n");
+		exit(0);
 	}
 
 	while (1) 
@@ -21,7 +23,7 @@ int main(int argc, char *argv[])
 		int gameType = mainMenu();
 		if (gameType == PVP_GAME) 
 		{
-			pvpGame();
+			pvpOfflineGame();
 		}
 		else if (gameType == PVAI_GAME)
 		{
@@ -32,9 +34,8 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
-				// int difficulty = response;
-				// pvaiGame(difficulty);
-				pvaiGame(response);
+				int difficulty = response;
+				pvaiGame(difficulty);
 			}
 		}
 		else if (gameType == EXIT)
@@ -43,6 +44,7 @@ int main(int argc, char *argv[])
 			SDL_DestroyRenderer(renderer);
 			SDL_DestroyWindow(window);
 			SDL_Quit();
+
 		}
 		else 
 		{

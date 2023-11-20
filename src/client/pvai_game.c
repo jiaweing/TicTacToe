@@ -7,6 +7,7 @@ int pvaiGame(int difficulty)
 {
 	char board[9] = {'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}; // computer squares are x, player squares are o, empty squares are b
 	int turn = 0;
+	int move = 0;
 	char player = X_SYMBOL;
 
 	drawBoard(board);
@@ -15,12 +16,14 @@ int pvaiGame(int difficulty)
 	{
 		if (player == X_SYMBOL)
 		{
-			computerMove(X_SYMBOL, board, difficulty);
+			move = computerMove(X_SYMBOL, board, difficulty);
+			board[move] = X_SYMBOL;
 			player = O_SYMBOL;
 		}
 		else
 		{
-			playerMove(O_SYMBOL, board);
+			move = playerMove(O_SYMBOL, board);
+			board[move] = O_SYMBOL;
 			player = X_SYMBOL;
 		}
 
@@ -50,7 +53,7 @@ int pvaiGame(int difficulty)
 	return -1;
 }
 
-void computerMove(char symbol, char board[9], int difficulty)
+int computerMove(char symbol, char board[9], int difficulty)
 {
 	if (difficulty == EASY_DIFFICULTY || difficulty == MEDIUM_DIFFICULTY || difficulty == HARD_DIFFICULTY)
 	{
@@ -71,7 +74,7 @@ void computerMove(char symbol, char board[9], int difficulty)
 
 		int next_move = predictNextMove(board, priors, likelihoods);
 
-		board[next_move] = X_SYMBOL;
+		return next_move;
 	}
 	else if (difficulty == IMPOSSIBLE_DIFFICULTY)
 	{
@@ -92,6 +95,10 @@ void computerMove(char symbol, char board[9], int difficulty)
 			}
 		}
 		// returns a score based on minimax tree at a given node.
-		board[move] = X_SYMBOL;
+		return move;
+	}
+	else
+	{
+		return -1;
 	}
 }

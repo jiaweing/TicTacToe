@@ -1,27 +1,21 @@
 #include "ui.h"
 #include "board.h"
-#include "pvp_game.h"
+#include "pvp_offline_game.h"
 
-int pvpGame()
+int pvpOfflineGame()
 {
 	char board[9] = {'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}; // computer squares are x, player squares are o, empty squares are b
 	int turn = 0;
+	int move = 0;
 	char player = X_SYMBOL;
 
 	drawBoard(board);
 
 	for (turn = 0; turn < 9 && win(board) == EMPTY_SYMBOL; ++turn) // loop until turns finish or there is no win
-	{ 
-		if (player == X_SYMBOL)
-		{								 // check current player type
-			playerMove(X_SYMBOL, board); // do move
-			player = O_SYMBOL;			 // switch to other player
-		}
-		else
-		{
-			playerMove(O_SYMBOL, board);
-			player = X_SYMBOL;
-		}
+	{
+		move = playerMove(player, board);
+		board[move] = player;
+		player = player == X_SYMBOL ? O_SYMBOL : X_SYMBOL;
 
 		drawBoard(board); // redraw board after changes
 	}
