@@ -31,6 +31,7 @@ We only have prebuilt binaries for Macs running on Apple Intel, as it is not pos
    - `make server -j4`
 5. Run the game 
    - `./ttt_client.exe`
+6. Run the server 
    - `./ttt_server.exe`
 
 ### Mac
@@ -43,8 +44,9 @@ We only have prebuilt binaries for Macs running on Apple Intel, as it is not pos
    - `make client -j4`
    - `make server -j4`
 5. Run the game 
-   - `./ttt_client.exe`
-   - `./ttt_server.exe`
+   - `./ttt_client`
+6. Run the server 
+   - `./ttt_server`
 
 ### Linux
 
@@ -54,8 +56,9 @@ We only have prebuilt binaries for Macs running on Apple Intel, as it is not pos
    - `make client -j4`
    - `make server -j4`
 4. Run the game 
-   - `./ttt_client.exe`
-   - `./ttt_server.exe`
+   - `./ttt_client`
+5. Run the server 
+   - `./ttt_server`
 
 ## How to Play
 
