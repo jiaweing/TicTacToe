@@ -26,6 +26,7 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 	const char player = id ? X_SYMBOL: O_SYMBOL;
 
 	drawBoard(board);
+	SDL_RenderPresent(renderer);
 
 	while (1)
 	{
@@ -35,6 +36,8 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 		{
 			printf("Your move...\n");
 			get_move(sockfd, player, board);
+			drawBoard(board);
+			SDL_RenderPresent(renderer);
 		}
 		else if (!strcmp(msg, INVALID_MOVE))
 		{
@@ -49,6 +52,7 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 		{
 			get_update(sockfd, board);
 			drawBoard(board);
+			SDL_RenderPresent(renderer);
 		}
 		else if (!strcmp(msg, WAIT))
 		{
@@ -162,6 +166,4 @@ void error(const char *msg)
 {
 	perror(msg);
 	printf("Either the server shut down or the other player disconnected.\nGame over.\n");
-
-	exit(0);
 }

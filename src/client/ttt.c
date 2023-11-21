@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 		int gameType = mainMenu();
 		if (gameType == PVP_GAME) 
 		{
-			pvpOfflineGame();
+			pvpOnlineGame(SERVER_HOSTNAME, SERVER_PORT);
 		}
 		else if (gameType == PVAI_GAME)
 		{
@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
 			SDL_DestroyRenderer(renderer);
 			SDL_DestroyWindow(window);
 			SDL_Quit();
+			exit(1);
 
 		}
 		else 

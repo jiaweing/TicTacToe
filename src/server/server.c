@@ -223,9 +223,9 @@ void *run_game(void *thread_data)
 
 	pthread_mutex_lock(&mutexcount);
 	player_count--;
-	printf("Number of players is now %d.", player_count);
+	printf("Number of players is now %d.\n", player_count);
 	player_count--;
-	printf("Number of players is now %d.", player_count);
+	printf("Number of players is now %d.\n", player_count);
 	pthread_mutex_unlock(&mutexcount);
 
 	free(cli_sockfd);

@@ -88,7 +88,6 @@ void drawBoard(const char board[9])
 	}
 
 	drawCurrentPlayer(' ');
-	SDL_RenderPresent(renderer);
 }
 
 void drawCurrentPlayer(char currentPlayer)

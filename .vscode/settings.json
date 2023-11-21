@@ -63,6 +63,7 @@
     "board.h": "c",
     "ui.h": "c",
     "stdlib.h": "c",
-    "pvai_game.h": "c"
+    "pvai_game.h": "c",
+    "pvp_online_game.h": "c"
   }
 }

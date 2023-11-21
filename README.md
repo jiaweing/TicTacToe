@@ -16,34 +16,46 @@ We only have prebuilt binaries for Macs running on Apple Intel, as it is not pos
 
 - SDL2
 - SDL2_ttf
+- GNU Make
 
 ## Compilation
 
 ### Windows
 
-1. Install [MSYS2](https://www.msys2.org/)
-2. Open MSYS2 terminal
+1. Install [Chocalatey](https://chocolatey.org/install)
+2. Install GNU Make using Chocolatey
+   - `choco install make`
 3. Navigate to the project directory
-4. Compile the game: `gcc -std=c17 ttt.c -I<project path>\include\SDL2\include -L<project path>\include\SDL2\lib -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o ttt`
-   - Replace `<project path>` with the location of your project
-5. Run the game: `./ttt.exe`
+4. Compile the game and the server
+   - `make client -j4`
+   - `make server -j4`
+5. Run the game 
+   - `./ttt_client.exe`
+   - `./ttt_server.exe`
 
 ### Mac
 
 1. Install [Homebrew](https://brew.sh/)
-2. Install SDL2 and SDL2_ttf libraries: `brew install sdl2 sdl2_ttf`
+2. Install SDL2, SDL2_ttf, and make libraries
+   - `brew install sdl2 sdl2_ttf make`
 3. Navigate to the project directory
-4. Compile the game
-   - Intel: `gcc -o ttt ttt.c -I /usr/local/include -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm`
-   - Apple Silicon: `gcc -o ttt ttt.c -I /opt/homebrew/include -L /opt/homebrew/lib -lSDL2 -lSDL2_ttf -lm`
-5. Run the game: `./ttt`
+4. Compile the game and the server
+   - `make client -j4`
+   - `make server -j4`
+5. Run the game 
+   - `./ttt_client.exe`
+   - `./ttt_server.exe`
 
 ### Linux
 
-1. Install SDL2 and SDL2_ttf libraries: `sudo apt-get install libsdl2-dev libsdl2-ttf-dev`
+1. Install SDL2 and SDL2_ttf libraries: `sudo apt-get install libsdl2-dev libsdl2-ttf-dev make`
 2. Navigate to the project directory
-3. Compile the game: `gcc -o ttt ttt.c -lSDL2 -lSDL2_ttf`
-4. Run the game: `./ttt`
+3. Compile the game and the server
+   - `make client -j4`
+   - `make server -j4`
+4. Run the game 
+   - `./ttt_client.exe`
+   - `./ttt_server.exe`
 
 ## How to Play
 
