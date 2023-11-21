@@ -5,31 +5,46 @@
 
 int pvpOnlineGame(const char *hostname, int hostportno)
 {
-	int sockfd = connect_to_server(hostname, hostportno);
-	int id = recv_server_int(sockfd);
-	char msg[4];
+	
 
-	#ifdef DEBUG
-		printf("[DEBUG] Client ID: %d\n", id);
-	#endif
+	int sockfd = connect_to_server(hostname, hostportno);
+	if (sockfd < 0)
+	{
+		return ERROR;
+	}
+	int id = recv_server_int(sockfd);
+	if (id < 0)
+	{
+		return ERROR;
+	}
+
+	char msg[4];
+	SDL_Event event;
 
 	do
 	{
-		recv_server_msg(sockfd, msg);
+		if (recv_server_msg(sockfd, msg) == ERROR)
+		{
+			return ERROR;
+		}
 		if (!strcmp(msg, HOLD))
 		{
 			printf("Waiting for a second player...\n");
 		}
-	} while (strcmp(msg, START));
+		usleep(50);
+	} while (SDL_PollEvent(&event) || strcmp(msg, START));
 
 	char board[9] = {'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}; // computer squares are x, player squares are o, empty squares are b
-	const char player = id ? X_SYMBOL: O_SYMBOL;
+	const char player = id ? X_SYMBOL : O_SYMBOL;
 
 	drawBoard(board);
 
-	while (1)
+	while (1 || SDL_PollEvent(&event))
 	{
-		recv_server_msg(sockfd, msg);
+		if (recv_server_msg(sockfd, msg) == ERROR)
+		{
+			return ERROR;
+		}
 
 		if (!strcmp(msg, PLAYER_TURN))
 		{
@@ -71,9 +86,13 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 			break;
 		}
 		else
+		{
 			error("Unknown message.");
+		}
+
+		usleep(50);
 	}
-	
+
 	close(sockfd);
 	return SUCCESS;
 }
@@ -124,15 +143,19 @@ void get_update(int sockfd, char board[9])
 	board[move] = player_id ? X_SYMBOL : O_SYMBOL;
 }
 
-void recv_server_msg(int sockfd, char *msg)
+int recv_server_msg(int sockfd, char *msg)
 {
 	memset(msg, 0, 4);
 	int n = read(sockfd, msg, 3);
 
 	if (n < 0 || n != 3)
+	{
 		error("ERROR reading message from server socket.");
+		return ERROR;
+	}
 
 	printf("[DEBUG] Received message: %s\n", msg);
+	return SUCCESS;
 }
 
 int recv_server_int(int sockfd)
@@ -142,21 +165,25 @@ int recv_server_int(int sockfd)
 
 	if (n < 0 || n != sizeof(int))
 	{
-		error("ERROR reading int from server socket");
+		error("ERROR reading int from server socket.");
+		return ERROR;
 	}
 
-	printf("[DEBUG] Received int: %d\n", msg);
-
+	printf("[DEBUG] Received int: %i\n", msg);
 	return msg;
 }
 
-void write_server_int(int sockfd, int msg)
+int write_server_int(int sockfd, int msg)
 {
 	int n = write(sockfd, &msg, sizeof(int));
 	if (n < 0)
-		error("ERROR writing int to server socket");
+	{
+		error("ERROR writing int to server socket.");
+		return ERROR;
+	}
 
-	printf("[DEBUG] Wrote int to server: %d\n", msg);
+	printf("DEBUG] Wrote int to server: %i\n", msg);
+	return SUCCESS;
 }
 
 void error(const char *msg)

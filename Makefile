@@ -12,7 +12,7 @@ SVOBJS := $(SVSRCS:%.c=tmp/%.o) $(wildcard Gfx/*.o) $(wildcard Sfx/*.o)
 SVEXEC := ttt_server
 
 ifeq ($(OS),Windows_NT)
-CLFLAGS += -std=c17 -I.\include\SDL2\include -L.\include\SDL2\lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
+CLFLAGS += -std=c17 -I./include/SDL2/include -L./include/SDL2/lib -Llib -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
 else
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
