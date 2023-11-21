@@ -16,6 +16,7 @@
 #include <winsock2.h>
 #endif
 
+#define SERVER_HOSTNAME "127.0.0.1"
 #define SERVER_PORT 27428
 
 int pvpOnlineGame(const char *hostname, int hostportno);

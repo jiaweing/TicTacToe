@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 		int gameType = mainMenu();
 		if (gameType == PVP_GAME) 
 		{
-			pvpOnlineGame(SERVER_HOSTNAME, SERVER_PORT);
+			pvpOfflineGame();
 		}
 		else if (gameType == PVAI_GAME)
 		{
