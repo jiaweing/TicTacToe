@@ -1,6 +1,6 @@
 int mainMenu();
 int difficultyMenu();
-int drawMainMenu(SDL_Rect buttonRects[5]);
+int drawMainMenu(SDL_Rect buttonRects[3]);
 int drawDifficultyMenu(SDL_Rect buttonRects[5]);
 
 #define PVP_GAME 1

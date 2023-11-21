@@ -5,8 +5,6 @@
 
 int pvpOnlineGame(const char *hostname, int hostportno)
 {
-	
-
 	int sockfd = connect_to_server(hostname, hostportno);
 	if (sockfd < 0)
 	{

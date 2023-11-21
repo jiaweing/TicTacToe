@@ -3,9 +3,18 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
+
+#ifdef __APPLE__
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#endif
+
+#ifdef _WIN32
+#include <ws2spi.h>
+#include <ws2tcpip.h>
+#include <winsock2.h>
+#endif
 
 #define SERVER_PORT 27428
 
