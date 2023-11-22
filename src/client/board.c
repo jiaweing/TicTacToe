@@ -5,8 +5,6 @@ int playerMove(char symbol, char board[9])
 {
 	SDL_Event event;
 
-	drawCurrentPlayer(symbol);
-
 	// Poll for event
 	while (1)
 	{
@@ -42,24 +40,9 @@ int playerMove(char symbol, char board[9])
 	return -1;
 }
 
-char win(const char board[9])
-{
-	// determines if a player has won, returns 0 otherwise.
-	unsigned int wins[8][3] = {{2, 4, 6}, {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 4, 8}}; // win states
-	for (int i = 0; i < 8; ++i)
-	{
-		if (board[wins[i][0]] != EMPTY_SYMBOL &&
-			board[wins[i][0]] == board[wins[i][1]] &&
-			board[wins[i][0]] == board[wins[i][2]])
-			return board[wins[i][0]];
-	}
-	return EMPTY_SYMBOL;
-}
-
 void drawBoard(const char board[9])
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
 
 	SDL_Rect board_rect = {SCREEN_WIDTH / 2 - BOARD_SIZE / 2, SCREEN_HEIGHT / 2 - BOARD_SIZE / 2, BOARD_SIZE, BOARD_SIZE};
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -70,6 +53,7 @@ void drawBoard(const char board[9])
 		int row = i % 3;
 		int col = i / 3;
 		SDL_Rect tileRect = {board_rect.x + row * TILE_SIZE, board_rect.y + col * TILE_SIZE, TILE_SIZE, TILE_SIZE};
+		TTF_Font *font = TTF_OpenFont(PCSENIOR_FONT, 35);
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		SDL_RenderDrawRect(renderer, &tileRect);
 
@@ -77,18 +61,15 @@ void drawBoard(const char board[9])
 		{
 			// Set the color for X
 			SDL_Color color = {255, 0, 0, 255}; // Red color
-			renderText("X", tileRect.x + TILE_SIZE / 2, tileRect.y + TILE_SIZE / 2, color);
+			renderAnchoredText("X", font, tileRect.x + TILE_SIZE / 2, tileRect.y + TILE_SIZE / 2, color);
 		}
 		else if (board[i] == O_SYMBOL)
 		{
 			// Set the color for O
 			SDL_Color color = {0, 155, 255, 255}; // Blue color
-			renderText("O", tileRect.x + TILE_SIZE / 2, tileRect.y + TILE_SIZE / 2, color);
+			renderAnchoredText("O", font, tileRect.x + TILE_SIZE / 2, tileRect.y + TILE_SIZE / 2, color);
 		}
 	}
-
-	drawCurrentPlayer(' ');
-	SDL_RenderPresent(renderer);
 }
 
 void drawCurrentPlayer(char currentPlayer)
@@ -111,4 +92,18 @@ void drawCurrentPlayer(char currentPlayer)
 	SDL_FreeSurface(textSurface);
 	SDL_DestroyTexture(textTexture);
 	SDL_RenderPresent(renderer);
+}
+
+char win(const char board[9])
+{
+	// determines if a player has won, returns 0 otherwise.
+	unsigned int wins[8][3] = {{2, 4, 6}, {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 4, 8}}; // win states
+	for (int i = 0; i < 8; ++i)
+	{
+		if (board[wins[i][0]] != EMPTY_SYMBOL &&
+			board[wins[i][0]] == board[wins[i][1]] &&
+			board[wins[i][0]] == board[wins[i][2]])
+			return board[wins[i][0]];
+	}
+	return EMPTY_SYMBOL;
 }

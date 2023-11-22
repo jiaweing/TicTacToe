@@ -5,93 +5,157 @@
 
 int pvpOnlineGame(const char *hostname, int hostportno)
 {
+	// back button
+
 	int sockfd = connect_to_server(hostname, hostportno);
 	if (sockfd < 0)
 	{
+		clearScreen();
 		return ERROR;
 	}
 	int id = recv_server_int(sockfd);
 	if (id < 0)
 	{
+		clearScreen();
 		return ERROR;
 	}
-
 	char msg[4];
-	SDL_Event event;
 
-	do
-	{
-		if (recv_server_msg(sockfd, msg) == ERROR)
-		{
-			return ERROR;
-		}
-		if (!strcmp(msg, HOLD))
-		{
-			printf("Waiting for a second player...\n");
-		}
-		usleep(50);
-	} while (SDL_PollEvent(&event) || strcmp(msg, START));
+	int playerFound = 0;
 
 	char board[9] = {'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}; // computer squares are x, player squares are o, empty squares are b
-	const char player = id ? X_SYMBOL : O_SYMBOL;
+	const char player = id % 2 ? X_SYMBOL : O_SYMBOL;
 
-	drawBoard(board);
+	SDL_Event event;
 
-	while (1 || SDL_PollEvent(&event))
-	{
+	while (1)
+    {
+		while (SDL_PollEvent(&event))
+        {
+			if (event.type == SDL_QUIT)
+			{
+				exit(0);
+				break;
+			}
+		}
+
 		if (recv_server_msg(sockfd, msg) == ERROR)
 		{
+			clearScreen();
+			close(sockfd);
 			return ERROR;
 		}
 
-		if (!strcmp(msg, PLAYER_TURN))
+		if (!playerFound)
 		{
-			printf("Your move...\n");
-			get_move(sockfd, player, board);
-			drawBoard(board);
-		}
-		else if (!strcmp(msg, INVALID_MOVE))
-		{
-			printf("That position has already been played. Try again.\n");
-		}
-		else if (!strcmp(msg, PLAYER_COUNT))
-		{
-			int num_players = recv_server_int(sockfd);
-			printf("There are currently %d active players.\n", num_players);
-		}
-		else if (!strcmp(msg, UPDATE_BOARD))
-		{
-			get_update(sockfd, board);
-			drawBoard(board);
-		}
-		else if (!strcmp(msg, WAIT))
-		{
-			printf("Waiting for other players move...\n");
-		}
-		else if (!strcmp(msg, GAME_WIN))
-		{
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "You won the match!", window);
-			break;
-		}
-		else if (!strcmp(msg, GAME_LOSE))
-		{
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "You lost the match.", window);
-			break;
-		}
-		else if (!strcmp(msg, GAME_DRAW))
-		{
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "The match ended in a draw...", window);
-			break;
+			if (!strcmp(msg, HOLD))
+			{
+				printf("Waiting for a second player...\n");
+				clearScreen();
+				renderAnchoredText(
+					"Looking for players...", 
+					pcsenior24_f, 
+					SCREEN_WIDTH / 2, 
+					SCREEN_HEIGHT / 2, 
+					white
+				);
+				SDL_RenderPresent(renderer);
+			}
+			else if (!strcmp(msg, START))
+			{
+				playerFound = 1;
+				clearScreen();
+				drawBoard(board);
+				renderText(
+					"Game on!", 
+					pcsenior24_f, 
+					BOARD_STATUS_PADDING, 
+					BOARD_STATUS_PADDING, 
+					white
+				);
+				SDL_RenderPresent(renderer);
+			}
 		}
 		else
 		{
-			error("Unknown message.");
+			if (!strcmp(msg, PLAYER_TURN))
+			{
+				get_move(sockfd, player, board);
+				clearScreen();
+				drawBoard(board);
+				renderText(
+					"Your turn!", 
+					pcsenior24_f, 
+					BOARD_STATUS_PADDING, 
+					BOARD_STATUS_PADDING, 
+					white
+				);
+				SDL_RenderPresent(renderer);
+			}
+			else if (!strcmp(msg, INVALID_MOVE))
+			{
+				clearScreen();
+				drawBoard(board);
+				printf("That position has already been played. Try again.\n");
+			}
+			else if (!strcmp(msg, PLAYER_COUNT))
+			{
+				int num_players = recv_server_int(sockfd);
+				printf("There are currently %d active players.\n", num_players);
+			}
+			else if (!strcmp(msg, UPDATE_BOARD))
+			{
+				get_update(sockfd, board);
+				clearScreen();
+				drawBoard(board);
+				renderText(
+					"Your turn!", 
+					pcsenior24_f, 
+					BOARD_STATUS_PADDING, 
+					BOARD_STATUS_PADDING, 
+					white
+				);
+				SDL_RenderPresent(renderer);
+			}
+			else if (!strcmp(msg, WAIT))
+			{
+				clearScreen();
+				drawBoard(board);
+				renderText(
+					"Waiting for opponent...", 
+					pcsenior24_f, 
+					BOARD_STATUS_PADDING, 
+					BOARD_STATUS_PADDING, 
+					white
+				);
+				SDL_RenderPresent(renderer);
+			}
+			else if (!strcmp(msg, GAME_WIN))
+			{
+				SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "You won the match!", window);
+				break;
+			}
+			else if (!strcmp(msg, GAME_LOSE))
+			{
+				SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "You lost the match.", window);
+				break;
+			}
+			else if (!strcmp(msg, GAME_DRAW))
+			{
+				SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "The match ended in a draw...", window);
+				break;
+			}
+			else
+			{
+				error("Unknown message.");
+			}
 		}
 
-		usleep(50);
+		usleep(100);
 	}
 
 	close(sockfd);
+	clearScreen();
 	return SUCCESS;
 }
 
@@ -103,14 +167,17 @@ int connect_to_server(const char *hostname, int hostportno)
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
 	if (sockfd < 0)
+	{
 		error("ERROR opening socket for server.");
+		return ERROR;
+	}
 
 	server = gethostbyname(hostname);
 
 	if (server == NULL)
 	{
 		fprintf(stderr, "ERROR, no such host\n");
-		exit(0);
+		return ERROR;
 	}
 
 	memset(&serv_addr, 0, sizeof(serv_addr));
@@ -119,8 +186,11 @@ int connect_to_server(const char *hostname, int hostportno)
 	memmove(server->h_addr, &serv_addr.sin_addr.s_addr, server->h_length);
 	serv_addr.sin_port = htons(hostportno);
 
-	if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+	if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
+	{
 		error("ERROR connecting to server");
+		return ERROR;
+	}
 
 	printf("[DEBUG] Connected to server.\n");
 	return sockfd;

@@ -23,6 +23,7 @@ int mainMenu()
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50)
                     {
+                        clearScreen();
                         return PVP_GAME;
                     }
                 }
@@ -30,6 +31,7 @@ int mainMenu()
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
                     {
+                        clearScreen();
                         return PVAI_GAME;
                     }
                 }
@@ -37,18 +39,20 @@ int mainMenu()
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
                     {
+                        clearScreen();
                         return EXIT;
                     }
                 }
             }
             else if (event.type == SDL_QUIT)
             {
-				exit(0);
-				break;
+                exit(0);
+                break;
             }
         }
     }
 
+    clearScreen();
     return ERROR;
 }
 
@@ -73,6 +77,7 @@ int difficultyMenu()
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50)
                     {
+                        clearScreen();
                         return EASY_DIFFICULTY;
                     }
                 }
@@ -80,6 +85,7 @@ int difficultyMenu()
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
                     {
+                        clearScreen();
                         return MEDIUM_DIFFICULTY;
                     }
                 }
@@ -87,6 +93,7 @@ int difficultyMenu()
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
                     {
+                        clearScreen();
                         return HARD_DIFFICULTY;
                     }
                 }
@@ -94,6 +101,7 @@ int difficultyMenu()
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
                     {
+                        clearScreen();
                         return IMPOSSIBLE_DIFFICULTY;
                     }
                 }
@@ -101,29 +109,27 @@ int difficultyMenu()
                 {
                     if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
                     {
+                        clearScreen();
                         return BACK;
                     }
                 }
             }
             else if (event.type == SDL_QUIT)
             {
-				exit(0);
-				break;
+                exit(0);
+                break;
             }
         }
     }
 
+    clearScreen();
     return ERROR;
 }
 
 int drawMainMenu(SDL_Rect buttonRects[3])
 {
-    // Clear the screen
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
     // Create a font (you should replace this with your own font)
-    TTF_Font *font = TTF_OpenFont(PCSENIOR_FONT, 39);
+    TTF_Font *font = TTF_OpenFont(ARCADE_FONT, 90);
     TTF_Font *btnfont = TTF_OpenFont(PCSENIOR_FONT, 18);
     if (font == NULL)
     {
@@ -154,7 +160,7 @@ int drawMainMenu(SDL_Rect buttonRects[3])
         // Define button colors and positions
         SDL_SetRenderDrawColor(renderer, buttonColors[i].r, buttonColors[i].g, buttonColors[i].b, 255);
         buttonRects[i].x = SCREEN_WIDTH / 2 - 150; //-150 because the button width is 300
-        buttonRects[i].y = 115 + i * 95;
+        buttonRects[i].y = 150 + i * 95;
         buttonRects[i].w = 300;
         buttonRects[i].h = 80;
         // SDL_SetRenderDrawColor(_renderer, 255, 255, 255,255); // Border color (black)
@@ -183,12 +189,8 @@ int drawMainMenu(SDL_Rect buttonRects[3])
 
 int drawDifficultyMenu(SDL_Rect buttonRects[5])
 {
-    // Clear the screen
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
     // Create a font (you should replace this with your own font)
-    TTF_Font *font = TTF_OpenFont(PCSENIOR_FONT, 39);
+    TTF_Font *font = TTF_OpenFont(ARCADE_FONT, 90);
     TTF_Font *btnfont = TTF_OpenFont(PCSENIOR_FONT, 18);
     if (font == NULL)
     {
@@ -219,7 +221,7 @@ int drawDifficultyMenu(SDL_Rect buttonRects[5])
         // Define button colors and positions
         SDL_SetRenderDrawColor(renderer, buttonColors[i].r, buttonColors[i].g, buttonColors[i].b, 255);
         buttonRects[i].x = SCREEN_WIDTH / 2 - 150; //-150 because the button width is 300
-        buttonRects[i].y = 115 + i * 95;
+        buttonRects[i].y = 150 + i * 95;
         buttonRects[i].w = 300;
         buttonRects[i].h = 80;
         // SDL_SetRenderDrawColor(_renderer, 255, 255, 255,255); // Border color (black)
@@ -237,11 +239,128 @@ int drawDifficultyMenu(SDL_Rect buttonRects[5])
         SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     }
 
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
     // Clean up resources
     TTF_CloseFont(font);
     TTF_CloseFont(btnfont);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
+
+    return SUCCESS;
+}
+
+int askForHostIP(char *ip)
+{
+    memset(ip, ' ', 15);
+    int position = 0;
+    int done = 0;
+
+    drawTextInput("Host IP Address", ip);
+
+    SDL_Event e;
+    while (!done)
+    {
+        if (SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_KEYDOWN)
+            {
+                if ((e.key.keysym.sym >= SDLK_0 && e.key.keysym.sym <= SDLK_9) || e.key.keysym.sym == SDLK_PERIOD)
+                {
+                    if (position > 14)
+                    {
+                        position = 14;
+                    }
+                    ip[position] = e.key.keysym.sym;
+                    position++;
+                    drawTextInput("Host IP Address", ip);
+                }
+                if (e.key.keysym.sym == SDLK_BACKSPACE)
+                {
+                    position--;
+                    if (position < 0)
+                    {
+                        position = 0;
+                    }
+                    ip[position] = ' ';
+                    drawTextInput("Host IP Address", ip);
+                }
+                if (e.key.keysym.sym == SDLK_RETURN)
+                {
+                    ip[position] = 0;
+                    done = 1;
+                }
+                if (e.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    return BACK;
+                }
+            }
+            if (e.type == SDL_QUIT)
+            {
+				exit(0);
+				break;
+            }
+        }
+    }
+
+    return SUCCESS;
+}
+
+int askForHostPort(int *port)
+{
+    char portStr[7] = "";
+    memset(portStr, ' ', 7);
+    int position = 0;
+    int done = 0;
+
+    drawTextInput("Host Port Number", portStr);
+
+    SDL_Event e;
+    while (!done)
+    {
+        if (SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_KEYDOWN)
+            {
+                if ((e.key.keysym.sym >= SDLK_0 && e.key.keysym.sym <= SDLK_9))
+                {
+                    if (position > 6)
+                    {
+                        position = 6;
+                    }
+                    portStr[position] = e.key.keysym.sym;
+                    position++;
+                    drawTextInput("Host Port Number", portStr);
+                }
+                if (e.key.keysym.sym == SDLK_BACKSPACE)
+                {
+                    position--;
+                    if (position < 0)
+                    {
+                        position = 0;
+                    }
+                    portStr[position] = ' ';
+                    drawTextInput("Host Port Number", portStr);
+                }
+                if (e.key.keysym.sym == SDLK_RETURN)
+                {
+                    portStr[position] = 0;
+                    *port = atoi(portStr);
+                    done = 1;
+                }
+                if (e.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    return BACK;
+                }
+
+			}
+            if (e.type == SDL_QUIT)
+            {
+				exit(0);
+				break;
+            }
+        }
+    }
 
     return SUCCESS;
 }

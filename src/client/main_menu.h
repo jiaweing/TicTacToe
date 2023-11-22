@@ -2,6 +2,8 @@ int mainMenu();
 int difficultyMenu();
 int drawMainMenu(SDL_Rect buttonRects[3]);
 int drawDifficultyMenu(SDL_Rect buttonRects[5]);
+int askForHostPort(int *port);
+int askForHostIP(char *ip);
 
 #define PVP_GAME 1
 #define PVAI_GAME 2

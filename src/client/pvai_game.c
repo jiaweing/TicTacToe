@@ -10,7 +10,7 @@ int pvaiGame(int difficulty)
 	int move = 0;
 	char player = X_SYMBOL;
 
-	drawBoard(board);
+	drawAIGameScreen(board, player);
 
 	for (turn = 0; turn < 9 && win(board) == EMPTY_SYMBOL; ++turn)
 	{
@@ -27,30 +27,26 @@ int pvaiGame(int difficulty)
 			player = X_SYMBOL;
 		}
 
-		drawBoard(board); // redraw board after changes
+		drawAIGameScreen(board, player);
 	}
 
 	char winner = win(board);
 
-	drawBoard(board);
-
 	if (winner == X_SYMBOL)
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "The computer (X) is the winner!", window);
-		return SUCCESS;
 	}
 	else if (winner == O_SYMBOL)
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "You (O) are the winner!", window);
-		return SUCCESS;
 	}
 	else
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", "The game ended in a draw...", window);
-		return SUCCESS;
 	}
 
-	return -1;
+	clearScreen();
+	return SUCCESS;
 }
 
 int computerMove(char symbol, char board[9], int difficulty)
@@ -101,4 +97,25 @@ int computerMove(char symbol, char board[9], int difficulty)
 	{
 		return -1;
 	}
+}
+
+void drawAIGameScreen(char board[9], char player)
+{
+	clearScreen();
+	drawBoard(board);
+	renderText(
+		"Current Player", 
+		pcsenior18_f, 
+		BOARD_STATUS_PADDING, 
+		BOARD_STATUS_PADDING, 
+		white
+	);
+	renderText(
+		player == X_SYMBOL ? "X (Computer)" : "O (You)", 
+		pcsenior24_f, 
+		BOARD_STATUS_PADDING, 
+		BOARD_STATUS_PADDING + 30, 
+		player == X_SYMBOL ? red : blue
+	);
+	SDL_RenderPresent(renderer);
 }

@@ -23,7 +23,26 @@ int main(int argc, char *argv[])
 		int gameType = mainMenu();
 		if (gameType == PVP_GAME) 
 		{
-			pvpOfflineGame();
+			char ip[15] = SERVER_HOSTNAME;
+			int port = SERVER_PORT;
+			if (askForHostIP(ip) == BACK)
+			{
+				continue;
+			}
+			if (askForHostPort(&port) == BACK)
+			{
+				continue;
+			}
+			if (pvpOnlineGame(ip, port) == ERROR)
+			{
+				renderText(
+					"Couldn't connect to server", 
+					pcsenior24_f, 
+					BOARD_STATUS_PADDING, 
+					SCREEN_HEIGHT - BOARD_STATUS_PADDING - 48, 
+					white
+				);
+			}
 		}
 		else if (gameType == PVAI_GAME)
 		{
@@ -85,6 +104,14 @@ int initialiseSDL()
 
 	// Initialize SDL_ttf
     if (TTF_Init() != 0)
+    {
+        printf("TTF_Init Error: %s\n", TTF_GetError());
+        SDL_Quit();
+        return ERROR;
+    }
+
+	// Initialize SDL_ttf
+    if (initialiseFonts() == ERROR)
     {
         printf("TTF_Init Error: %s\n", TTF_GetError());
         SDL_Quit();
