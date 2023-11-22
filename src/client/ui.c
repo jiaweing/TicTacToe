@@ -62,7 +62,6 @@ int setBackgroundImage(const char *imagePath)
     SDL_Rect destRect = {0, 0, 1950, 700};
 
     // Render the background image using the original size
-    SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, backgroundTexture, &srcRect, &destRect);
 
     SDL_FreeSurface(backgroundSurface);
