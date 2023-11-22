@@ -56,6 +56,60 @@ int mainMenu()
     return ERROR;
 }
 
+int pvpMenu()
+{
+    SDL_Event event;
+    SDL_Rect buttonRects[3];
+
+    drawPvPMenu(buttonRects);
+    SDL_RenderPresent(renderer);
+
+    while (1)
+    {
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int x = event.button.x;
+                int y = event.button.y;
+
+                if (y >= buttonRects[0].y && y < buttonRects[0].y + buttonRects[0].h && x >= buttonRects[0].x && x < buttonRects[0].x + buttonRects[0].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50)
+                    {
+                        clearScreen();
+                        return ONLINE_GAME;
+                    }
+                }
+                else if (y >= buttonRects[1].y && y < buttonRects[1].y + buttonRects[1].h && x >= buttonRects[1].x && x < buttonRects[1].x + buttonRects[1].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
+                    {
+                        clearScreen();
+                        return OFFLINE_GAME;
+                    }
+                }
+                else if (y >= buttonRects[2].y && y < buttonRects[2].y + buttonRects[2].h && x >= buttonRects[2].x && x < buttonRects[2].x + buttonRects[2].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
+                    {
+                        clearScreen();
+                        return BACK;
+                    }
+                }
+            }
+            else if (event.type == SDL_QUIT)
+            {
+                exit(0);
+                break;
+            }
+        }
+    }
+
+    clearScreen();
+    return ERROR;
+}
+
 int difficultyMenu()
 {
     SDL_Event event;
@@ -187,6 +241,68 @@ int drawMainMenu(SDL_Rect buttonRects[3])
 
         SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     }
+
+    // Clean up resources
+    TTF_CloseFont(font);
+    TTF_CloseFont(btnfont);
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+
+    return SUCCESS;
+}
+
+int drawPvPMenu(SDL_Rect buttonRects[3])
+{
+    TTF_Font *font = TTF_OpenFont(ARCADE_FONT, 90);
+    TTF_Font *btnfont = TTF_OpenFont(PCSENIOR_FONT, 18);
+    if (font == NULL)
+    {
+        fprintf(stderr, "TTF_OpenFont Errors: %s\n", TTF_GetError());
+        return ERROR;
+    }
+
+    SDL_Color textColor = {255, 255, 255};
+    SDL_Surface *textSurface;
+    SDL_Texture *textTexture;
+    SDL_Rect textRect;
+
+    // Draw the title
+    textSurface = TTF_RenderText_Solid(font, "Tic Tac Toe", textColor);
+    textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    textRect.x = SCREEN_WIDTH / 2 - textSurface->w / 2;
+    textRect.y = 40;
+    textRect.w = textSurface->w;
+    textRect.h = textSurface->h;
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+    // Draw the menu options (PVP, PVAI, Exit)
+    char *menuOptions[3] = {"Online", "Offline", "Back"};
+    SDL_Color buttonColors[3] = {{79, 175, 68}, {181, 173, 16}, {42, 52, 146}};
+    // SDL_Rect buttonRects[4];
+    for (int i = 0; i < 5; i++)
+    {
+        // Define button colors and positions
+        SDL_SetRenderDrawColor(renderer, buttonColors[i].r, buttonColors[i].g, buttonColors[i].b, 255);
+        buttonRects[i].x = SCREEN_WIDTH / 2 - 150; //-150 because the button width is 300
+        buttonRects[i].y = 150 + i * 95;
+        buttonRects[i].w = 300;
+        buttonRects[i].h = 80;
+        // SDL_SetRenderDrawColor(_renderer, 255, 255, 255,255); // Border color (black)
+        SDL_RenderFillRect(renderer, &buttonRects[i]);
+
+        textSurface = TTF_RenderText_Solid(btnfont, menuOptions[i], textColor);
+        textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+
+        // Center the text within the buttonRect
+        textRect.x = buttonRects[i].x + (buttonRects[i].w - textSurface->w) / 2;
+        textRect.y = buttonRects[i].y + (buttonRects[i].h - textSurface->h) / 2;
+        textRect.w = textSurface->w;
+        textRect.h = textSurface->h;
+
+        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
     // Clean up resources
     TTF_CloseFont(font);
