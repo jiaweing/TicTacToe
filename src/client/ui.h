@@ -14,7 +14,6 @@
 
 #define PCSENIOR_FONT "assets/fonts/pcsenior.ttf"
 #define ARCADE_FONT "assets/fonts/ARCADE.TTF"
-#define INTER_FONT "assets/fonts/Inter-Regular.ttf"
 
 int initialiseFonts();
 void drawTextInput(char *label, char *var);

@@ -1,58 +1,104 @@
 CC := gcc
-CLFLAGS := -Wall
+CLFLAGS += -Wall
 CLHDRS := $(wildcard src/client/*.h)
 CLSRCS := $(wildcard src/client/*.c)
-CLOBJS := $(CLSRCS:%.c=tmp/%.o) $(wildcard Gfx/*.o) $(wildcard Sfx/*.o)
-CLEXEC := ttt_client
+CLOBJS := $(CLSRCS:src/client/%.c=.out/client/%.o) $(wildcard Gfx/*.o) $(wildcard Sfx/*.o)
+CLEXEC := .out/ttt_client
 
 SVFLAGS := -Wall
 SVHDRS := $(wildcard src/server/*.h)
 SVSRCS := $(wildcard src/server/*.c)
-SVOBJS := $(SVSRCS:%.c=tmp/%.o) $(wildcard Gfx/*.o) $(wildcard Sfx/*.o)
-SVEXEC := ttt_server
+SVOBJS := $(SVSRCS:src/server/%.c=.out/server/%.o) $(wildcard Gfx/*.o) $(wildcard Sfx/*.o)
+SVEXEC := .out/ttt_server
 
 ifeq ($(OS),Windows_NT)
-CLFLAGS += -std=c17 -I./include/SDL2/include -L./include/SDL2/lib -llib -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image
+CLFLAGS += -I./include/SDL2/include
+LDFLAGS := -std=c17 -L./include/SDL2/lib -Wl,-subsystem,windows -lmingw32 -lws2_32 -lSDL2main -lSDL2 -lSDL2_ttf -lws2_32 -lm
+MKDIR_P := mkdir
+RM := del /f
+RMDIR := rmdir /s /q
 else
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-CLFLAGS += -lSDL2 -lSDL2_ttf
+LDFLAGS := -lSDL2 -lSDL2_ttf
 endif
 ifeq ($(UNAME_S),Darwin)
-ifeq ($(filter %86,$(UNAME_P)),)
-CLFLAGS += -I./include/SDL2/include -lSDL2 -lSDL2_ttf -lSDL2_image -lm
+UNAME_M := $(shell uname -m)
+ifeq ($(UNAME_M),x86_64)
+CLFLAGS += -I/usr/local/include
+LDFLAGS := -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm
+else ifeq ($(UNAME_M),arm64)
+CLFLAGS += -I/opt/homebrew/include
+LDFLAGS := -L /opt/homebrew/lib -lSDL2 -lSDL2_ttf -lm
+endif
+endif
+MKDIR_P := mkdir -p
+RM := rm -f
+RMDIR := rm -rf
+endif
+
+
+.PHONY: client
+
+client: $(CLEXEC)
+
+ifeq ($(OS),Windows_NT)
+	@echo "Copying SDL2.dll and SDL2_ttf.dll to .out folder..."
+	@copy include\SDL2\bin\SDL2.dll .out\SDL2.dll
+	@copy include\SDL2\bin\SDL2_ttf.dll .out\SDL2_ttf.dll
+	@copy include\ws2_32.dll .out\ws2_32.dll
+	@echo "Copying assets to .out folder..."
+	@xcopy /E /I assets .out\assets
+	@echo "Copying data to .out folder..."
+	@xcopy /E /I data .out\data
 else
-CLFLAGS += -I./include/SDL2/include -lSDL2 -lSDL2_ttf -lm
+	@echo "Copying assets to .out folder..."
+	@cp -r assets .out/
+	@echo "Copying data to .out folder..."
+	@cp -r data .out/
 endif
-endif
-endif
-
-
-.PHONY: all, client
-
-all, client: $(CLEXEC)
 
 $(CLEXEC): $(CLOBJS) $(CLHDRS)
-	$(CC) -o $@ $(CLOBJS) $(CLFLAGS) && echo "EXEC [OK]  $@"
+	@echo "$(CC) -o $@ $(CLOBJS) $(CLFLAGS) $(LDFLAGS)"
+	$(CC) -o $@ $(CLOBJS) $(CLFLAGS) $(LDFLAGS) && echo "EXEC [OK]  $@"
 
-tmp/%.o: %.c
-	@$(CC) $(CLFLAGS) -c $< -o $@ && echo "tmp/%.o: %.c [OK]  $@"
-
+.out/client/%.o: src/client/%.c
+	-@$(MKDIR_P) "$(@D)"
+	@echo "$(CC) $(CLFLAGS) -c $< -o $@ $(LDFLAGS)"
+	@$(CC) $(CLFLAGS) -c $< -o $@ $(LDFLAGS) && echo ".out/client/%.o: src/client/%.c [OK]  $@"
+	
+	
 .PHONY: server
 
 server: $(SVEXEC)
 
+ifeq ($(OS),Windows_NT)
+	@copy include\ws2_32.dll .out\ws2_32.dll
+endif
+
 $(SVEXEC): $(SVOBJS) $(SVHDRS)
-	$(CC) -o $@ $(SVOBJS) $(SVFLAGS) && echo "EXEC [OK]  $@"
+	@echo "$(CC) -o $@ $(SVOBJS) $(SVFLAGS) $(LDFLAGS)"
+	$(CC) -o $@ $(SVOBJS) $(SVFLAGS) $(LDFLAGS) && echo "EXEC [OK]  $@"
 
-tmp/%.o: %.c
-	@$(CC) $(SVFLAGS) -c $< -o $@ && echo "tmp/%.o: %.c [OK]  $@"
-
-
+.out/server/%.o: src/server/%.c
+	-@$(MKDIR_P) "$(@D)"
+	@echo "$(CC) $(SVFLAGS) -c $< -o $@ $(LDFLAGS)"
+	@$(CC) $(SVFLAGS) -c $< -o $@ $(LDFLAGS) && echo ".out/server/%.o: src/server/%.c [OK]  $@"
+	
+	
 .PHONY: clean, clear
 
 clean clear:
-	@rm -f ttt_client && echo "[CL] out/ttt_client"
-	@rm -f tmp/src/client/* && echo "[CL] tmp/client"
-	@rm -f ttt_server && echo "[CL] out/ttt_server"
-	@rm -f tmp/src/server/* && echo "[CL] tmp/server"
+ifeq ($(OS),Windows_NT)
+	-@$(RM) .out\src\client\* && echo "[CL] .out\client"
+	-@$(RM) .out\src\server\* && echo "[CL] .out\server"
+	-@$(RM) .out\ttt_client.exe && echo "[CL] .out\ttt_client.exe"
+	-@$(RM) .out\ttt_server.exe && echo "[CL] .out\ttt_server.exe"
+	-@$(RMDIR) .out && echo "[CL] .out"
+else
+	-@$(RM) .out/src/client/* && echo "[CL] .out/client"
+	-@$(RM) .out/src/server/* && echo "[CL] .out/server"
+	-@$(RM) .out/ttt_client && echo "[CL] .out/ttt_client"
+	-@$(RM) .out/ttt_server && echo "[CL] .out/ttt_server"
+	-@$(RMDIR) .out && echo "[CL] .out"
+endif
