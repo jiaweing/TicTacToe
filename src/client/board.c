@@ -48,6 +48,11 @@ void drawBoard(const char board[9])
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderDrawRect(renderer, &board_rect);
 
+	if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    {
+        printf("Image checkpoint not working");
+    }
+
 	for (int i = 0; i < 9; ++i)
 	{
 		int row = i % 3;

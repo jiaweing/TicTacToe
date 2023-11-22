@@ -12,7 +12,7 @@ int initialiseSDL();
 
 int main(int argv, char** args)
 {
-	printf("we out hereL.\n");
+	printf("we out iygykgigiygygyyrtfgyhuoofrdtfuyiuohereL.\n");
 
 	if (initialiseSDL() == ERROR)
 	{
@@ -41,8 +41,8 @@ int main(int argv, char** args)
 					"Couldn't connect to server", 
 					pcsenior24_f, 
 					BOARD_STATUS_PADDING, 
-					SCREEN_HEIGHT - BOARD_STATUS_PADDING - 50, 
-					white
+					BOARD_STATUS_PADDING, 
+					red
 				);
 			}
 		}

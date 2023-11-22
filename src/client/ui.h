@@ -45,4 +45,7 @@ extern SDL_Color orange;
 extern SDL_Color green;
 extern SDL_Color black;
 extern SDL_Color white;
+extern SDL_Color cyan;
+extern SDL_Color btnblue;
+extern SDL_Color deepblue;
 extern SDL_Color transparent;

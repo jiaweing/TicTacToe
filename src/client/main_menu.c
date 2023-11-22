@@ -60,7 +60,10 @@ int difficultyMenu()
 {
     SDL_Event event;
     SDL_Rect buttonRects[5];
-
+    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    {
+        printf("Image checkpoint not working");
+    }
     drawDifficultyMenu(buttonRects);
     SDL_RenderPresent(renderer);
 
@@ -160,7 +163,7 @@ int drawMainMenu(SDL_Rect buttonRects[3])
 
     // Draw the menu options (PVP, PVAI, Exit)
     char *menuOptions[] = {"Player v Player", "Player v AI", "Exit"};
-    SDL_Color buttonColors[] = {{0, 100, 200}, {0, 200, 100}, {42, 52, 146}};
+    SDL_Color buttonColors[] = {{80, 200, 200}, {0, 100, 200}, {42, 52, 146}};
     // SDL_Rect buttonRects[4];
     for (int i = 0; i < 3; i++)
     {
