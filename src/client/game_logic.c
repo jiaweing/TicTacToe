@@ -3,55 +3,54 @@
 #include "game_logic.h"
 
 // Function to predict the next move
-int predictNextMove(char board[], double priors[], double likelihoods[NUM_POSITIONS][MAX_ROWS][NUM_CLASSES])
-{
-	// Calculate the posterior probability for each possible move
-	int temp_board[NUM_POSITIONS];
+int predictNextMove(int difficulty_level, char char_board[NUM_POSITIONS], double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES]) {
+    int int_board[NUM_POSITIONS];
+    double pos = 0.0;
+    int empty_pos[NUM_POSITIONS];
+    double max_pos = 0.0;
+    double lowest_pos = 1;
+    int best_move;
+    int result;
 
-	for (int pos = 0; pos < NUM_POSITIONS; pos++)
-	{
-		if (board[pos] == EMPTY_SYMBOL)
-		{
-			temp_board[pos] = EMPTY;
-		}
-		else if (board[pos] == X_SYMBOL)
-		{
-			temp_board[pos] = X;
-		}
-		else if (board[pos] == O_SYMBOL)
-		{
-			temp_board[pos] = O;
-		}
-	}
+    changeToIntBoard(char_board, int_board);
+    int possible_moves = countEmptyPositions(int_board, empty_pos);
 
-	double posteriors[NUM_POSITIONS] = {0.0};
+    if (possible_moves > 1) {
+        if (difficulty_level == 1) {
+            for (int j = 0; j < possible_moves; ++j) {
+                int_board[empty_pos[j]] = X;
+                result = naiveBayesPredict(int_board, priors, likelihoods, &pos);
+                if (result == 1) {
+                    if (pos < lowest_pos) {
+                        lowest_pos = pos;
+                        best_move = empty_pos[j];
+                    }
+                }
+                int_board[empty_pos[j]] = EMPTY;
+            }
 
-	for (int pos = 0; pos < NUM_POSITIONS; pos++)
-	{
-		if (temp_board[pos] == EMPTY)
-		{
-			for (int cls = 0; cls < NUM_CLASSES; cls++)
-			{
-				posteriors[pos] += priors[cls];
-				posteriors[pos] *= likelihoods[pos][temp_board[pos]][cls];
-			}
-		}
-	}
+            return best_move;
+        }
 
-	// Find the move with the highest posterior probability
-	int best_move = 0;
-	double max_posterior = posteriors[0];
+        else if (difficulty_level == 2) {
+            for (int j = 0; j < possible_moves; ++j) {
+                int_board[empty_pos[j]] = X;
+                result = naiveBayesPredict(int_board, priors, likelihoods, &pos);
+                if (result == 1) {
+                    if (pos > max_pos) {
+                        max_pos = pos;
+                        best_move = empty_pos[j];
+                    }
+                }
+                int_board[empty_pos[j]] = EMPTY;
+            }
 
-	for (int pos = 1; pos < NUM_POSITIONS; pos++)
-	{
-		if (temp_board[pos] == EMPTY && posteriors[pos] > max_posterior)
-		{
-			max_posterior = posteriors[pos];
-			best_move = pos;
-		}
-	}
+            return best_move;
+        } 
+    }
+    
+    return empty_pos[0];
 
-	return best_move;
 }
 
 int minimax(char board[9], char player, int depth, int alpha, int beta)

@@ -12,11 +12,27 @@ int pvaiGame(int difficulty)
 
 	drawAIGameScreen(board, player);
 
+	int data[MAX_ROWS][NUM_POSITIONS];
+	int labels[MAX_ROWS];
+	int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS];
+	int training_labels[MAX_TRAINING_ROWS];
+	int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS]; 
+	int testing_labels[MAX_TESTING_ROWS]; 
+	int split_ratio = 80;
+	double priors[NUM_CLASSES];
+	double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES];
+
+	extract_data(data, labels);
+	split_data(data, labels, training_data, training_labels, testing_data, testing_labels, split_ratio);
+
+	// NaiveBayes Train Model and Cross Validation
+	validate(training_data, training_labels, testing_data, testing_labels, likelihoods, priors);
+
 	for (turn = 0; turn < 9 && win(board) == EMPTY_SYMBOL; ++turn)
 	{
 		if (player == X_SYMBOL)
 		{
-			move = computerMove(X_SYMBOL, board, difficulty);
+			move = computerMove(X_SYMBOL, board, difficulty, priors, likelihoods);
 			board[move] = X_SYMBOL;
 			player = O_SYMBOL;
 		}
@@ -49,30 +65,14 @@ int pvaiGame(int difficulty)
 	return SUCCESS;
 }
 
-int computerMove(char symbol, char board[9], int difficulty)
+int computerMove(char symbol, char board[9], int difficulty, double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES])
 {
-	if (difficulty == EASY_DIFFICULTY || difficulty == MEDIUM_DIFFICULTY || difficulty == HARD_DIFFICULTY)
+	if (difficulty == EASY_DIFFICULTY || difficulty == MEDIUM_DIFFICULTY)
 	{
-		int data[MAX_ROWS][NUM_POSITIONS];
-		int labels[MAX_ROWS];
-		int training_data[MAX_ROWS][NUM_POSITIONS];
-		int training_labels[MAX_ROWS];
-		int testing_data[MAX_ROWS][NUM_POSITIONS];
-		int testing_labels[MAX_ROWS];
-		int split_ratio = 80;
-		double priors[NUM_CLASSES];
-		double likelihoods[NUM_POSITIONS][MAX_ROWS][NUM_CLASSES];
-
-		extract_data(data, labels);
-		split_data(data, labels, training_data, training_labels, testing_data, testing_labels, split_ratio);
-		calculatePriors(training_data, training_labels, priors);
-		calculateLikelihoods(training_data, training_labels, likelihoods, priors);
-
-		int next_move = predictNextMove(board, priors, likelihoods);
-
+		int next_move = predictNextMove(difficulty, board, priors, likelihoods);
 		return next_move;
 	}
-	else if (difficulty == IMPOSSIBLE_DIFFICULTY)
+	else if (difficulty == HARD_DIFFICULTY || difficulty == IMPOSSIBLE_DIFFICULTY)
 	{
 		int move = 0;
 		int bestScore = MIN_SCORE;
