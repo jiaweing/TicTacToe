@@ -185,6 +185,11 @@ int difficultyMenu()
 
 int drawMainMenu(SDL_Rect buttonRects[3])
 {
+    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    {
+        printf("Image not loading");
+    }
+
     // Create a font (you should replace this with your own font)
     TTF_Font *font = TTF_OpenFont(ARCADE_FONT, 90);
     TTF_Font *btnfont = TTF_OpenFont(PCSENIOR_FONT, 18);
@@ -192,11 +197,6 @@ int drawMainMenu(SDL_Rect buttonRects[3])
     {
         fprintf(stderr, "TTF_OpenFont Errors: %s\n", TTF_GetError());
         return ERROR;
-    }
-
-    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
-    {
-        printf("Image checkpoint not working");
     }
     
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -253,6 +253,11 @@ int drawMainMenu(SDL_Rect buttonRects[3])
 
 int drawPvPMenu(SDL_Rect buttonRects[3])
 {
+    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    {
+        printf("Image not loading");
+    }
+
     TTF_Font *font = TTF_OpenFont(ARCADE_FONT, 90);
     TTF_Font *btnfont = TTF_OpenFont(PCSENIOR_FONT, 18);
     if (font == NULL)
@@ -279,7 +284,7 @@ int drawPvPMenu(SDL_Rect buttonRects[3])
     char *menuOptions[3] = {"Online", "Offline", "Back"};
     SDL_Color buttonColors[3] = {{79, 175, 68}, {181, 173, 16}, {42, 52, 146}};
     // SDL_Rect buttonRects[4];
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 3; i++)
     {
         // Define button colors and positions
         SDL_SetRenderDrawColor(renderer, buttonColors[i].r, buttonColors[i].g, buttonColors[i].b, 255);
@@ -302,8 +307,6 @@ int drawPvPMenu(SDL_Rect buttonRects[3])
         SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     }
 
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
     // Clean up resources
     TTF_CloseFont(font);
     TTF_CloseFont(btnfont);
@@ -315,6 +318,11 @@ int drawPvPMenu(SDL_Rect buttonRects[3])
 
 int drawDifficultyMenu(SDL_Rect buttonRects[5])
 {
+    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    {
+        printf("Image not loading");
+    }
+
     // Create a font (you should replace this with your own font)
     TTF_Font *font = TTF_OpenFont(ARCADE_FONT, 90);
     TTF_Font *btnfont = TTF_OpenFont(PCSENIOR_FONT, 18);
@@ -364,8 +372,6 @@ int drawDifficultyMenu(SDL_Rect buttonRects[5])
 
         SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     }
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
     // Clean up resources
     TTF_CloseFont(font);

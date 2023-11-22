@@ -48,11 +48,11 @@ int main(int argv, char** args)
 						pcsenior24_f, 
 						BOARD_STATUS_PADDING, 
 						SCREEN_HEIGHT - BOARD_STATUS_PADDING - 50, 
-						white
+						red
 					);
 				}
 			}
-			else
+			else if (response == OFFLINE_GAME)
 			{
 				pvpOfflineGame();
 			}
