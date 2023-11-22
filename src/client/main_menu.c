@@ -136,6 +136,10 @@ int drawMainMenu(SDL_Rect buttonRects[3])
         fprintf(stderr, "TTF_OpenFont Errors: %s\n", TTF_GetError());
         return ERROR;
     }
+    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    {
+        printf("Image checkpoint not working");
+    } 
 
     SDL_Color textColor = {255, 255, 255};
     SDL_Surface *textSurface;
@@ -153,14 +157,14 @@ int drawMainMenu(SDL_Rect buttonRects[3])
 
     // Draw the menu options (PVP, PVAI, Exit)
     char *menuOptions[] = {"Player v Player", "Player v AI", "Exit"};
-    SDL_Color buttonColors[] = {{0, 100, 200}, {0, 200, 100}, {42, 52, 146}};
+    SDL_Color buttonColors[] = {{112, 185, 216}, {0, 100, 200}, {42, 52, 146}};
     // SDL_Rect buttonRects[4];
     for (int i = 0; i < 3; i++)
     {
         // Define button colors and positions
         SDL_SetRenderDrawColor(renderer, buttonColors[i].r, buttonColors[i].g, buttonColors[i].b, 255);
         buttonRects[i].x = SCREEN_WIDTH / 2 - 150; //-150 because the button width is 300
-        buttonRects[i].y = 150 + i * 95;
+        buttonRects[i].y = 200 + i * 95;
         buttonRects[i].w = 300;
         buttonRects[i].h = 80;
         // SDL_SetRenderDrawColor(_renderer, 255, 255, 255,255); // Border color (black)
@@ -177,6 +181,7 @@ int drawMainMenu(SDL_Rect buttonRects[3])
 
         SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     }
+
 
     // Clean up resources
     TTF_CloseFont(font);
@@ -202,6 +207,11 @@ int drawDifficultyMenu(SDL_Rect buttonRects[5])
     SDL_Surface *textSurface;
     SDL_Texture *textTexture;
     SDL_Rect textRect;
+    
+    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    {
+        printf("Image checkpoint not working");
+    } 
 
     // Draw the title
     textSurface = TTF_RenderText_Solid(font, "Tic Tac Toe", textColor);
@@ -308,7 +318,7 @@ int askForHostIP(char *ip)
 
 int askForHostPort(int *port)
 {
-    char portStr[7] = "";
+    char portStr[7] = "      ";
     memset(portStr, ' ', 7);
     int position = 0;
     int done = 0;

@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <stdlib.h>
+#include <SDL2/SDL_image.h>
 
 #define ERROR -1
 #define SUCCESS 1
@@ -19,6 +20,7 @@ void drawTextInput(char *label, char *var);
 void renderText(char *text, TTF_Font *font, int x, int y, SDL_Color color);
 void renderAnchoredText(char *text, TTF_Font *font, int x, int y, SDL_Color color);
 void clearScreen();
+int setBackgroundImage(const char *imagePath);
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
