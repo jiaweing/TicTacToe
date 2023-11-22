@@ -12,7 +12,7 @@ SVOBJS := $(SVSRCS:%.c=tmp/%.o) $(wildcard Gfx/*.o) $(wildcard Sfx/*.o)
 SVEXEC := ttt_server
 
 ifeq ($(OS),Windows_NT)
-CLFLAGS += -std=c17 -I./include/SDL2/include -L./include/SDL2/lib -llib -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
+CLFLAGS += -std=c17 -I./include/SDL2/include -L./include/SDL2/lib -llib -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image
 else
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -20,7 +20,7 @@ CLFLAGS += -lSDL2 -lSDL2_ttf
 endif
 ifeq ($(UNAME_S),Darwin)
 ifeq ($(filter %86,$(UNAME_P)),)
-CLFLAGS += -I./include/SDL2/include -lSDL2 -lSDL2_ttf -lm
+CLFLAGS += -I./include/SDL2/include -lSDL2 -lSDL2_ttf -lSDL2_image -lm
 else
 CLFLAGS += -I./include/SDL2/include -lSDL2 -lSDL2_ttf -lm
 endif

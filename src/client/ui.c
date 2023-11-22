@@ -54,7 +54,7 @@ void drawTextInput(char *label, char *var)
         pcsenior24_f,
         SCREEN_WIDTH / 2,
         SCREEN_HEIGHT / 2 - 50,
-        white);
+        blue);
     SDL_RenderPresent(renderer);
 }
 
@@ -92,4 +92,64 @@ void clearScreen()
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
+}
+
+// int setBackgroundImage(const char *imagePath)
+// {
+//     SDL_Surface *backgroundSurface = IMG_Load(imagePath);
+//     if (backgroundSurface == NULL)
+//     {
+//         printf("IMG_Load Error: %s\n", IMG_GetError());
+//         return ERROR;
+//     }
+
+//     SDL_Texture *backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
+//     if (backgroundTexture == NULL)
+//     {
+//         printf("SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+//         SDL_FreeSurface(backgroundSurface);
+//         return ERROR;
+//     }
+
+//     SDL_RenderClear(renderer);
+//     SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+
+//     SDL_FreeSurface(backgroundSurface);
+//     SDL_DestroyTexture(backgroundTexture);
+
+//     return SUCCESS;
+// }
+int setBackgroundImage(const char *imagePath)
+{
+    SDL_Surface *backgroundSurface = IMG_Load(imagePath);
+    if (backgroundSurface == NULL)
+    {
+        printf("IMG_Load Error: %s\n", IMG_GetError());
+        return ERROR;
+    }
+
+    SDL_Texture *backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
+    if (backgroundTexture == NULL)
+    {
+        printf("SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        SDL_FreeSurface(backgroundSurface);
+        return ERROR;
+    }
+
+    // Get the dimensions of the original image
+    int imageWidth = 400;
+    int imageHeight = 400;
+
+    // Create source and destination rectangles
+    SDL_Rect srcRect = {0, 0, 1920, 900};
+    SDL_Rect destRect = {0, 0, 1950, 700};
+
+    // Render the background image using the original size
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, backgroundTexture, &srcRect, &destRect);
+
+    SDL_FreeSurface(backgroundSurface);
+    SDL_DestroyTexture(backgroundTexture);
+
+    return SUCCESS;
 }
