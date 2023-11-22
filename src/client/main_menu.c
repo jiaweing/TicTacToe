@@ -137,6 +137,13 @@ int drawMainMenu(SDL_Rect buttonRects[3])
         return ERROR;
     }
 
+    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    {
+        printf("Image checkpoint not working");
+    }
+    
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
     SDL_Color textColor = {255, 255, 255};
     SDL_Surface *textSurface;
     SDL_Texture *textTexture;
@@ -297,8 +304,8 @@ int askForHostIP(char *ip)
             }
             if (e.type == SDL_QUIT)
             {
-				exit(0);
-				break;
+                exit(0);
+                break;
             }
         }
     }
@@ -352,12 +359,11 @@ int askForHostPort(int *port)
                 {
                     return BACK;
                 }
-
-			}
+            }
             if (e.type == SDL_QUIT)
             {
-				exit(0);
-				break;
+                exit(0);
+                break;
             }
         }
     }

@@ -6,9 +6,8 @@
 int pvpOnlineGame(const char *hostname, int hostportno)
 {
 	// back button
-
 	int sockfd = connect_to_server(hostname, hostportno);
-	if (sockfd < 0)
+	if (sockfd == ERROR)
 	{
 		clearScreen();
 		return ERROR;
@@ -163,9 +162,19 @@ int connect_to_server(const char *hostname, int hostportno)
 {
 	struct hostent *server;
 	struct sockaddr_in serv_addr;
+	int sockfd;
 
-	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	#ifdef _WIN32
+	WSADATA wsaData;
+	
+	int result = WSAStartup(MAKEWORD(2,2), &wsaData);
+    if (result != 0) {
+        printf("WSAStartup failed with error: %d\n", result);
+        return 1;
+    }
+	#endif
 
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
 	{
 		error("ERROR opening socket for server.");
@@ -173,7 +182,6 @@ int connect_to_server(const char *hostname, int hostportno)
 	}
 
 	server = gethostbyname(hostname);
-
 	if (server == NULL)
 	{
 		fprintf(stderr, "ERROR, no such host\n");

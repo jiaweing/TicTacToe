@@ -66,6 +66,8 @@
     "pvai_game.h": "c",
     "pvp_online_game.h": "c",
     "socket.h": "c",
-    "netdb.h": "c"
+    "netdb.h": "c",
+    "sdl_ttf.h": "c",
+    "stdio.h": "c"
   }
 }

@@ -66,3 +66,12 @@ We only have prebuilt binaries for Macs running on Apple Intel, as it is not pos
 2. Click on an empty tile to place your mark.
 3. The first player to get three marks in a row (horizontally, vertically, or diagonally) wins.
 4. If all tiles are filled and no player has won, the game is a tie.
+
+gcc -std=c17 ttt.c ui.c game_logic.c board.c main_menu.c naivebayes.c pvai_game.c pvp_online_game.c pvp_offline_game.c -I "C:\Users\Tay Jeung Hong\Documents\SIT\Y1S1\CSC 1103 - Programming Methodology\PMGrpAsg\TicTacToe(WORKING)\sdl2\include" -L "C:\Users\Tay Jeung Hong\Documents\SIT\Y1S1\CSC 1103 - Programming Methodology\PMGrpAsg\TicTacToe(WORKING)\SDL2\lib"  -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lwsock32 -o ttt_client
+
+gcc -std=c17 src/client/ttt.c src/client/ui.c src/client/game_logic.c src/client/board.c src/client/main_menu.c src/client/naivebayes.c src/client/pvai_game.c src/client/pvp_online_game.c src/client/pvp_offline_game.c -I "C:\Users\Tay Jeung Hong\Documents\SIT\Y1S1\CSC 1103 - Programming Methodology\PMGrpAsg\TicTacToe(WORKING)\sdl2\include" -L "C:\Users\Tay Jeung Hong\Documents\SIT\Y1S1\CSC 1103 - Programming Methodology\PMGrpAsg\TicTacToe(WORKING)\SDL2\lib"  -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lwsock32 -o ttt_client
+
+gcc -std=c17 src/client/ttt.c src/client/ui.c src/client/game_logic.c src/client/board.c src/client/main_menu.c src/client/naivebayes.c src/client/pvai_game.c src/client/pvp_online_game.c src/client/pvp_offline_game.c -I "C:\Users\Tay Jeung Hong\Desktop\TicTacToe - Copy\include\sdl2\include" -L "C:\Users\Tay Jeung Hong\Desktop\TicTacToe - Copy\include\SDL2\lib"  -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lwsock32 -o ttt_client
+
+172.16.150.222
+27428

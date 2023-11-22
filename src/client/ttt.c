@@ -10,8 +10,10 @@
 
 int initialiseSDL();
 
-int main(int argc, char *argv[])
+int main(int argv, char** args)
 {
+	printf("we out hereL.\n");
+
 	if (initialiseSDL() == ERROR)
 	{
 		printf("There has been an error with initialising SDL.\n");
@@ -39,7 +41,7 @@ int main(int argc, char *argv[])
 					"Couldn't connect to server", 
 					pcsenior24_f, 
 					BOARD_STATUS_PADDING, 
-					SCREEN_HEIGHT - BOARD_STATUS_PADDING - 48, 
+					SCREEN_HEIGHT - BOARD_STATUS_PADDING - 50, 
 					white
 				);
 			}

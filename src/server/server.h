@@ -1,8 +1,9 @@
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <pthread.h>
 
 #ifdef __APPLE__
 #include <sys/socket.h>
@@ -11,9 +12,11 @@
 #endif
 
 #ifdef _WIN32
-#include <ws2spi.h>
-#include <ws2tcpip.h>
 #include <winsock2.h>
+#include <windows.h>
+#include <winsock.h>
+#include <ws2tcpip.h>
+#include <ws2ipdef.h>
 #endif
 
 #include "board.h"

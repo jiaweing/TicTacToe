@@ -59,6 +59,16 @@ int setup_listener(int portno)
 	int sockfd;
 	struct sockaddr_in serv_addr;
 
+	#ifdef _WIN32
+	WSADATA wsaData;
+	
+	int result = WSAStartup(MAKEWORD(2,2), &wsaData);
+    if (result != 0) {
+        printf("WSAStartup failed with error: %d\n", result);
+        server_error("ERROR WSAStartup failed.");
+    }
+	#endif
+
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
 	{

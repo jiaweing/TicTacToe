@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include <stdlib.h>
 
 #define ERROR -1
@@ -11,14 +12,23 @@
 
 #define BOARD_STATUS_PADDING 10
 
+#ifdef __APPLE__
 #define PCSENIOR_FONT "assets/fonts/pcsenior.ttf"
 #define ARCADE_FONT "assets/fonts/ARCADE.TTF"
 #define INTER_FONT "assets/fonts/Inter-Regular.ttf"
+#endif
+
+#ifdef _WIN32
+#define PCSENIOR_FONT "assets/fonts/pcsenior.ttf"
+#define ARCADE_FONT "assets/fonts/ARCADE.TTF"
+#define INTER_FONT "assets/fonts/Inter-Regular.ttf"
+#endif
 
 int initialiseFonts();
 void drawTextInput(char *label, char *var);
 void renderText(char *text, TTF_Font *font, int x, int y, SDL_Color color);
 void renderAnchoredText(char *text, TTF_Font *font, int x, int y, SDL_Color color);
+int setBackgroundImage(const char *imagePath);
 void clearScreen();
 
 extern SDL_Window *window;
