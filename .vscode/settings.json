@@ -69,6 +69,7 @@
     "pvp_online_game.h": "c",
     "socket.h": "c",
     "netdb.h": "c",
-    "sdl.h": "c"
+    "sdl.h": "c",
+    "ws2tcpip.h": "c"
   }
 }
