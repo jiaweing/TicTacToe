@@ -13,23 +13,23 @@ SVEXEC := .out/ttt_server
 
 ifeq ($(OS),Windows_NT)
 CLFLAGS += -I./include/SDL2/include
-LDFLAGS := -std=c17 -L./include/SDL2/lib -Wl,-subsystem,windows -lmingw32 -lws2_32 -lSDL2main -lSDL2 -lSDL2_ttf -lws2_32 -lm
+LDFLAGS := -std=c17 -L./include/SDL2/lib -Wl,-subsystem,windows -lmingw32 -lws2_32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lws2_32 -lm
 MKDIR_P := mkdir
 RM := del /f
 RMDIR := rmdir /s /q
 else
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-LDFLAGS := -lSDL2 -lSDL2_ttf
+LDFLAGS := -lSDL2 -lSDL2_ttf -lSDL2_image
 endif
 ifeq ($(UNAME_S),Darwin)
 UNAME_M := $(shell uname -m)
 ifeq ($(UNAME_M),x86_64)
 CLFLAGS += -I/usr/local/include
-LDFLAGS := -L /usr/local/lib -lSDL2 -lSDL2_ttf -lm
+LDFLAGS := -L /usr/local/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lm
 else ifeq ($(UNAME_M),arm64)
 CLFLAGS += -I/opt/homebrew/include
-LDFLAGS := -L /opt/homebrew/lib -lSDL2 -lSDL2_ttf -lm
+LDFLAGS := -L /opt/homebrew/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lm
 endif
 endif
 MKDIR_P := mkdir -p
@@ -46,6 +46,7 @@ ifeq ($(OS),Windows_NT)
 	@echo "Copying SDL2.dll and SDL2_ttf.dll to .out folder..."
 	@copy include\SDL2\bin\SDL2.dll .out\SDL2.dll
 	@copy include\SDL2\bin\SDL2_ttf.dll .out\SDL2_ttf.dll
+	@copy include\SDL2\bin\SDL2_image.dll .out\SDL2_image.dll
 	@copy include\ws2_32.dll .out\ws2_32.dll
 	@echo "Copying assets to .out folder..."
 	@xcopy /E /I assets .out\assets
