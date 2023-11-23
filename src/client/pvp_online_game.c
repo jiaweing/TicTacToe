@@ -95,6 +95,7 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 			{
 				clearScreen();
 				drawBoard(board);
+				SDL_RenderPresent(renderer);
 				printf("That position has already been played. Try again.\n");
 			}
 			else if (!strcmp(msg, PLAYER_COUNT))

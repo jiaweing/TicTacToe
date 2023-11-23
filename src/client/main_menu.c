@@ -388,7 +388,11 @@ int askForHostIP(char *ip)
     int position = 0;
     int done = 0;
 
-    drawTextInput("Host IP Address", ip);
+    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    {
+        printf("Image not loading");
+    }
+    drawTextInput("Type in Host IP Address", ip);
 
     SDL_Event e;
     while (!done)
@@ -405,7 +409,7 @@ int askForHostIP(char *ip)
                     }
                     ip[position] = e.key.keysym.sym;
                     position++;
-                    drawTextInput("Host IP Address", ip);
+                    drawTextInput("Type in Host IP Address", ip);
                 }
                 if (e.key.keysym.sym == SDLK_BACKSPACE)
                 {
@@ -415,7 +419,7 @@ int askForHostIP(char *ip)
                         position = 0;
                     }
                     ip[position] = ' ';
-                    drawTextInput("Host IP Address", ip);
+                    drawTextInput("Type in Host IP Address", ip);
                 }
                 if (e.key.keysym.sym == SDLK_RETURN)
                 {
@@ -445,7 +449,11 @@ int askForHostPort(int *port)
     int position = 0;
     int done = 0;
 
-    drawTextInput("Host Port Number", portStr);
+    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    {
+        printf("Image not loading");
+    }
+    drawTextInput("Type in Host Port Number", portStr);
 
     SDL_Event e;
     while (!done)
@@ -462,7 +470,7 @@ int askForHostPort(int *port)
                     }
                     portStr[position] = e.key.keysym.sym;
                     position++;
-                    drawTextInput("Host Port Number", portStr);
+                    drawTextInput("Type in Host Port Number", portStr);
                 }
                 if (e.key.keysym.sym == SDLK_BACKSPACE)
                 {
@@ -472,7 +480,7 @@ int askForHostPort(int *port)
                         position = 0;
                     }
                     portStr[position] = ' ';
-                    drawTextInput("Host Port Number", portStr);
+                    drawTextInput("Type in Host Port Number", portStr);
                 }
                 if (e.key.keysym.sym == SDLK_RETURN)
                 {

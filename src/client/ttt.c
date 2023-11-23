@@ -50,6 +50,7 @@ int main(int argv, char** args)
 						SCREEN_HEIGHT - BOARD_STATUS_PADDING - 50, 
 						red
 					);
+					continue;
 				}
 			}
 			else if (response == OFFLINE_GAME)
@@ -77,7 +78,6 @@ int main(int argv, char** args)
 			SDL_DestroyWindow(window);
 			SDL_Quit();
 			exit(1);
-
 		}
 		else 
 		{
