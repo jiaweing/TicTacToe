@@ -13,7 +13,7 @@ SVEXEC := .out/ttt_server
 
 ifeq ($(OS),Windows_NT)
 CLFLAGS += -I./include/SDL2/include
-LDFLAGS := -std=c17 -L./include/SDL2/lib -Wl,-subsystem,windows -lmingw32 -lws2_32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lws2_32 -lm
+LDFLAGS := -std=c17 -L./include/SDL2/lib -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lws2_32 -lm
 SVFLAGS += -lws2_32
 MKDIR_P := mkdir
 RM := del /f
@@ -44,7 +44,7 @@ endif
 client: $(CLEXEC)
 
 ifeq ($(OS),Windows_NT)
-	@echo "Copying SDL2.dll, SDL2_ttf.dll and SDL2_image.dll to .out folder..."
+	@echo "Copying Windows dependencies to .out folder..."
 	@copy include\SDL2\bin\SDL2.dll .out\SDL2.dll
 	@copy include\SDL2\bin\SDL2_ttf.dll .out\SDL2_ttf.dll
 	@copy include\SDL2\bin\SDL2_image.dll .out\SDL2_image.dll
