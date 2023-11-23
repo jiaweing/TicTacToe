@@ -14,12 +14,23 @@
 #define NUM_CLASSES 2
 // Define the maximum number of data rows
 #define MAX_ROWS 958
+#define MAX_TRAINING_ROWS 766
+#define MAX_TESTING_ROWS 192
 // Define the number of characters for 'positive\n' & 'negative\n'
 #define MAX_CHARACTERS 9
 
 void extract_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]);
-void shuffleArr(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]);
-void split_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS], int training_data[MAX_ROWS][NUM_POSITIONS], int training_labels[MAX_ROWS],
-				int testing_data[MAX_ROWS][NUM_POSITIONS], int testing_labels[MAX_ROWS], int split_ratio);
-void calculatePriors(int data[][NUM_POSITIONS], int labels[], double priors[]);
-void calculateLikelihoods(int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][MAX_ROWS][NUM_CLASSES], double priors[]);
+void shuffleArr (int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]);
+void split_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS], int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS],
+                int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS], int testing_labels[MAX_TESTING_ROWS], int split_ratio);
+void calculatePriors(int labels[MAX_ROWS], double priors[NUM_CLASSES]);
+void calculateLikelihoods(int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double priors[NUM_CLASSES]);
+int countEmptyPositions(int int_board[NUM_POSITIONS], int empty_pos[NUM_POSITIONS]);
+void changeToIntBoard(char char_board[NUM_POSITIONS], int int_board[NUM_POSITIONS]);
+void naiveBayesLearn(int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double priors[NUM_CLASSES]);
+int naiveBayesPredict(int int_board[NUM_POSITIONS], double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double *positive_possibility, double *negative_possibility);
+void calcStats(int data_rows, int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS], int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS],
+               int testing_labels[MAX_TESTING_ROWS], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double priors[NUM_CLASSES], double *accuracy, double *errorcount, 
+               double *truepos, double *trueneg, double *falsepos, double *falseneg, double *positive, double *negative);
+void validate(int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS], int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS], 
+			  int testing_labels[MAX_TESTING_ROWS], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double priors[NUM_CLASSES]);
