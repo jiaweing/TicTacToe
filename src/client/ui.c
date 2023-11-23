@@ -14,6 +14,9 @@ SDL_Color orange = {255, 149, 38};
 SDL_Color green = {79, 175, 68};
 SDL_Color black = {0, 0, 0};
 SDL_Color white = {255, 255, 255};
+SDL_Color cyan = {80, 200, 200};
+SDL_Color btnblue ={0, 100, 200};
+SDL_Color deepblue = {42, 52, 146};
 SDL_Color transparent = {0, 0, 0, 0};
 
 int initialiseFonts()
@@ -62,7 +65,6 @@ int setBackgroundImage(const char *imagePath)
     SDL_Rect destRect = {0, 0, 1950, 700};
 
     // Render the background image using the original size
-    SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, backgroundTexture, &srcRect, &destRect);
 
     SDL_FreeSurface(backgroundSurface);
@@ -85,7 +87,7 @@ void drawTextInput(char *label, char *var)
         pcsenior24_f,
         SCREEN_WIDTH / 2,
         SCREEN_HEIGHT / 2 - 50,
-        white);
+        cyan);
     SDL_RenderPresent(renderer);
 }
 

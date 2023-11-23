@@ -12,8 +12,6 @@ int initialiseSDL();
 
 int main(int argv, char** args)
 {
-	printf("we out hereL.\n");
-
 	if (initialiseSDL() == ERROR)
 	{
 		printf("There has been an error with initialising SDL.\n");
@@ -25,25 +23,38 @@ int main(int argv, char** args)
 		int gameType = mainMenu();
 		if (gameType == PVP_GAME) 
 		{
-			char ip[15] = SERVER_HOSTNAME;
-			int port = SERVER_PORT;
-			if (askForHostIP(ip) == BACK)
+			int response = pvpMenu();
+			if (response == BACK)
 			{
 				continue;
 			}
-			if (askForHostPort(&port) == BACK)
+			else if (response == ONLINE_GAME)
 			{
-				continue;
+				char ip[15] = SERVER_HOSTNAME;
+				int port = SERVER_PORT;
+
+				if (askForHostIP(ip) == BACK)
+				{
+					continue;
+				}
+				if (askForHostPort(&port) == BACK)
+				{
+					continue;
+				}
+				if (pvpOnlineGame(ip, port) == ERROR)
+				{
+					renderText(
+						"Couldn't connect to server", 
+						pcsenior24_f, 
+						BOARD_STATUS_PADDING, 
+						SCREEN_HEIGHT - BOARD_STATUS_PADDING - 50, 
+						red
+					);
+				}
 			}
-			if (pvpOnlineGame(ip, port) == ERROR)
+			else if (response == OFFLINE_GAME)
 			{
-				renderText(
-					"Couldn't connect to server", 
-					pcsenior24_f, 
-					BOARD_STATUS_PADDING, 
-					SCREEN_HEIGHT - BOARD_STATUS_PADDING - 50, 
-					white
-				);
+				pvpOfflineGame();
 			}
 		}
 		else if (gameType == PVAI_GAME)
