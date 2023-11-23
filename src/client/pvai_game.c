@@ -81,7 +81,7 @@ int computerMove(char symbol, char board[9], int difficulty, double priors[NUM_C
 			if (board[i] == EMPTY_SYMBOL)
 			{
 				board[i] = X_SYMBOL;
-				if (difficulty == HARD_DIFFICULTY)
+				if (difficulty == EASY_DIFFICULTY)
 				{
 					int score = randminimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
 					board[i] = EMPTY_SYMBOL;
