@@ -2,10 +2,12 @@
 #include "naivebayes.h"
 
 // Extract all data from tic-tac-toe.data
-void extract_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]) {
-    FILE *file = fopen("data/tic-tac-toe.data", "r"); 
+void extract_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS])
+{
+    FILE *file = fopen("data/tic-tac-toe.data", "r");
 
-    if (file == NULL) {
+    if (file == NULL)
+    {
         perror("Error opening file");
     }
 
@@ -16,37 +18,43 @@ void extract_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]) {
 
     // Read and extract data from the file
     int row = 0;
-    while (row < MAX_ROWS) {
+    while (row < MAX_ROWS)
+    {
 
         if (fscanf(file, "%c,%c,%c,%c,%c,%c,%c,%c,%c,%c",
-            &temp_data[row][0], &temp_data[row][1], &temp_data[row][2],
-            &temp_data[row][3], &temp_data[row][4], &temp_data[row][5],
-            &temp_data[row][6], &temp_data[row][7], &temp_data[row][8],
-            &temp_label) == NUM_POSITIONS + 1) {
-                
-            if (temp_label == 'p') {
+                   &temp_data[row][0], &temp_data[row][1], &temp_data[row][2],
+                   &temp_data[row][3], &temp_data[row][4], &temp_data[row][5],
+                   &temp_data[row][6], &temp_data[row][7], &temp_data[row][8],
+                   &temp_label) == NUM_POSITIONS + 1)
+        {
+
+            if (temp_label == 'p')
+            {
                 labels[row] = 1;
             }
-            else if (temp_label == 'n') { 
+            else if (temp_label == 'n')
+            {
                 labels[row] = 0;
             }
 
-            for (int i = 0; i < NUM_POSITIONS; ++i) {
-                if (temp_data[row][i] == 'x') {
+            for (int i = 0; i < NUM_POSITIONS; ++i)
+            {
+                if (temp_data[row][i] == 'x')
+                {
                     data[row][i] = X;
                 }
                 else if (temp_data[row][i] == 'o')
                 {
                     data[row][i] = O;
                 }
-                else {
+                else
+                {
                     data[row][i] = EMPTY;
                 }
             }
 
             ++row;
         }
-        
     }
 
     fclose(file);
@@ -54,40 +62,47 @@ void extract_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]) {
     // return 0;
 }
 
-void shuffleArr (int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]) {           //generate random array element
-   srand (time(NULL));                 //use time to get different seed value to start
-   for (int i = MAX_ROWS-1; i > 0; --i) {
-      int j = rand() % (i+1);           //randomly choose an index from 0 to i
+void shuffleArr(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS])
+{                      // generate random array element
+    srand(time(NULL)); // use time to get different seed value to start
+    for (int i = MAX_ROWS - 1; i > 0; --i)
+    {
+        int j = rand() % (i + 1); // randomly choose an index from 0 to i
 
-      for (int k = 0; k < NUM_POSITIONS; ++k) {
-        int temp = data[i][k];
-        data[i][k] = data[j][k]; //swap current element with element placed in jth location
-        data[j][k] = temp;
-        temp = labels[i];
-        labels[i] = labels[j];
-        labels[j] = temp; 
-      }                
-   }
+        for (int k = 0; k < NUM_POSITIONS; ++k)
+        {
+            int temp = data[i][k];
+            data[i][k] = data[j][k]; // swap current element with element placed in jth location
+            data[j][k] = temp;
+            temp = labels[i];
+            labels[i] = labels[j];
+            labels[j] = temp;
+        }
+    }
 }
 
-
 // Split dataset into training and testing according to ratio
-void split_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS], int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS], 
-                   int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS], int testing_labels[MAX_TESTING_ROWS], int split_ratio) {
-                    
+void split_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS], int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS],
+                int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS], int testing_labels[MAX_TESTING_ROWS], int split_ratio)
+{
+
     int num_rows = round(split_ratio * MAX_ROWS / 100);
 
     shuffleArr(data, labels);
 
-    for (int i = 0; i < num_rows; ++i) {
-        for (int j = 0; j < NUM_POSITIONS; ++j) {
+    for (int i = 0; i < num_rows; ++i)
+    {
+        for (int j = 0; j < NUM_POSITIONS; ++j)
+        {
             training_data[i][j] = data[i][j];
             training_labels[i] = labels[i];
         }
     }
 
-    for (int i = num_rows; i < MAX_ROWS; ++i) {
-        for (int j = 0; j < NUM_POSITIONS; ++j) {
+    for (int i = num_rows; i < MAX_ROWS; ++i)
+    {
+        for (int j = 0; j < NUM_POSITIONS; ++j)
+        {
             testing_data[i - num_rows][j] = data[i][j];
             testing_labels[i - num_rows] = labels[i];
         }
@@ -95,11 +110,15 @@ void split_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS], int tra
 }
 
 // Function to calculate prior probabilities
-void calculatePriors(int labels[MAX_ROWS], double priors[NUM_CLASSES]) {
-    for (int i = 0; i < NUM_CLASSES; ++i) {
+void calculatePriors(int labels[MAX_ROWS], double priors[NUM_CLASSES])
+{
+    for (int i = 0; i < NUM_CLASSES; ++i)
+    {
         priors[i] = 0.0;
-        for (int j = 0; j < MAX_ROWS; ++j) {
-            if (labels[j] == i) {
+        for (int j = 0; j < MAX_ROWS; ++j)
+        {
+            if (labels[j] == i)
+            {
                 ++priors[i];
             }
         }
@@ -108,13 +127,19 @@ void calculatePriors(int labels[MAX_ROWS], double priors[NUM_CLASSES]) {
 }
 
 // Function to calculate conditional probabilities
-void calculateLikelihoods(int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double priors[NUM_CLASSES]) {
-    for (int pos = 0; pos < NUM_POSITIONS; ++pos) {
-        for (int val = X; val <= EMPTY; ++val) {
-            for (int cls = 0; cls < NUM_CLASSES; ++cls) {
+void calculateLikelihoods(int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES], double priors[NUM_CLASSES])
+{
+    for (int pos = 0; pos < NUM_POSITIONS; ++pos)
+    {
+        for (int val = X; val <= EMPTY; ++val)
+        {
+            for (int cls = 0; cls < NUM_CLASSES; ++cls)
+            {
                 int count = 0;
-                for (int i = 0; i < MAX_ROWS; ++i) {
-                    if (data[i][pos] == val && labels[i] == cls) {
+                for (int i = 0; i < MAX_ROWS; ++i)
+                {
+                    if (data[i][pos] == val && labels[i] == cls)
+                    {
                         ++count;
                     }
                 }
@@ -125,10 +150,13 @@ void calculateLikelihoods(int data[][NUM_POSITIONS], int labels[], double likeli
 }
 
 // Function to count the number of empty positions on the board
-int countEmptyPositions(int int_board[NUM_POSITIONS], int empty_pos[NUM_POSITIONS]) {
+int countEmptyPositions(int int_board[NUM_POSITIONS], int empty_pos[NUM_POSITIONS])
+{
     int count = 0;
-    for (int pos = 0; pos < NUM_POSITIONS; ++pos) {
-        if (int_board[pos] == EMPTY) {
+    for (int pos = 0; pos < NUM_POSITIONS; ++pos)
+    {
+        if (int_board[pos] == EMPTY)
+        {
             empty_pos[count] = pos;
             count++;
         }
@@ -137,10 +165,12 @@ int countEmptyPositions(int int_board[NUM_POSITIONS], int empty_pos[NUM_POSITION
     return count;
 }
 
-
-void changeToIntBoard(char char_board[NUM_POSITIONS], int int_board[NUM_POSITIONS]) {
-    for (int pos = 0; pos < NUM_POSITIONS; ++pos) {
-        if (char_board[pos] == EMPTY_SYMBOL) {
+void changeToIntBoard(char char_board[NUM_POSITIONS], int int_board[NUM_POSITIONS])
+{
+    for (int pos = 0; pos < NUM_POSITIONS; ++pos)
+    {
+        if (char_board[pos] == EMPTY_SYMBOL)
+        {
             int_board[pos] = EMPTY;
         }
         else if (char_board[pos] == X_SYMBOL)
@@ -150,39 +180,44 @@ void changeToIntBoard(char char_board[NUM_POSITIONS], int int_board[NUM_POSITION
         else if (char_board[pos] == O_SYMBOL)
         {
             int_board[pos] = O;
-        }    
+        }
     }
 }
 
-
-void naiveBayesLearn(int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double priors[NUM_CLASSES]) {
+void naiveBayesLearn(int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES], double priors[NUM_CLASSES])
+{
     calculatePriors(labels, priors);
     calculateLikelihoods(data, labels, likelihoods, priors);
 }
 
-int naiveBayesPredict(int int_board[NUM_POSITIONS], double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double *positive_possibility, double *negative_possibility) {
+int naiveBayesPredict(int int_board[NUM_POSITIONS], double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES], double *positive_possibility, double *negative_possibility)
+{
     double posteriors[NUM_CLASSES];
 
-    for (int cls = 0; cls < NUM_CLASSES; ++cls) {
+    for (int cls = 0; cls < NUM_CLASSES; ++cls)
+    {
         posteriors[cls] = priors[cls];
-        for (int pos = 0; pos < NUM_POSITIONS; ++pos) { 
-            posteriors[cls] *= likelihoods[pos][int_board[pos]][cls];                
+        for (int pos = 0; pos < NUM_POSITIONS; ++pos)
+        {
+            posteriors[cls] *= likelihoods[pos][int_board[pos]][cls];
         }
     }
 
-    if (posteriors[0] > posteriors[1]) {
+    if (posteriors[0] > posteriors[1])
+    {
         *negative_possibility = posteriors[0];
         return 0;
     }
 
-    else {
-        *positive_possibility = posteriors[1]; 
+    else
+    {
+        *positive_possibility = posteriors[1];
         return 1;
     }
-
 }
 
-void calcStats(int data_rows, int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS], int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS], int testing_labels[MAX_TESTING_ROWS], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double priors[NUM_CLASSES], double *accuracy, double *errorcount, double *truepos, double *trueneg, double *falsepos, double *falseneg, double *positive, double *negative) {
+void calcStats(int data_rows, int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS], int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS], int testing_labels[MAX_TESTING_ROWS], double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES], double priors[NUM_CLASSES], double *accuracy, double *errorcount, double *truepos, double *trueneg, double *falsepos, double *falseneg, double *positive, double *negative)
+{
     double pos;
     double neg;
     *errorcount = 0;
@@ -194,10 +229,12 @@ void calcStats(int data_rows, int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS
     *positive = 0;
     *negative = 0;
 
-    for (int i = 0; i < data_rows; ++i) {
+    for (int i = 0; i < data_rows; ++i)
+    {
         int result = naiveBayesPredict(testing_data[i], priors, likelihoods, &pos, &neg);
 
-        if (result == 1 && result == testing_labels[i]) {
+        if (result == 1 && result == testing_labels[i])
+        {
             *accuracy += 1;
             *truepos += 1;
             *positive += 1;
@@ -210,7 +247,8 @@ void calcStats(int data_rows, int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS
             *negative += 1;
         }
 
-        if (result == 1 && result != testing_labels[i]) {
+        if (result == 1 && result != testing_labels[i])
+        {
             *errorcount += 1;
             *falsepos += 1;
             *negative += 1;
@@ -228,14 +266,16 @@ void calcStats(int data_rows, int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS
     *errorcount /= data_rows;
 }
 
-void validate(int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS], int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS], int testing_labels[MAX_TESTING_ROWS], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double priors[NUM_CLASSES]) {
+void validate(int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS], int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS], int testing_labels[MAX_TESTING_ROWS], double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES], double priors[NUM_CLASSES])
+{
     double errorcount, accuracy, truepos, trueneg, falsepos, falseneg, positive, negative;
-    
+
     naiveBayesLearn(training_data, training_labels, likelihoods, priors);
 
-	FILE *file = fopen(".out/data/confusion-matrix.txt", "w");
+    FILE *file = fopen("data/confusion-matrix.txt", "w");
 
-	if (file == NULL) {
+    if (file == NULL)
+    {
         perror("Error opening file");
     }
 
@@ -248,11 +288,11 @@ void validate(int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_
     fprintf(file, "False Positive: %d / %d\n", (int)falsepos, (int)negative);
     fprintf(file, "True Negative: %d / %d\n", (int)trueneg, (int)negative);
     fprintf(file, "False Negative: %d / %d\n", (int)falseneg, (int)positive);
-    fprintf(file, "Recall: %.4f\n", truepos/(truepos+falseneg));
-    fprintf(file, "Precision: %.4f\n\n", truepos/(truepos+falsepos));
-	fprintf(file, "     									   Confusion Matrix (Test Dataset)\n");
-	fprintf(file, "         										  Actual Values\n");
-	fprintf(file, "    										Positive          Negative\n");
+    fprintf(file, "Recall: %.4f\n", truepos / (truepos + falseneg));
+    fprintf(file, "Precision: %.4f\n\n", truepos / (truepos + falsepos));
+    fprintf(file, "     									   Confusion Matrix (Test Dataset)\n");
+    fprintf(file, "         										  Actual Values\n");
+    fprintf(file, "    										Positive          Negative\n");
     fprintf(file, "										-----------------------------------\n");
     fprintf(file, "										| True Positive  | False Positive |\n");
     fprintf(file, "							  Positive	|        =       |       =        |\n");
@@ -274,11 +314,11 @@ void validate(int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_
     fprintf(file, "False Positive: %d / %d\n", (int)falsepos, (int)negative);
     fprintf(file, "True Negative: %d / %d\n", (int)trueneg, (int)negative);
     fprintf(file, "False Negative: %d / %d\n", (int)falseneg, (int)positive);
-    fprintf(file, "Recall: %.4f\n", truepos/(truepos+falseneg));
-    fprintf(file, "Precision: %.4f\n\n", truepos/(truepos+falsepos));
-	fprintf(file, "     									Confusion Matrix (Training Dataset)\n");
-	fprintf(file, "         										  Actual Values\n");
-	fprintf(file, "    										Positive          Negative\n");
+    fprintf(file, "Recall: %.4f\n", truepos / (truepos + falseneg));
+    fprintf(file, "Precision: %.4f\n\n", truepos / (truepos + falsepos));
+    fprintf(file, "     									Confusion Matrix (Training Dataset)\n");
+    fprintf(file, "         										  Actual Values\n");
+    fprintf(file, "    										Positive          Negative\n");
     fprintf(file, "										-----------------------------------\n");
     fprintf(file, "										| True Positive  | False Positive |\n");
     fprintf(file, "							  Positive	|        =       |       =        |\n");
@@ -289,6 +329,5 @@ void validate(int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_
     fprintf(file, "										|    %d         |    %d         |\n", (int)falseneg, (int)trueneg);
     fprintf(file, "										-----------------------------------\n");
 
-	fclose(file);
-    
+    fclose(file);
 }

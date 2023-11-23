@@ -16,11 +16,11 @@ int pvaiGame(int difficulty)
 	int labels[MAX_ROWS];
 	int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS];
 	int training_labels[MAX_TRAINING_ROWS];
-	int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS]; 
-	int testing_labels[MAX_TESTING_ROWS]; 
+	int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS];
+	int testing_labels[MAX_TESTING_ROWS];
 	int split_ratio = 80;
 	double priors[NUM_CLASSES];
-	double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES];
+	double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES];
 
 	extract_data(data, labels);
 	split_data(data, labels, training_data, training_labels, testing_data, testing_labels, split_ratio);
@@ -65,7 +65,7 @@ int pvaiGame(int difficulty)
 	return SUCCESS;
 }
 
-int computerMove(char symbol, char board[9], int difficulty, double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES])
+int computerMove(char symbol, char board[9], int difficulty, double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES])
 {
 	if (difficulty == EASY_DIFFICULTY || difficulty == MEDIUM_DIFFICULTY)
 	{
@@ -104,18 +104,16 @@ void drawAIGameScreen(char board[9], char player)
 	clearScreen();
 	drawBoard(board);
 	renderText(
-		"Current Player", 
-		pcsenior18_f, 
-		BOARD_STATUS_PADDING, 
-		BOARD_STATUS_PADDING, 
-		white
-	);
+		"Current Player",
+		pcsenior18_f,
+		BOARD_STATUS_PADDING,
+		BOARD_STATUS_PADDING,
+		white);
 	renderText(
-		player == X_SYMBOL ? "X (Computer)" : "O (You)", 
-		pcsenior24_f, 
-		BOARD_STATUS_PADDING, 
-		BOARD_STATUS_PADDING + 30, 
-		player == X_SYMBOL ? red : blue
-	);
+		player == X_SYMBOL ? "X (Computer)" : "O (You)",
+		pcsenior24_f,
+		BOARD_STATUS_PADDING,
+		BOARD_STATUS_PADDING + 30,
+		player == X_SYMBOL ? red : blue);
 	SDL_RenderPresent(renderer);
 }
