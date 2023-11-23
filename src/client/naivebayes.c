@@ -233,30 +233,62 @@ void validate(int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_
     
     naiveBayesLearn(training_data, training_labels, likelihoods, priors);
 
-    calcStats(MAX_TESTING_ROWS, training_data, training_labels, testing_data, testing_labels, likelihoods, priors, &accuracy, &errorcount, &truepos, &trueneg, &falsepos, &falseneg, &positive, &negative);
-    printf("TEST DATA STATISTICS \n");
-    printf("_____________________________________________\n");
-    printf("Accuracy: %.4f\n", accuracy);
-    printf("Probability of Error: %.4f\n", errorcount);
-    printf("True Positive: %d / %d\n", (int)truepos, (int)positive);
-    printf("False Positive: %d / %d\n", (int)falsepos, (int)negative);
-    printf("True Negative: %d / %d\n", (int)trueneg, (int)negative);
-    printf("False Negative: %d / %d\n", (int)falseneg, (int)positive);
-    printf("Recall: %.4f\n", truepos/(truepos+falseneg));
-    printf("Precision: %.4f\n", truepos/(truepos+falsepos));
+	FILE *file = fopen(".out/data/confusion-matrix.txt", "w");
 
-    printf("\n\n\n");
+	if (file == NULL) {
+        perror("Error opening file");
+    }
+
+    calcStats(MAX_TESTING_ROWS, training_data, training_labels, testing_data, testing_labels, likelihoods, priors, &accuracy, &errorcount, &truepos, &trueneg, &falsepos, &falseneg, &positive, &negative);
+    fprintf(file, "TEST DATA STATISTICS & CONFUSION MATRIX \n");
+    fprintf(file, "_____________________________________________\n");
+    fprintf(file, "Accuracy: %.4f\n", accuracy);
+    fprintf(file, "Probability of Error: %.4f\n", errorcount);
+    fprintf(file, "True Positive: %d / %d\n", (int)truepos, (int)positive);
+    fprintf(file, "False Positive: %d / %d\n", (int)falsepos, (int)negative);
+    fprintf(file, "True Negative: %d / %d\n", (int)trueneg, (int)negative);
+    fprintf(file, "False Negative: %d / %d\n", (int)falseneg, (int)positive);
+    fprintf(file, "Recall: %.4f\n", truepos/(truepos+falseneg));
+    fprintf(file, "Precision: %.4f\n\n", truepos/(truepos+falsepos));
+	fprintf(file, "     									   Confusion Matrix (Test Dataset)\n");
+	fprintf(file, "         										  Actual Values\n");
+	fprintf(file, "    										Positive          Negative\n");
+    fprintf(file, "										-----------------------------------\n");
+    fprintf(file, "										| True Positive  | False Positive |\n");
+    fprintf(file, "							  Positive	|        =       |       =        |\n");
+    fprintf(file, "										|    %d         |    %d          |\n", (int)truepos, (int)falsepos);
+    fprintf(file, "		    Predicted Values			|----------------|----------------|\n");
+    fprintf(file, "										| False Negative | True Negative  |\n");
+    fprintf(file, "							  Negative	|       =        |       =        |\n");
+    fprintf(file, "										|    %d          |    %d          |\n", (int)falseneg, (int)trueneg);
+    fprintf(file, "										-----------------------------------\n");
+
+    fprintf(file, "\n\n");
 
     calcStats(MAX_TRAINING_ROWS, training_data, training_labels, testing_data, testing_labels, likelihoods, priors, &accuracy, &errorcount, &truepos, &trueneg, &falsepos, &falseneg, &positive, &negative);
-    printf("TRAINING DATA STATISTICS \n");
-    printf("_____________________________________________\n");
-    printf("Accuracy: %.4f\n", accuracy);
-    printf("Probability of Error: %.4f\n", errorcount);
-    printf("True Positive: %d / %d\n", (int)truepos, (int)positive);
-    printf("False Positive: %d / %d\n", (int)falsepos, (int)negative);
-    printf("True Negative: %d / %d\n", (int)trueneg, (int)negative);
-    printf("False Negative: %d / %d\n", (int)falseneg, (int)positive);
-    printf("Recall: %.4f\n", truepos/(truepos+falseneg));
-    printf("Precision: %.4f\n", truepos/(truepos+falsepos));
+    fprintf(file, "TRAINING DATA STATISTICS & CONFUSION MATRIX \n");
+    fprintf(file, "_____________________________________________\n");
+    fprintf(file, "Accuracy: %.4f\n", accuracy);
+    fprintf(file, "Probability of Error: %.4f\n", errorcount);
+    fprintf(file, "True Positive: %d / %d\n", (int)truepos, (int)positive);
+    fprintf(file, "False Positive: %d / %d\n", (int)falsepos, (int)negative);
+    fprintf(file, "True Negative: %d / %d\n", (int)trueneg, (int)negative);
+    fprintf(file, "False Negative: %d / %d\n", (int)falseneg, (int)positive);
+    fprintf(file, "Recall: %.4f\n", truepos/(truepos+falseneg));
+    fprintf(file, "Precision: %.4f\n\n", truepos/(truepos+falsepos));
+	fprintf(file, "     									Confusion Matrix (Training Dataset)\n");
+	fprintf(file, "         										  Actual Values\n");
+	fprintf(file, "    										Positive          Negative\n");
+    fprintf(file, "										-----------------------------------\n");
+    fprintf(file, "										| True Positive  | False Positive |\n");
+    fprintf(file, "							  Positive	|        =       |       =        |\n");
+    fprintf(file, "										|    %d         |    %d         |\n", (int)truepos, (int)falsepos);
+    fprintf(file, "		    Predicted Values			|----------------|----------------|\n");
+    fprintf(file, "										| False Negative | True Negative  |\n");
+    fprintf(file, "							  Negative	|       =        |       =        |\n");
+    fprintf(file, "										|    %d         |    %d         |\n", (int)falseneg, (int)trueneg);
+    fprintf(file, "										-----------------------------------\n");
+
+	fclose(file);
     
 }
