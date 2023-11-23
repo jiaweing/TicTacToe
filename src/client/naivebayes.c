@@ -241,7 +241,7 @@ void validate(int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_
 
     calcStats(MAX_TESTING_ROWS, training_data, training_labels, testing_data, testing_labels, likelihoods, priors, &accuracy, &errorcount, &truepos, &trueneg, &falsepos, &falseneg, &positive, &negative);
     fprintf(file, "TEST DATA STATISTICS & CONFUSION MATRIX \n");
-    fprintf(file, "_____________________________________________\n");
+    fprintf(file, "---------------------------------------------\n");
     fprintf(file, "Accuracy: %.4f\n", accuracy);
     fprintf(file, "Probability of Error: %.4f\n", errorcount);
     fprintf(file, "True Positive: %d / %d\n", (int)truepos, (int)positive);
@@ -267,7 +267,7 @@ void validate(int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_
 
     calcStats(MAX_TRAINING_ROWS, training_data, training_labels, testing_data, testing_labels, likelihoods, priors, &accuracy, &errorcount, &truepos, &trueneg, &falsepos, &falseneg, &positive, &negative);
     fprintf(file, "TRAINING DATA STATISTICS & CONFUSION MATRIX \n");
-    fprintf(file, "_____________________________________________\n");
+    fprintf(file, "---------------------------------------------\n");
     fprintf(file, "Accuracy: %.4f\n", accuracy);
     fprintf(file, "Probability of Error: %.4f\n", errorcount);
     fprintf(file, "True Positive: %d / %d\n", (int)truepos, (int)positive);
