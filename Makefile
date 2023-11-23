@@ -12,7 +12,7 @@ SVOBJS := $(SVSRCS:src/server/%.c=.out/server/%.o) $(wildcard Gfx/*.o) $(wildcar
 SVEXEC := .out/ttt_server
 
 ifeq ($(OS),Windows_NT)
-CLFLAGS += -I./include/SDL2/include
+CLFLAGS += -I./include/SDL2/include -g
 LDFLAGS := -std=c17 -L./include/SDL2/lib -Wl,-subsystem,windows -lmingw32 -lws2_32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lws2_32 -lm
 MKDIR_P := mkdir
 RM := del /f

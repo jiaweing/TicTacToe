@@ -28,7 +28,7 @@ void calculateLikelihoods(int data[][NUM_POSITIONS], int labels[], double likeli
 int countEmptyPositions(int int_board[NUM_POSITIONS], int empty_pos[NUM_POSITIONS]);
 void changeToIntBoard(char char_board[NUM_POSITIONS], int int_board[NUM_POSITIONS]);
 void naiveBayesLearn(int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double priors[NUM_CLASSES]);
-int naiveBayesPredict(int int_board[NUM_POSITIONS], double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double *possibility);
+int naiveBayesPredict(int int_board[NUM_POSITIONS], double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double *positive_possibility, double *negative_possibility);
 void calcStats(int data_rows, int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS], int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS],
                int testing_labels[MAX_TESTING_ROWS], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double priors[NUM_CLASSES], double *accuracy, double *errorcount, 
                double *truepos, double *trueneg, double *falsepos, double *falseneg, double *positive, double *negative);

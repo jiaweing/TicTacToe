@@ -3,7 +3,7 @@
 
 // Extract all data from tic-tac-toe.data
 void extract_data(int data[MAX_ROWS][NUM_POSITIONS], int labels[MAX_ROWS]) {
-    FILE *file = fopen("../data/tic-tac-toe.data", "r"); 
+    FILE *file = fopen("data/tic-tac-toe.data", "r"); 
 
     if (file == NULL) {
         perror("Error opening file");
@@ -160,7 +160,7 @@ void naiveBayesLearn(int data[][NUM_POSITIONS], int labels[], double likelihoods
     calculateLikelihoods(data, labels, likelihoods, priors);
 }
 
-int naiveBayesPredict(int int_board[NUM_POSITIONS], double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double *possibility) {
+int naiveBayesPredict(int int_board[NUM_POSITIONS], double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double *positive_possibility, double *negative_possibility) {
     double posteriors[NUM_CLASSES];
 
     for (int cls = 0; cls < NUM_CLASSES; ++cls) {
@@ -171,11 +171,12 @@ int naiveBayesPredict(int int_board[NUM_POSITIONS], double priors[NUM_CLASSES], 
     }
 
     if (posteriors[0] > posteriors[1]) {
+        *negative_possibility = posteriors[0];
         return 0;
     }
 
     else {
-        *possibility = posteriors[1]; 
+        *positive_possibility = posteriors[1]; 
         return 1;
     }
 
@@ -183,6 +184,7 @@ int naiveBayesPredict(int int_board[NUM_POSITIONS], double priors[NUM_CLASSES], 
 
 void calcStats(int data_rows, int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS], int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS], int testing_labels[MAX_TESTING_ROWS], double likelihoods[NUM_POSITIONS][EMPTY+1][NUM_CLASSES], double priors[NUM_CLASSES], double *accuracy, double *errorcount, double *truepos, double *trueneg, double *falsepos, double *falseneg, double *positive, double *negative) {
     double pos;
+    double neg;
     *errorcount = 0;
     *accuracy = 0;
     *truepos = 0;
@@ -193,7 +195,7 @@ void calcStats(int data_rows, int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS
     *negative = 0;
 
     for (int i = 0; i < data_rows; ++i) {
-        int result = naiveBayesPredict(testing_data[i], priors, likelihoods, &pos);
+        int result = naiveBayesPredict(testing_data[i], priors, likelihoods, &pos, &neg);
 
         if (result == 1 && result == testing_labels[i]) {
             *accuracy += 1;
