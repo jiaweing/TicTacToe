@@ -28,9 +28,9 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 	SDL_Event event;
 
 	while (1)
-    {
+	{
 		while (SDL_PollEvent(&event))
-        {
+		{
 			if (event.type == SDL_QUIT)
 			{
 				exit(0);
@@ -52,12 +52,11 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 				printf("Waiting for a second player...\n");
 				clearScreen();
 				renderAnchoredText(
-					"Looking for players...", 
-					pcsenior24_f, 
-					SCREEN_WIDTH / 2, 
-					SCREEN_HEIGHT / 2, 
-					white
-				);
+					"Looking for players...",
+					pcsenior24_f,
+					SCREEN_WIDTH / 2,
+					SCREEN_HEIGHT / 2,
+					white);
 				SDL_RenderPresent(renderer);
 			}
 			else if (!strcmp(msg, START))
@@ -66,12 +65,11 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 				clearScreen();
 				drawBoard(board);
 				renderText(
-					"Game on!", 
-					pcsenior24_f, 
-					BOARD_STATUS_PADDING, 
-					BOARD_STATUS_PADDING, 
-					white
-				);
+					"Game on!",
+					pcsenior24_f,
+					BOARD_STATUS_PADDING,
+					BOARD_STATUS_PADDING,
+					white);
 				SDL_RenderPresent(renderer);
 			}
 		}
@@ -83,12 +81,11 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 				clearScreen();
 				drawBoard(board);
 				renderText(
-					"Your turn!", 
-					pcsenior24_f, 
-					BOARD_STATUS_PADDING, 
-					BOARD_STATUS_PADDING, 
-					white
-				);
+					"Your turn!",
+					pcsenior24_f,
+					BOARD_STATUS_PADDING,
+					BOARD_STATUS_PADDING,
+					white);
 				SDL_RenderPresent(renderer);
 			}
 			else if (!strcmp(msg, INVALID_MOVE))
@@ -109,12 +106,11 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 				clearScreen();
 				drawBoard(board);
 				renderText(
-					"Your turn!", 
-					pcsenior24_f, 
-					BOARD_STATUS_PADDING, 
-					BOARD_STATUS_PADDING, 
-					white
-				);
+					"Your turn!",
+					pcsenior24_f,
+					BOARD_STATUS_PADDING,
+					BOARD_STATUS_PADDING,
+					white);
 				SDL_RenderPresent(renderer);
 			}
 			else if (!strcmp(msg, WAIT))
@@ -122,12 +118,11 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 				clearScreen();
 				drawBoard(board);
 				renderText(
-					"Waiting for opponent...", 
-					pcsenior24_f, 
-					BOARD_STATUS_PADDING, 
-					BOARD_STATUS_PADDING, 
-					white
-				);
+					"Waiting for opponent...",
+					pcsenior24_f,
+					BOARD_STATUS_PADDING,
+					BOARD_STATUS_PADDING,
+					white);
 				SDL_RenderPresent(renderer);
 			}
 			else if (!strcmp(msg, GAME_WIN))
@@ -165,15 +160,16 @@ int connect_to_server(const char *hostname, int hostportno)
 	struct sockaddr_in serv_addr;
 	int sockfd;
 
-	#ifdef _WIN32
+#ifdef _WIN32
 	WSADATA wsaData;
-	
-	int result = WSAStartup(MAKEWORD(2,2), &wsaData);
-    if (result != 0) {
-        printf("WSAStartup failed with error: %d\n", result);
-        return 1;
-    }
-	#endif
+
+	int result = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if (result != 0)
+	{
+		printf("WSAStartup failed with error: %d\n", result);
+		return 1;
+	}
+#endif
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
@@ -192,10 +188,11 @@ int connect_to_server(const char *hostname, int hostportno)
 	memset(&serv_addr, 0, sizeof(serv_addr));
 
 	serv_addr.sin_family = AF_INET;
-	memmove(server->h_addr, &serv_addr.sin_addr.s_addr, server->h_length);
+	// memmove(server->h_addr, &serv_addr.sin_addr.s_addr, server->h_length);
+	memmove(&serv_addr.sin_addr.s_addr, server->h_addr, server->h_length);
 	serv_addr.sin_port = htons(hostportno);
 
-	if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
+	if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
 	{
 		error("ERROR connecting to server");
 		return ERROR;

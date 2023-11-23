@@ -19,6 +19,12 @@
 #include <ws2ipdef.h>
 #endif
 
+#ifdef __linux__
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#endif
+
 #include "board.h"
 
 #define DEFAULT_PORT 27428

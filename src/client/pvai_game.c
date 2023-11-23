@@ -67,12 +67,12 @@ int pvaiGame(int difficulty)
 
 int computerMove(char symbol, char board[9], int difficulty, double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES])
 {
-	if (difficulty == EASY_DIFFICULTY || difficulty == MEDIUM_DIFFICULTY)
+	if (difficulty == HARD_DIFFICULTY || difficulty == MEDIUM_DIFFICULTY)
 	{
 		int next_move = predictNextMove(difficulty, board, priors, likelihoods);
 		return next_move;
 	}
-	else if (difficulty == HARD_DIFFICULTY || difficulty == IMPOSSIBLE_DIFFICULTY)
+	else if (difficulty == EASY_DIFFICULTY || difficulty == IMPOSSIBLE_DIFFICULTY)
 	{
 		int move = 0;
 		int bestScore = MIN_SCORE;
@@ -81,12 +81,25 @@ int computerMove(char symbol, char board[9], int difficulty, double priors[NUM_C
 			if (board[i] == EMPTY_SYMBOL)
 			{
 				board[i] = X_SYMBOL;
-				int score = minimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
-				board[i] = EMPTY_SYMBOL;
-				if (score > bestScore)
+				if (difficulty == HARD_DIFFICULTY)
 				{
-					bestScore = score;
-					move = i;
+					int score = randminimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
+					board[i] = EMPTY_SYMBOL;
+					if (score > bestScore)
+					{
+						bestScore = score;
+						move = i;
+					}
+				}
+				else if (difficulty == IMPOSSIBLE_DIFFICULTY)
+				{
+					int score = minimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
+					board[i] = EMPTY_SYMBOL;
+					if (score > bestScore)
+					{
+						bestScore = score;
+						move = i;
+					}
 				}
 			}
 		}

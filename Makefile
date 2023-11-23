@@ -21,7 +21,7 @@ RMDIR := rmdir /s /q
 else
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-LDFLAGS := -lSDL2 -lSDL2_ttf -lSDL2_image
+LDFLAGS := -lSDL2 -lSDL2_ttf -lSDL2_image -lpthread
 endif
 ifeq ($(UNAME_S),Darwin)
 UNAME_M := $(shell uname -m)
