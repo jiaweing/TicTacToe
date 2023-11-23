@@ -6,7 +6,7 @@ int player_count = 0;
 int main(int argc, char *argv[])
 {
 	int port;
-	
+
 	if (argc < 2)
 	{
 		port = DEFAULT_PORT;
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	int lis_sockfd = setup_listener(port);
 	pthread_mutex_init(&mutexcount, NULL);
 
-	printf("Server running...\n");
+	printf("Server running on port %d...\n", port);
 
 	while (1)
 	{
@@ -30,9 +30,9 @@ int main(int argc, char *argv[])
 
 			get_clients(lis_sockfd, cli_sockfd);
 
-			#ifdef DEBUG
-				printf("[DEBUG] Starting new game thread...\n");
-			#endif
+#ifdef DEBUG
+			printf("[DEBUG] Starting new game thread...\n");
+#endif
 
 			pthread_t thread;
 			int result = pthread_create(&thread, NULL, run_game, (void *)cli_sockfd);
@@ -42,9 +42,9 @@ int main(int argc, char *argv[])
 				exit(-1);
 			}
 
-			#ifdef DEBUG
-				printf("[DEBUG] New game thread started.\n");
-			#endif
+#ifdef DEBUG
+			printf("[DEBUG] New game thread started.\n");
+#endif
 		}
 	}
 
@@ -59,15 +59,16 @@ int setup_listener(int portno)
 	int sockfd;
 	struct sockaddr_in serv_addr;
 
-	#ifdef _WIN32
+#ifdef _WIN32
 	WSADATA wsaData;
-	
-	int result = WSAStartup(MAKEWORD(2,2), &wsaData);
-    if (result != 0) {
-        printf("WSAStartup failed with error: %d\n", result);
-        server_error("ERROR WSAStartup failed.");
-    }
-	#endif
+
+	int result = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if (result != 0)
+	{
+		printf("WSAStartup failed with error: %d\n", result);
+		server_error("ERROR WSAStartup failed.");
+	}
+#endif
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
@@ -85,9 +86,9 @@ int setup_listener(int portno)
 		server_error("ERROR binding listener socket.");
 	}
 
-	#ifdef DEBUG
-		printf("[DEBUG] Listener set.\n");
-	#endif
+#ifdef DEBUG
+	printf("[DEBUG] Listener set.\n");
+#endif
 
 	return sockfd;
 }
@@ -97,9 +98,9 @@ void get_clients(int lis_sockfd, int *cli_sockfd)
 	socklen_t clilen;
 	struct sockaddr_in cli_addr;
 
-	#ifdef DEBUG
-		printf("[DEBUG] Listening for clients...\n");
-	#endif
+#ifdef DEBUG
+	printf("[DEBUG] Listening for clients...\n");
+#endif
 
 	int num_conn = 0;
 	while (num_conn < 2)
@@ -117,15 +118,15 @@ void get_clients(int lis_sockfd, int *cli_sockfd)
 			server_error("ERROR accepting a connection from a client.");
 		}
 
-		#ifdef DEBUG
-			printf("[DEBUG] Accepted connection from client %d\n", num_conn);
-		#endif
+#ifdef DEBUG
+		printf("[DEBUG] Accepted connection from client %d\n", num_conn);
+#endif
 
 		write(cli_sockfd[num_conn], &num_conn, sizeof(int));
 
-		#ifdef DEBUG
-			printf("[DEBUG] Sent client %d it's ID.\n", num_conn);
-		#endif
+#ifdef DEBUG
+		printf("[DEBUG] Sent client %d it's ID.\n", num_conn);
+#endif
 
 		pthread_mutex_lock(&mutexcount);
 		player_count++;
@@ -136,9 +137,9 @@ void get_clients(int lis_sockfd, int *cli_sockfd)
 		{
 			write_client_msg(cli_sockfd[0], HOLD);
 
-			#ifdef DEBUG
-				printf("[DEBUG] Told client 0 to hold.\n");
-			#endif
+#ifdef DEBUG
+			printf("[DEBUG] Told client 0 to hold.\n");
+#endif
 		}
 
 		num_conn++;
@@ -157,14 +158,14 @@ void *run_game(void *thread_data)
 
 	write_clients_msg(cli_sockfd, START);
 
-	#ifdef DEBUG
-		printf("[DEBUG] Sent start message.\n");
-	#endif
+#ifdef DEBUG
+	printf("[DEBUG] Sent start message.\n");
+#endif
 
 	server_draw_board(board);
 
 	for (turn = 0; turn < 9 && win(board) == EMPTY_SYMBOL; ++turn) // loop until turns finish or there is no win
-	{ 
+	{
 		if (player != prev_player)
 		{
 			write_client_msg(cli_sockfd[(player + 1) % 2], WAIT);
@@ -186,7 +187,7 @@ void *run_game(void *thread_data)
 			{
 				valid = 1;
 			}
-			else 
+			else
 			{
 				printf("Move was invalid. Let's try this again...\n");
 				write_client_msg(cli_sockfd[player], INVALID_MOVE);
@@ -245,9 +246,9 @@ void *run_game(void *thread_data)
 
 int get_player_move(int cli_sockfd)
 {
-	#ifdef DEBUG
-		printf("[DEBUG] Getting player move...\n");
-	#endif
+#ifdef DEBUG
+	printf("[DEBUG] Getting player move...\n");
+#endif
 
 	write_client_msg(cli_sockfd, PLAYER_TURN);
 
@@ -256,17 +257,17 @@ int get_player_move(int cli_sockfd)
 
 void send_update(int *cli_sockfd, int move, int player_id)
 {
-	#ifdef DEBUG
-		printf("[DEBUG] Sending update...\n");
-	#endif
+#ifdef DEBUG
+	printf("[DEBUG] Sending update...\n");
+#endif
 
 	write_clients_msg(cli_sockfd, UPDATE_BOARD);
 	write_clients_int(cli_sockfd, player_id);
 	write_clients_int(cli_sockfd, move);
 
-	#ifdef DEBUG
-		printf("[DEBUG] Update sent.\n");
-	#endif
+#ifdef DEBUG
+	printf("[DEBUG] Update sent.\n");
+#endif
 }
 
 void send_player_count(int cli_sockfd)
@@ -274,9 +275,9 @@ void send_player_count(int cli_sockfd)
 	write_client_msg(cli_sockfd, PLAYER_COUNT);
 	write_client_int(cli_sockfd, player_count);
 
-	#ifdef DEBUG
-		printf("[DEBUG] Player Count Sent.\n");
-	#endif
+#ifdef DEBUG
+	printf("[DEBUG] Player Count Sent.\n");
+#endif
 }
 
 int recv_clients_int(int cli_sockfd)

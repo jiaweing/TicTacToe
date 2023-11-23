@@ -1,19 +1,13 @@
-# SDL2_image CMake version configuration file:
-# This file is meant to be placed in a cmake subfolder of SDL2_image-devel-2.x.y-mingw
+# sdl2_image cmake project-config-version input for ./configure scripts
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-    set(sdl2_image_config_path "${CMAKE_CURRENT_LIST_DIR}/../i686-w64-mingw32/lib/cmake/SDL2_image/sdl2_image-config-version.cmake")
-elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(sdl2_image_config_path "${CMAKE_CURRENT_LIST_DIR}/../x86_64-w64-mingw32/lib/cmake/SDL2_image/sdl2_image-config-version.cmake")
-else("${CMAKE_SIZEOF_VOID_P}" STREQUAL "")
-    set(PACKAGE_VERSION_UNSUITABLE TRUE)
-    return()
+set(PACKAGE_VERSION "@MAJOR_VERSION_MACRO@.@MINOR_VERSION_MACRO@.@MICRO_VERSION_MACRO@")
+
+if(PACKAGE_VERSION VERSION_LESS PACKAGE_FIND_VERSION)
+  set(PACKAGE_VERSION_COMPATIBLE FALSE)
+else()
+  set(PACKAGE_VERSION_COMPATIBLE TRUE)
+  if(PACKAGE_FIND_VERSION STREQUAL PACKAGE_VERSION)
+    set(PACKAGE_VERSION_EXACT TRUE)
+  endif()
 endif()
 
-if(NOT EXISTS "${sdl2_image_config_path}")
-    message(WARNING "${sdl2_image_config_path} does not exist: MinGW development package is corrupted")
-    set(PACKAGE_VERSION_UNSUITABLE TRUE)
-    return()
-endif()
-
-include("${sdl2_image_config_path}")
