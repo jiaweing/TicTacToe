@@ -10,6 +10,12 @@
 #include <netdb.h>
 #endif
 
+#ifdef __linux__
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#endif
+
 #ifdef _WIN32
 #include <winsock2.h>
 #include <windows.h>

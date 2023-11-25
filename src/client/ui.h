@@ -19,6 +19,12 @@
 #define INTER_FONT "assets/fonts/Inter-Regular.ttf"
 #endif
 
+#ifdef __linux__
+#define PCSENIOR_FONT "assets/fonts/pcsenior.ttf"
+#define ARCADE_FONT "assets/fonts/ARCADE.TTF"
+#define INTER_FONT "assets/fonts/Inter-Regular.ttf"
+#endif
+
 #ifdef _WIN32
 #define PCSENIOR_FONT "assets/fonts/pcsenior.ttf"
 #define ARCADE_FONT "assets/fonts/ARCADE.TTF"
