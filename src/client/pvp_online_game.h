@@ -1,5 +1,11 @@
 #include <stdio.h>
 
+#ifdef __linux__
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#endif
+
 #define SERVER_HOSTNAME "127.0.0.1"
 #define SERVER_PORT 27428
 

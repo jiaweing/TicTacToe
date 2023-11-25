@@ -2,6 +2,11 @@
 
 This is a simple Tic Tac Toe game written in C using the SDL2 library.
 
+## Features
+
+- Online/Offline Multiplayer Mode
+- Versus AI
+
 ## Builds
 
 ## Mac
@@ -10,57 +15,36 @@ We only have prebuilt binaries for Macs running on Apple Intel, as it is not pos
 
 ## Dependencies
 
-**These are required to run the app. Dependencies for Windows are packaged together with the project.**
-
 - SDL2
 - SDL2_ttf
-- GNU Make
-
-## Compilation
+- SDL2_image
+- GNU make
 
 ### Windows
 
-1. Install [Chocalatey](https://chocolatey.org/install)
-2. Install GNU Make using Chocolatey
+1. Install [MYS2](https://www.msys2.org)
+2. Install [Chocalatey](https://chocolatey.org/install)
+3. Install GNU make using Chocolatey
    - `choco install make`
-3. Navigate to the project directory
-4. Compile the game and the server
-   - `make client -j4`
-   - `make server -j4`
-5. Run the game 
-   - `./ttt_client.exe`
-6. Run the server 
-   - `./ttt_server.exe`
 
 ### Mac
 
 1. Install [Homebrew](https://brew.sh/)
-2. Install SDL2, SDL2_ttf, and make libraries
+2. Install dependencies
    - `brew install sdl2 sdl2_ttf make`
-3. Navigate to the project directory
-4. Compile the game and the server
-   - `make client -j4`
-   - `make server -j4`
-5. Run the game 
-   - `./ttt_client`
-6. Run the server 
-   - `./ttt_server`
 
 ### Linux
 
-1. Install SDL2 and SDL2_ttf libraries: `sudo apt-get install libsdl2-dev libsdl2-ttf-dev make`
-2. Navigate to the project directory
-3. Compile the game and the server
+1. Install dependencies
+   - `sudo apt-get install libsdl2-dev libsdl2-ttf-dev make`
+
+## Compilation
+
+1. Navigate to the project directory
+2. Compile the game and the server
    - `make client -j4`
    - `make server -j4`
-4. Run the game 
+3. Run the game
    - `./ttt_client`
-5. Run the server 
+4. Run the server
    - `./ttt_server`
-
-## How to Play
-
-1. The game starts with player X.
-2. Click on an empty tile to place your mark.
-3. The first player to get three marks in a row (horizontally, vertically, or diagonally) wins.
-4. If all tiles are filled and no player has won, the game is a tie.

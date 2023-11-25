@@ -1,6 +1,8 @@
 {
   "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
   "files.associations": {
+    "*.embeddedhtml": "html",
+    "*.titan": "SourcePawn",
     "__bit_reference": "c",
     "__bits": "c",
     "__config": "c",
@@ -74,6 +76,7 @@
     "main_menu.h": "c",
     "deque": "c",
     "future": "c",
-    "time.h": "c"
+    "time.h": "c",
+    "ws2ipdef.h": "c"
   }
 }

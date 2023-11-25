@@ -216,7 +216,7 @@ int naiveBayesPredict(int int_board[NUM_POSITIONS], double priors[NUM_CLASSES], 
     }
 }
 
-void calcStats(int data_rows, int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_labels[MAX_TRAINING_ROWS], int testing_data[MAX_TESTING_ROWS][NUM_POSITIONS], int testing_labels[MAX_TESTING_ROWS], double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES], double priors[NUM_CLASSES], double *accuracy, double *errorcount, double *truepos, double *trueneg, double *falsepos, double *falseneg, double *positive, double *negative)
+void calcStats(int data_rows, int data[][NUM_POSITIONS], int labels[], double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES], double priors[NUM_CLASSES], double *accuracy, double *errorcount, double *truepos, double *trueneg, double *falsepos, double *falseneg, double *positive, double *negative)
 {
     double pos;
     double neg;
@@ -231,30 +231,30 @@ void calcStats(int data_rows, int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS
 
     for (int i = 0; i < data_rows; ++i)
     {
-        int result = naiveBayesPredict(testing_data[i], priors, likelihoods, &pos, &neg);
+        int result = naiveBayesPredict(data[i], priors, likelihoods, &pos, &neg);
 
-        if (result == 1 && result == testing_labels[i])
+        if (result == 1 && result == labels[i])
         {
             *accuracy += 1;
             *truepos += 1;
             *positive += 1;
         }
 
-        else if (result == 0 && result == testing_labels[i])
+        else if (result == 0 && result == labels[i])
         {
             *accuracy += 1;
             *trueneg += 1;
             *negative += 1;
         }
 
-        if (result == 1 && result != testing_labels[i])
+        if (result == 1 && result != labels[i])
         {
             *errorcount += 1;
             *falsepos += 1;
             *negative += 1;
         }
 
-        else if (result == 0 && result != testing_labels[i])
+        else if (result == 0 && result != labels[i])
         {
             *errorcount += 1;
             *falseneg += 1;
@@ -279,7 +279,7 @@ void validate(int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_
         perror("Error opening file");
     }
 
-    calcStats(MAX_TESTING_ROWS, training_data, training_labels, testing_data, testing_labels, likelihoods, priors, &accuracy, &errorcount, &truepos, &trueneg, &falsepos, &falseneg, &positive, &negative);
+    calcStats(MAX_TESTING_ROWS, testing_data, testing_labels, likelihoods, priors, &accuracy, &errorcount, &truepos, &trueneg, &falsepos, &falseneg, &positive, &negative);
     fprintf(file, "TEST DATA STATISTICS & CONFUSION MATRIX \n");
     fprintf(file, "---------------------------------------------\n");
     fprintf(file, "Accuracy: %.4f\n", accuracy);
@@ -305,7 +305,7 @@ void validate(int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS], int training_
 
     fprintf(file, "\n\n");
 
-    calcStats(MAX_TRAINING_ROWS, training_data, training_labels, testing_data, testing_labels, likelihoods, priors, &accuracy, &errorcount, &truepos, &trueneg, &falsepos, &falseneg, &positive, &negative);
+    calcStats(MAX_TRAINING_ROWS, training_data, training_labels, likelihoods, priors, &accuracy, &errorcount, &truepos, &trueneg, &falsepos, &falseneg, &positive, &negative);
     fprintf(file, "TRAINING DATA STATISTICS & CONFUSION MATRIX \n");
     fprintf(file, "---------------------------------------------\n");
     fprintf(file, "Accuracy: %.4f\n", accuracy);

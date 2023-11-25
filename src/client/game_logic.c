@@ -19,7 +19,7 @@ int predictNextMove(int difficulty_level, char char_board[NUM_POSITIONS], double
 
     if (possible_moves > 1)
     {
-        if (difficulty_level == 1)
+        if (difficulty_level == 2)
         {
             // Search for game instance with lowest posterior probability for a positive outcome
             for (int j = 0; j < possible_moves; ++j)
@@ -60,7 +60,7 @@ int predictNextMove(int difficulty_level, char char_board[NUM_POSITIONS], double
             return best_move;
         }
 
-        else if (difficulty_level == 2)
+        else if (difficulty_level == 3)
         {
             // Search for game instance with highest posterior probability for a positive outcome
             for (int j = 0; j < possible_moves; ++j)

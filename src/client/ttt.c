@@ -9,7 +9,7 @@
 
 int initialiseSDL();
 
-int main(int argv, char** args)
+int main(int argv, char **args)
 {
 	if (initialiseSDL() == ERROR)
 	{
@@ -17,10 +17,10 @@ int main(int argv, char** args)
 		exit(0);
 	}
 
-	while (1) 
+	while (1)
 	{
 		int gameType = mainMenu();
-		if (gameType == PVP_GAME) 
+		if (gameType == PVP_GAME)
 		{
 			int response = pvpMenu();
 			if (response == BACK)
@@ -43,12 +43,11 @@ int main(int argv, char** args)
 				if (pvpOnlineGame(ip, port) == ERROR)
 				{
 					renderText(
-						"Couldn't connect to server", 
-						pcsenior24_f, 
-						BOARD_STATUS_PADDING, 
-						SCREEN_HEIGHT - BOARD_STATUS_PADDING - 50, 
-						red
-					);
+						"Couldn't connect to server",
+						pcsenior24_f,
+						BOARD_STATUS_PADDING,
+						SCREEN_HEIGHT - BOARD_STATUS_PADDING - 50,
+						red);
 					continue;
 				}
 			}
@@ -78,57 +77,57 @@ int main(int argv, char** args)
 			SDL_Quit();
 			exit(1);
 		}
-		else 
+		else
 		{
 			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "GAME TYPE", "Selected invalid option!", window);
 		}
 	}
 }
 
-int initialiseSDL() 
+int initialiseSDL()
 {
 	// Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-    {
-        printf("SDL_Init Error: %s\n", SDL_GetError());
-        return ERROR;
-    }
-    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+	{
+		printf("SDL_Init Error: %s\n", SDL_GetError());
+		return ERROR;
+	}
+	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
-    // Create window
-    window = SDL_CreateWindow("Tic Tac Toe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
-    if (window == NULL)
-    {
-        printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
-        SDL_Quit();
-        return ERROR;
-    }
+	// Create window
+	window = SDL_CreateWindow("Tic Tac Toe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+	if (window == NULL)
+	{
+		printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
+		SDL_Quit();
+		return ERROR;
+	}
 
-    // Create renderer
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (renderer == NULL)
-    {
-        printf("SDL_CreateRenderer Error: %s\n", SDL_GetError());
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return ERROR;
-    }
-
-	// Initialize SDL_ttf
-    if (TTF_Init() != 0)
-    {
-        printf("TTF_Init Error: %s\n", TTF_GetError());
-        SDL_Quit();
-        return ERROR;
-    }
+	// Create renderer
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	if (renderer == NULL)
+	{
+		printf("SDL_CreateRenderer Error: %s\n", SDL_GetError());
+		SDL_DestroyWindow(window);
+		SDL_Quit();
+		return ERROR;
+	}
 
 	// Initialize SDL_ttf
-    if (initialiseFonts() == ERROR)
-    {
-        printf("TTF_Init Error: %s\n", TTF_GetError());
-        SDL_Quit();
-        return ERROR;
-    }
+	if (TTF_Init() != 0)
+	{
+		printf("TTF_Init Error: %s\n", TTF_GetError());
+		SDL_Quit();
+		return ERROR;
+	}
+
+	// Initialize SDL_ttf
+	if (initialiseFonts() == ERROR)
+	{
+		printf("TTF_Init Error: %s\n", TTF_GetError());
+		SDL_Quit();
+		return ERROR;
+	}
 
 	clearScreen();
 
