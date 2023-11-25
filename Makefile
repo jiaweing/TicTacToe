@@ -28,6 +28,7 @@ endif
 ifeq ($(UNAME_S),Darwin)
 UNAME_M := $(shell uname -m)
 ifeq ($(UNAME_M),x86_64)
+# the one included in the repository is supported for this build but not supported for apple silicon
 CLFLAGS += -I./include/SDL2/include
 LDFLAGS := -L./include/SDL2/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lm
 else ifeq ($(UNAME_M),arm64)
