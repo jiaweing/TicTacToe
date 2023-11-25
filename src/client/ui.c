@@ -1,12 +1,13 @@
 #include "ui.h"
-
+//set up variables dor window and renderer which is what we draw to
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-
+//Loading fonts with different sizes
 TTF_Font *pcsenior24_f;
 TTF_Font *pcsenior18_f;
 TTF_Font *arcade24_f;
 
+//setting colours that are reusable
 SDL_Color blue = {0, 155, 255};
 SDL_Color indigo = {42, 52, 146};
 SDL_Color red = {239, 68, 35};
@@ -42,12 +43,14 @@ int initialiseFonts()
 
 	return SUCCESS;
 }
-
+//set the background image for all the windows
 int setBackgroundImage(const char *imagePath)
 {
+    // load image into surface
     SDL_Surface *backgroundSurface = IMG_Load(imagePath);
     if (backgroundSurface == NULL)
     {
+        // error validation
         printf("IMG_Load Error: %s\n", IMG_GetError());
         return ERROR;
     }
@@ -93,6 +96,7 @@ void drawTextInput(char *label, char *var)
 
 void renderText(char *text, TTF_Font *font, int x, int y, SDL_Color color)
 {
+    //setting up font style for a specific text in the design
     SDL_Surface *surface;
     SDL_Texture *texture;
     SDL_Rect pos;
@@ -107,7 +111,7 @@ void renderText(char *text, TTF_Font *font, int x, int y, SDL_Color color)
 }
 
 void renderAnchoredText(char *text, TTF_Font *font, int x, int y, SDL_Color color)
-{
+{   //setting up font style for a specific text in the design
     SDL_Surface *surface;
     SDL_Texture *texture;
     SDL_Rect pos;
@@ -123,6 +127,8 @@ void renderAnchoredText(char *text, TTF_Font *font, int x, int y, SDL_Color colo
 
 void clearScreen()
 {
+    //clear the screen and set the background colour
+    //free up resources
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
     if (setBackgroundImage(BACKDROP_IMAGE) == ERROR)
@@ -132,7 +138,7 @@ void clearScreen()
 }
 
 void clearSDL()
-{
+{   //Free up resources
     TTF_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
