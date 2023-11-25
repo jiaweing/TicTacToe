@@ -47,4 +47,4 @@ We only have prebuilt binaries for Macs running on Apple Intel, as it is not pos
 3. Run the game
    - `./ttt_client`
 4. Run the server
-   - `./ttt_server`
+   - `./ttt_server [port number (optional)]`

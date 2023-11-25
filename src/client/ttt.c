@@ -8,10 +8,9 @@
 #include "pvai_game.h"
 
 int initialiseSDL();
-
 int main(int argv, char **args)
 {
-	if (initialiseSDL() == ERROR)
+	if (initialiseSDL() == ERROR) // Check if SDL initialization is unsuccessful
 	{
 		printf("There has been an error with initialising SDL.\n");
 		exit(0);
@@ -19,67 +18,80 @@ int main(int argv, char **args)
 
 	while (1)
 	{
-		int gameType = mainMenu();
+		// Enter into an infinite loop for the main menu
+		int gameType = mainMenu();  // Display and get the user's choice from the main menu
 		if (gameType == PVP_GAME)
 		{
-			int response = pvpMenu();
+			// If the user chooses Player vs. Player mode
+			int response = pvpMenu();  // Display and get the user's choice from the PvP menu
 			if (response == BACK)
 			{
-				continue;
+				// If the user chooses to go back to the main menu
+				continue;  // Skip the rest of the loop and go back to the main menu
 			}
-			else if (response == ONLINE_GAME)
+			else if (response == ONLINE_GAME) // If the user chooses online PvP game
 			{
-				char ip[15] = SERVER_HOSTNAME;
-				int port = SERVER_PORT;
+				char ip[15] = SERVER_HOSTNAME; // Declare a variable for containing the server IP address
+				int port = SERVER_PORT; // Declare a variable for containing the server port number
 
 				if (askForHostIP(ip) == BACK)
 				{
+					// If the user chooses to go back during IP input
 					continue;
 				}
 				if (askForHostPort(&port) == BACK)
 				{
+					// If the user chooses to go back during port input
 					continue;
 				}
 				if (pvpOnlineGame(ip, port) == ERROR)
 				{
+					// If connecting to the server for online PvP fails
 					renderText(
 						"Couldn't connect to server",
 						pcsenior24_f,
 						BOARD_STATUS_PADDING,
 						SCREEN_HEIGHT - BOARD_STATUS_PADDING - 50,
 						red);
-					continue;
+					continue;  // Display an error message and go back to the main menu
 				}
 			}
 			else if (response == OFFLINE_GAME)
 			{
-				pvpOfflineGame();
+				// If the user chooses offline PvP game
+				pvpOfflineGame();  // Start the offline PvP game
 			}
 		}
 		else if (gameType == PVAI_GAME)
 		{
-			int response = difficultyMenu();
+			// If the user chooses Player vs. AI mode
+			int response = difficultyMenu();  // Display and get the user's choice from the difficulty menu
 			if (response == BACK)
 			{
-				continue;
+				// If the user chooses to go back to the main menu
+				continue;  // Skip the rest of the loop and go back to the main menu
 			}
 			else
 			{
+				// If the user selects a difficulty level
 				int difficulty = response;
-				pvaiGame(difficulty);
+				pvaiGame(difficulty);  // Start the Player vs. AI game with the chosen difficulty
 			}
 		}
 		else if (gameType == EXIT)
 		{
-			clearSDL();
-			exit(1);
+			// If the user chooses to exit the game
+			clearSDL();  // Clear SDL resources
+			exit(1);  // Exit the program
 		}
 		else
 		{
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "GAME TYPE", "Selected invalid option!", window);
+			// If an invalid game type is selected
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "GAME TYPE", "Selected invalid option!", window);  // Display an error message
 		}
 	}
 }
+
 
 int initialiseSDL()
 {
