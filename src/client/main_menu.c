@@ -46,10 +46,7 @@ int mainMenu()
             }
             else if (event.type == SDL_QUIT)
             {
-                TTF_Quit();
-                SDL_DestroyRenderer(renderer);
-                SDL_DestroyWindow(window);
-                SDL_Quit();
+                clearSDL();
                 exit(1);
                 break;
             }
@@ -167,10 +164,7 @@ int pvpMenu()
             }
             else if (event.type == SDL_QUIT)
             {
-                TTF_Quit();
-                SDL_DestroyRenderer(renderer);
-                SDL_DestroyWindow(window);
-                SDL_Quit();
+                clearSDL();
                 exit(1);
                 break;
             }
@@ -301,10 +295,7 @@ int difficultyMenu()
             }
             else if (event.type == SDL_QUIT)
             {
-                TTF_Quit();
-                SDL_DestroyRenderer(renderer);
-                SDL_DestroyWindow(window);
-                SDL_Quit();
+                clearSDL();
                 exit(1);
                 break;
             }
@@ -424,10 +415,7 @@ int askForHostIP(char *ip)
             }
             if (e.type == SDL_QUIT)
             {
-                TTF_Quit();
-                SDL_DestroyRenderer(renderer);
-                SDL_DestroyWindow(window);
-                SDL_Quit();
+                clearSDL();
                 exit(1);
                 break;
             }
@@ -487,10 +475,7 @@ int askForHostPort(int *port)
             }
             if (e.type == SDL_QUIT)
             {
-                TTF_Quit();
-                SDL_DestroyRenderer(renderer);
-                SDL_DestroyWindow(window);
-                SDL_Quit();
+                clearSDL();
                 exit(1);
                 break;
             }

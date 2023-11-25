@@ -6,6 +6,11 @@
 
 int pvpOnlineGame(const char *hostname, int hostportno)
 {
+	#ifdef _WIN32
+	clearScreen();
+	return ERROR;
+	#endif
+
 	clearScreen();
 	renderAnchoredText(
 		"Attempting to connect to server...",
@@ -51,6 +56,7 @@ int pvpOnlineGame(const char *hostname, int hostportno)
 			if (event.type == SDL_QUIT)
 			{
 				close(sockfd);
+				clearSDL();
 				exit(0);
 				break;
 			}

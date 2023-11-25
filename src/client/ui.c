@@ -130,3 +130,11 @@ void clearScreen()
         printf("Image not loading");
     }
 }
+
+void clearSDL()
+{
+    TTF_Quit();
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+}

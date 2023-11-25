@@ -31,6 +31,7 @@ int playerMove(char symbol, char board[9])
 				}
 				break;
 			case SDL_QUIT:
+				clearSDL();
 				exit(0);
 				break;
 			}

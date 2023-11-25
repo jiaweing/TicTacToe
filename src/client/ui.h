@@ -33,6 +33,7 @@ void renderText(char *text, TTF_Font *font, int x, int y, SDL_Color color);
 void renderAnchoredText(char *text, TTF_Font *font, int x, int y, SDL_Color color);
 int setBackgroundImage(const char *imagePath);
 void clearScreen();
+void clearSDL();
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;

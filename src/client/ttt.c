@@ -71,10 +71,7 @@ int main(int argv, char **args)
 		}
 		else if (gameType == EXIT)
 		{
-			TTF_Quit();
-			SDL_DestroyRenderer(renderer);
-			SDL_DestroyWindow(window);
-			SDL_Quit();
+			clearSDL();
 			exit(1);
 		}
 		else

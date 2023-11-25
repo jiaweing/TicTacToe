@@ -18,10 +18,6 @@
 #include <ws2ipdef.h>
 #endif
 
-#include <fcntl.h>
-#include <poll.h>
-#include <time.h>
-
 #define ERROR -1
 #define SUCCESS 1
 
