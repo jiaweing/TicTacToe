@@ -68,6 +68,12 @@
     "socket.h": "c",
     "netdb.h": "c",
     "sdl_ttf.h": "c",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "server_responses.h": "c",
+    "game_logic.h": "c",
+    "main_menu.h": "c",
+    "deque": "c",
+    "future": "c",
+    "time.h": "c"
   }
 }

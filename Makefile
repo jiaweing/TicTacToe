@@ -21,16 +21,17 @@ RMDIR := rmdir /s /q
 else
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-LDFLAGS := -lSDL2 -lSDL2_ttf -lSDL2_image -lpthread
+CLFLAGS += -I./include/SDL2/include
+LDFLAGS := -L./include/SDL2/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lpthread
 endif
 ifeq ($(UNAME_S),Darwin)
 UNAME_M := $(shell uname -m)
 ifeq ($(UNAME_M),x86_64)
-CLFLAGS += -I/usr/local/include
-LDFLAGS := -L /usr/local/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lm
+CLFLAGS += -I./include/SDL2/include
+LDFLAGS := -L./include/SDL2/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lm
 else ifeq ($(UNAME_M),arm64)
-CLFLAGS += -I/opt/homebrew/include
-LDFLAGS := -L /opt/homebrew/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lm
+CLFLAGS += -I./include/SDL2/include
+LDFLAGS := -L./include/SDL2/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lm
 endif
 endif
 MKDIR_P := mkdir -p

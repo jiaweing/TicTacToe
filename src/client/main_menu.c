@@ -46,134 +46,11 @@ int mainMenu()
             }
             else if (event.type == SDL_QUIT)
             {
-                exit(0);
-                break;
-            }
-        }
-    }
-
-    clearScreen();
-    return ERROR;
-}
-
-int pvpMenu()
-{
-    SDL_Event event;
-    SDL_Rect buttonRects[3];
-
-    drawPvPMenu(buttonRects);
-    SDL_RenderPresent(renderer);
-
-    while (1)
-    {
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                int x = event.button.x;
-                int y = event.button.y;
-
-                if (y >= buttonRects[0].y && y < buttonRects[0].y + buttonRects[0].h && x >= buttonRects[0].x && x < buttonRects[0].x + buttonRects[0].w)
-                {
-                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50)
-                    {
-                        clearScreen();
-                        return ONLINE_GAME;
-                    }
-                }
-                else if (y >= buttonRects[1].y && y < buttonRects[1].y + buttonRects[1].h && x >= buttonRects[1].x && x < buttonRects[1].x + buttonRects[1].w)
-                {
-                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
-                    {
-                        clearScreen();
-                        return OFFLINE_GAME;
-                    }
-                }
-                else if (y >= buttonRects[2].y && y < buttonRects[2].y + buttonRects[2].h && x >= buttonRects[2].x && x < buttonRects[2].x + buttonRects[2].w)
-                {
-                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
-                    {
-                        clearScreen();
-                        return BACK;
-                    }
-                }
-            }
-            else if (event.type == SDL_QUIT)
-            {
-                exit(0);
-                break;
-            }
-        }
-    }
-
-    clearScreen();
-    return ERROR;
-}
-
-int difficultyMenu()
-{
-    SDL_Event event;
-    SDL_Rect buttonRects[5];
-    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
-    {
-        printf("Image checkpoint not working");
-    }
-    drawDifficultyMenu(buttonRects);
-    SDL_RenderPresent(renderer);
-
-    while (1)
-    {
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                int x = event.button.x;
-                int y = event.button.y;
-
-                if (y >= buttonRects[0].y && y < buttonRects[0].y + buttonRects[0].h && x >= buttonRects[0].x && x < buttonRects[0].x + buttonRects[0].w)
-                {
-                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50)
-                    {
-                        clearScreen();
-                        return EASY_DIFFICULTY;
-                    }
-                }
-                else if (y >= buttonRects[1].y && y < buttonRects[1].y + buttonRects[1].h && x >= buttonRects[1].x && x < buttonRects[1].x + buttonRects[1].w)
-                {
-                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
-                    {
-                        clearScreen();
-                        return MEDIUM_DIFFICULTY;
-                    }
-                }
-                else if (y >= buttonRects[2].y && y < buttonRects[2].y + buttonRects[2].h && x >= buttonRects[2].x && x < buttonRects[2].x + buttonRects[2].w)
-                {
-                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
-                    {
-                        clearScreen();
-                        return HARD_DIFFICULTY;
-                    }
-                }
-                else if (y >= buttonRects[3].y && y < buttonRects[3].y + buttonRects[3].h && x >= buttonRects[3].x && x < buttonRects[3].x + buttonRects[3].w)
-                {
-                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
-                    {
-                        clearScreen();
-                        return IMPOSSIBLE_DIFFICULTY;
-                    }
-                }
-                else if (y >= buttonRects[4].y && y < buttonRects[4].y + buttonRects[4].h && x >= buttonRects[4].x && x < buttonRects[4].x + buttonRects[4].w)
-                {
-                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
-                    {
-                        clearScreen();
-                        return BACK;
-                    }
-                }
-            }
-            else if (event.type == SDL_QUIT)
-            {
-                exit(0);
+                TTF_Quit();
+                SDL_DestroyRenderer(renderer);
+                SDL_DestroyWindow(window);
+                SDL_Quit();
+                exit(1);
                 break;
             }
         }
@@ -185,11 +62,6 @@ int difficultyMenu()
 
 int drawMainMenu(SDL_Rect buttonRects[3])
 {
-    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
-    {
-        printf("Image not loading");
-    }
-
     // Create a font (you should replace this with your own font)
     TTF_Font *font = TTF_OpenFont(ARCADE_FONT, 90);
     TTF_Font *btnfont = TTF_OpenFont(PCSENIOR_FONT, 18);
@@ -251,13 +123,66 @@ int drawMainMenu(SDL_Rect buttonRects[3])
     return SUCCESS;
 }
 
-int drawPvPMenu(SDL_Rect buttonRects[3])
+int pvpMenu()
 {
-    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    SDL_Event event;
+    SDL_Rect buttonRects[3];
+
+    drawPvPMenu(buttonRects);
+    SDL_RenderPresent(renderer);
+
+    while (1)
     {
-        printf("Image not loading");
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int x = event.button.x;
+                int y = event.button.y;
+
+                if (y >= buttonRects[0].y && y < buttonRects[0].y + buttonRects[0].h && x >= buttonRects[0].x && x < buttonRects[0].x + buttonRects[0].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50)
+                    {
+                        clearScreen();
+                        return ONLINE_GAME;
+                    }
+                }
+                else if (y >= buttonRects[1].y && y < buttonRects[1].y + buttonRects[1].h && x >= buttonRects[1].x && x < buttonRects[1].x + buttonRects[1].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
+                    {
+                        clearScreen();
+                        return OFFLINE_GAME;
+                    }
+                }
+                else if (y >= buttonRects[2].y && y < buttonRects[2].y + buttonRects[2].h && x >= buttonRects[2].x && x < buttonRects[2].x + buttonRects[2].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
+                    {
+                        clearScreen();
+                        return BACK;
+                    }
+                }
+            }
+            else if (event.type == SDL_QUIT)
+            {
+                TTF_Quit();
+                SDL_DestroyRenderer(renderer);
+                SDL_DestroyWindow(window);
+                SDL_Quit();
+                exit(1);
+                break;
+            }
+        }
     }
 
+    clearScreen();
+    return ERROR;
+}
+
+int drawPvPMenu(SDL_Rect buttonRects[3])
+{
     TTF_Font *font = TTF_OpenFont(ARCADE_FONT, 90);
     TTF_Font *btnfont = TTF_OpenFont(PCSENIOR_FONT, 18);
     if (font == NULL)
@@ -316,13 +241,82 @@ int drawPvPMenu(SDL_Rect buttonRects[3])
     return SUCCESS;
 }
 
-int drawDifficultyMenu(SDL_Rect buttonRects[5])
+int difficultyMenu()
 {
-    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
+    SDL_Event event;
+    SDL_Rect buttonRects[5];
+
+    drawDifficultyMenu(buttonRects);
+    SDL_RenderPresent(renderer);
+
+    while (1)
     {
-        printf("Image not loading");
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int x = event.button.x;
+                int y = event.button.y;
+
+                if (y >= buttonRects[0].y && y < buttonRects[0].y + buttonRects[0].h && x >= buttonRects[0].x && x < buttonRects[0].x + buttonRects[0].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50)
+                    {
+                        clearScreen();
+                        return EASY_DIFFICULTY;
+                    }
+                }
+                else if (y >= buttonRects[1].y && y < buttonRects[1].y + buttonRects[1].h && x >= buttonRects[1].x && x < buttonRects[1].x + buttonRects[1].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
+                    {
+                        clearScreen();
+                        return MEDIUM_DIFFICULTY;
+                    }
+                }
+                else if (y >= buttonRects[2].y && y < buttonRects[2].y + buttonRects[2].h && x >= buttonRects[2].x && x < buttonRects[2].x + buttonRects[2].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
+                    {
+                        clearScreen();
+                        return HARD_DIFFICULTY;
+                    }
+                }
+                else if (y >= buttonRects[3].y && y < buttonRects[3].y + buttonRects[3].h && x >= buttonRects[3].x && x < buttonRects[3].x + buttonRects[3].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
+                    {
+                        clearScreen();
+                        return IMPOSSIBLE_DIFFICULTY;
+                    }
+                }
+                else if (y >= buttonRects[4].y && y < buttonRects[4].y + buttonRects[4].h && x >= buttonRects[4].x && x < buttonRects[4].x + buttonRects[4].w)
+                {
+                    if (x >= SCREEN_WIDTH / 2 - 50 && x < SCREEN_WIDTH / 2 + 50 * 2)
+                    {
+                        clearScreen();
+                        return BACK;
+                    }
+                }
+            }
+            else if (event.type == SDL_QUIT)
+            {
+                TTF_Quit();
+                SDL_DestroyRenderer(renderer);
+                SDL_DestroyWindow(window);
+                SDL_Quit();
+                exit(1);
+                break;
+            }
+        }
     }
 
+    clearScreen();
+    return ERROR;
+}
+
+int drawDifficultyMenu(SDL_Rect buttonRects[5])
+{
     // Create a font (you should replace this with your own font)
     TTF_Font *font = TTF_OpenFont(ARCADE_FONT, 90);
     TTF_Font *btnfont = TTF_OpenFont(PCSENIOR_FONT, 18);
@@ -388,10 +382,6 @@ int askForHostIP(char *ip)
     int position = 0;
     int done = 0;
 
-    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
-    {
-        printf("Image not loading");
-    }
     drawTextInput("Type in Host IP Address", ip);
 
     SDL_Event e;
@@ -428,12 +418,17 @@ int askForHostIP(char *ip)
                 }
                 if (e.key.keysym.sym == SDLK_ESCAPE)
                 {
+                    clearScreen();
                     return BACK;
                 }
             }
             if (e.type == SDL_QUIT)
             {
-                exit(0);
+                TTF_Quit();
+                SDL_DestroyRenderer(renderer);
+                SDL_DestroyWindow(window);
+                SDL_Quit();
+                exit(1);
                 break;
             }
         }
@@ -448,11 +443,7 @@ int askForHostPort(int *port)
     memset(portStr, ' ', 7);
     int position = 0;
     int done = 0;
-
-    if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
-    {
-        printf("Image not loading");
-    }
+    
     drawTextInput("Type in Host Port Number", portStr);
 
     SDL_Event e;
@@ -490,12 +481,17 @@ int askForHostPort(int *port)
                 }
                 if (e.key.keysym.sym == SDLK_ESCAPE)
                 {
+                    clearScreen();
                     return BACK;
                 }
             }
             if (e.type == SDL_QUIT)
             {
-                exit(0);
+                TTF_Quit();
+                SDL_DestroyRenderer(renderer);
+                SDL_DestroyWindow(window);
+                SDL_Quit();
+                exit(1);
                 break;
             }
         }

@@ -3,6 +3,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define ERROR -1
 #define SUCCESS 1
@@ -23,6 +24,8 @@
 #define ARCADE_FONT "assets/fonts/ARCADE.TTF"
 #define INTER_FONT "assets/fonts/Inter-Regular.ttf"
 #endif
+
+#define BACKDROP_IMAGE "assets/images/backdropfinal.png"
 
 int initialiseFonts();
 void drawTextInput(char *label, char *var);

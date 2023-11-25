@@ -7,4 +7,5 @@
 #define GAME_WIN "WIN"
 #define GAME_LOSE "LSE"
 #define GAME_DRAW "DRW"
+#define GAME_INTERRUPTED "INT"
 #define PLAYER_TURN "TRN"

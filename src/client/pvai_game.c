@@ -10,8 +10,6 @@ int pvaiGame(int difficulty)
 	int move = 0;
 	char player = X_SYMBOL;
 
-	drawAIGameScreen(board, player);
-
 	int data[MAX_ROWS][NUM_POSITIONS];
 	int labels[MAX_ROWS];
 	int training_data[MAX_TRAINING_ROWS][NUM_POSITIONS];
@@ -21,6 +19,8 @@ int pvaiGame(int difficulty)
 	int split_ratio = 80;
 	double priors[NUM_CLASSES];
 	double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES];
+
+	drawAIGameScreen(board, player);
 
 	extract_data(data, labels);
 	split_data(data, labels, training_data, training_labels, testing_data, testing_labels, split_ratio);
@@ -32,7 +32,7 @@ int pvaiGame(int difficulty)
 	{
 		if (player == X_SYMBOL)
 		{
-			move = computerMove(X_SYMBOL, board, difficulty, priors, likelihoods);
+			move = computerMove(X_SYMBOL, board, difficulty, priors, likelihoods, turn);
 			board[move] = X_SYMBOL;
 			player = O_SYMBOL;
 		}
@@ -65,51 +65,52 @@ int pvaiGame(int difficulty)
 	return SUCCESS;
 }
 
-int computerMove(char symbol, char board[9], int difficulty, double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES])
+int computerMove(char symbol, char board[9], int difficulty, double priors[NUM_CLASSES], double likelihoods[NUM_POSITIONS][EMPTY + 1][NUM_CLASSES], int turn)
 {
-	if (difficulty == HARD_DIFFICULTY || difficulty == MEDIUM_DIFFICULTY)
+	if (turn > 0)
 	{
-		int next_move = predictNextMove(difficulty, board, priors, likelihoods);
-		return next_move;
-	}
-	else if (difficulty == EASY_DIFFICULTY || difficulty == IMPOSSIBLE_DIFFICULTY)
-	{
-		int move = 0;
-		int bestScore = MIN_SCORE;
-		for (int i = 0; i < 9; ++i)
+		if (difficulty == HARD_DIFFICULTY || difficulty == MEDIUM_DIFFICULTY)
 		{
-			if (board[i] == EMPTY_SYMBOL)
+			int next_move = predictNextMove(difficulty, board, priors, likelihoods);
+			return next_move;
+		}
+		else if (difficulty == EASY_DIFFICULTY || difficulty == IMPOSSIBLE_DIFFICULTY)
+		{
+			int move = 0;
+			int bestScore = MIN_SCORE;
+			for (int i = 0; i < 9; ++i)
 			{
-				board[i] = X_SYMBOL;
-				if (difficulty == HARD_DIFFICULTY)
+				if (board[i] == EMPTY_SYMBOL)
 				{
-					int score = randminimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
-					board[i] = EMPTY_SYMBOL;
-					if (score > bestScore)
+					board[i] = X_SYMBOL;
+					if (difficulty == EASY_DIFFICULTY)
 					{
-						bestScore = score;
-						move = i;
+						int score = randminimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
+						board[i] = EMPTY_SYMBOL;
+						if (score > bestScore)
+						{
+							bestScore = score;
+							move = i;
+						}
 					}
-				}
-				else if (difficulty == IMPOSSIBLE_DIFFICULTY)
-				{
-					int score = minimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
-					board[i] = EMPTY_SYMBOL;
-					if (score > bestScore)
+					else if (difficulty == IMPOSSIBLE_DIFFICULTY)
 					{
-						bestScore = score;
-						move = i;
+						int score = minimax(board, O_SYMBOL, 0, MIN_SCORE, MAX_SCORE);
+						board[i] = EMPTY_SYMBOL;
+						if (score > bestScore)
+						{
+							bestScore = score;
+							move = i;
+						}
 					}
 				}
 			}
+			// returns a score based on minimax tree at a given node.
+			return move;
 		}
-		// returns a score based on minimax tree at a given node.
-		return move;
 	}
-	else
-	{
-		return -1;
-	}
+		
+	return rand() % 9;
 }
 
 void drawAIGameScreen(char board[9], char player)

@@ -75,7 +75,7 @@ int setBackgroundImage(const char *imagePath)
 
 void drawTextInput(char *label, char *var)
 {
-    SDL_RenderClear(renderer);
+    clearScreen();
     renderAnchoredText(
         label,
         pcsenior18_f,
@@ -87,7 +87,7 @@ void drawTextInput(char *label, char *var)
         pcsenior24_f,
         SCREEN_WIDTH / 2,
         SCREEN_HEIGHT / 2 - 50,
-        cyan);
+        white);
     SDL_RenderPresent(renderer);
 }
 
@@ -125,4 +125,8 @@ void clearScreen()
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
+    if (setBackgroundImage(BACKDROP_IMAGE) == ERROR)
+    {
+        printf("Image not loading");
+    }
 }

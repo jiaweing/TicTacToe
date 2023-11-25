@@ -1,6 +1,5 @@
 // TODO: validation for input
-// TODO: spruce up GUI
-// TODO: choose who go first, random first position, choose colour of icon, undo button, responsive, timer, preview move with half opacity w/ blinks or animation, multiplayer, audio, quit button, score keeping, win animation, loading move, scoring
+// TODO: undo button, timer, preview move with half opacity w/ blinks or animation, audio, win animation, windows compatibility, window name icon
 
 #include "ui.h"
 #include "main_menu.h"
@@ -130,6 +129,8 @@ int initialiseSDL()
         SDL_Quit();
         return ERROR;
     }
+
+	clearScreen();
 
 	return SUCCESS;
 }

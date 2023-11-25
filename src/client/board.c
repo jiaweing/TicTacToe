@@ -42,11 +42,6 @@ int playerMove(char symbol, char board[9])
 
 void drawBoard(const char board[9])
 {
-	if (setBackgroundImage("assets/images/backdropfinal.jpeg") == ERROR)
-    {
-        printf("Image not loading");
-    }
-
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
 	SDL_Rect board_rect = {SCREEN_WIDTH / 2 - BOARD_SIZE / 2, SCREEN_HEIGHT / 2 - BOARD_SIZE / 2, BOARD_SIZE, BOARD_SIZE};

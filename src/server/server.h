@@ -11,6 +11,12 @@
 #include <netdb.h>
 #endif
 
+#ifdef __linux__
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#endif
+
 #ifdef _WIN32
 #include <winsock2.h>
 #include <windows.h>
@@ -19,15 +25,9 @@
 #include <ws2ipdef.h>
 #endif
 
-#ifdef __linux__
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#endif
-
 #include "board.h"
 
-#define DEFAULT_PORT 27428
+#define DEFAULT_PORT 27428 // the default port used for server
 
 int player_count;
 pthread_mutex_t mutexcount;
