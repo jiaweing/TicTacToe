@@ -30,8 +30,8 @@ ifeq ($(UNAME_M),x86_64)
 CLFLAGS += -I./include/SDL2/include
 LDFLAGS := -L./include/SDL2/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lm
 else ifeq ($(UNAME_M),arm64)
-CLFLAGS += -I./include/SDL2/include
-LDFLAGS := -L./include/SDL2/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lm
+CLFLAGS += -I/opt/homebrew/SDL2/include
+LDFLAGS := -L/opt/homebrew/SDL2/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lm
 endif
 endif
 MKDIR_P := mkdir -p
