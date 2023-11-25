@@ -23,6 +23,7 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 CLFLAGS += -I./include/SDL2/include
 LDFLAGS := -L./include/SDL2/lib -lSDL2 -lSDL2_ttf -lSDL2_image -lpthread
+SVFLAGS += -lpthread
 endif
 ifeq ($(UNAME_S),Darwin)
 UNAME_M := $(shell uname -m)
