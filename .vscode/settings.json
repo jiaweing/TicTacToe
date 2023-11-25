@@ -1,6 +1,8 @@
 {
   "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
   "files.associations": {
+    "*.embeddedhtml": "html",
+    "*.titan": "SourcePawn",
     "__bit_reference": "c",
     "__bits": "c",
     "__config": "c",
@@ -68,6 +70,7 @@
     "socket.h": "c",
     "netdb.h": "c",
     "sdl_ttf.h": "c",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "ws2ipdef.h": "c"
   }
 }
