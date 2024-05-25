@@ -6,10 +6,10 @@
 
 int pvpOnlineGame(const char *hostname, int hostportno)
 {
-	#ifdef _WIN32
+#ifdef _WIN32
 	clearScreen(); // Clear the screen for Windows
 	return ERROR;  // Return an error code on Windows
-	#endif
+#endif
 
 	clearScreen(); // Clear the screen for non-Windows platforms
 

@@ -1,0 +1,48 @@
+TEST DATA STATISTICS & CONFUSION MATRIX 
+---------------------------------------------
+Accuracy: 0.7188
+Probability of Error: 0.2812
+True Positive: 109 / 118
+False Positive: 45 / 74
+True Negative: 29 / 74
+False Negative: 9 / 118
+Recall: 0.9237
+Precision: 0.7078
+
+     									   Confusion Matrix (Test Dataset)
+         										  Actual Values
+    										Positive          Negative
+										-----------------------------------
+										| True Positive  | False Positive |
+							  Positive	|        =       |       =        |
+										|    109         |    45          |
+		    Predicted Values			|----------------|----------------|
+										| False Negative | True Negative  |
+							  Negative	|       =        |       =        |
+										|    9          |    29          |
+										-----------------------------------
+
+
+TRAINING DATA STATISTICS & CONFUSION MATRIX 
+---------------------------------------------
+Accuracy: 0.7363
+Probability of Error: 0.2637
+True Positive: 453 / 508
+False Positive: 147 / 258
+True Negative: 111 / 258
+False Negative: 55 / 508
+Recall: 0.8917
+Precision: 0.7550
+
+     									Confusion Matrix (Training Dataset)
+         										  Actual Values
+    										Positive          Negative
+										-----------------------------------
+										| True Positive  | False Positive |
+							  Positive	|        =       |       =        |
+										|    453         |    147         |
+		    Predicted Values			|----------------|----------------|
+										| False Negative | True Negative  |
+							  Negative	|       =        |       =        |
+										|    55         |    111         |
+										-----------------------------------

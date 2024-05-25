@@ -31,7 +31,7 @@ We only have prebuilt binaries for Macs running on Apple Intel, as it is not pos
 
 1. Install [Homebrew](https://brew.sh/)
 2. Install dependencies
-   - `brew install sdl2 sdl2_ttf make`
+   - `brew install sdl2 sdl2_ttf sdl2_image make`
 
 ### Linux
 
@@ -45,6 +45,6 @@ We only have prebuilt binaries for Macs running on Apple Intel, as it is not pos
    - `make client -j4`
    - `make server -j4`
 3. Run the game
-   - `./ttt_client`
+   - `.out/ttt_client`
 4. Run the server
-   - `./ttt_server [port number (optional)]`
+   - `.out/ttt_server [port number (optional)]`
