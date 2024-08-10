@@ -1,13 +1,13 @@
 TEST DATA STATISTICS & CONFUSION MATRIX 
 ---------------------------------------------
-Accuracy: 0.7188
-Probability of Error: 0.2812
-True Positive: 109 / 118
-False Positive: 45 / 74
-True Negative: 29 / 74
-False Negative: 9 / 118
-Recall: 0.9237
-Precision: 0.7078
+Accuracy: 0.6562
+Probability of Error: 0.3438
+True Positive: 101 / 113
+False Positive: 54 / 79
+True Negative: 25 / 79
+False Negative: 12 / 113
+Recall: 0.8938
+Precision: 0.6516
 
      									   Confusion Matrix (Test Dataset)
          										  Actual Values
@@ -15,24 +15,24 @@ Precision: 0.7078
 										-----------------------------------
 										| True Positive  | False Positive |
 							  Positive	|        =       |       =        |
-										|    109         |    45          |
+										|    101         |    54          |
 		    Predicted Values			|----------------|----------------|
 										| False Negative | True Negative  |
 							  Negative	|       =        |       =        |
-										|    9          |    29          |
+										|    12          |    25          |
 										-----------------------------------
 
 
 TRAINING DATA STATISTICS & CONFUSION MATRIX 
 ---------------------------------------------
-Accuracy: 0.7363
-Probability of Error: 0.2637
-True Positive: 453 / 508
-False Positive: 147 / 258
-True Negative: 111 / 258
-False Negative: 55 / 508
-Recall: 0.8917
-Precision: 0.7550
+Accuracy: 0.7454
+Probability of Error: 0.2546
+True Positive: 461 / 513
+False Positive: 143 / 253
+True Negative: 110 / 253
+False Negative: 52 / 513
+Recall: 0.8986
+Precision: 0.7632
 
      									Confusion Matrix (Training Dataset)
          										  Actual Values
@@ -40,9 +40,9 @@ Precision: 0.7550
 										-----------------------------------
 										| True Positive  | False Positive |
 							  Positive	|        =       |       =        |
-										|    453         |    147         |
+										|    461         |    143         |
 		    Predicted Values			|----------------|----------------|
 										| False Negative | True Negative  |
 							  Negative	|       =        |       =        |
-										|    55         |    111         |
+										|    52         |    110         |
 										-----------------------------------
